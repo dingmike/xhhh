@@ -54,13 +54,12 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           debugger
-
-          if(response.data.errno===0){
-            const data = response.data.data
-            console.log(data.token)
-            commit('SET_TOKEN', data.token)
-            commit('SET_USERID', data.userInfo.id)
-            setToken(data.token)
+          if(response.data.code===200){
+            const token = response.data.data
+            console.log(token)
+            commit('SET_TOKEN', token)
+            // commit('SET_USERID', data.userInfo.id)
+            setToken(token)
           }
             resolve(response.data)
 
@@ -76,7 +75,19 @@ const user = {
         console.log('key:' + key + ' value:' + state[key])
       }
       return new Promise((resolve, reject) => {
-        getUserInfo(state.userId).then(response => {
+        // 只有admin权限
+        commit('SET_ROLES', ['admin','editor'])
+        commit('SET_NAME', 'admin')
+        commit('SET_AVATAR', 'https://avatars1.githubusercontent.com/u/19502477?s=40&v=4')
+        let response = {
+          data:{
+            data: {
+                roles:['admin','editor']
+            }
+          }
+        }
+        resolve(response);
+        /*getUserInfo(state.userId).then(response => {
           debugger
           // if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
           //   reject('error')
@@ -98,7 +109,7 @@ const user = {
           resolve(response)
         }).catch(error => {
           reject(error)
-        })
+        })*/
       })
     },
 
@@ -119,11 +130,11 @@ const user = {
     // 登出
     LogOut({commit, state}) {
       return new Promise((resolve, reject) => {
-        logout(state.userId).then(() => {
+        logout(state.userId).then((res) => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
-          resolve()
+          resolve(res)
         }).catch(error => {
           reject(error)
         })

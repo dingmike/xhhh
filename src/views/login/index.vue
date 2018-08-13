@@ -93,6 +93,7 @@ export default {
       }
     },
     handleLogin() {
+        debugger
       this.$refs.loginForm.validate(valid => {
         if (valid) {
             debugger
@@ -100,7 +101,7 @@ export default {
           this.$store.dispatch('LoginByUsername', this.loginForm).then((res) => {
             this.loading = false
 debugger
-            if(res.errno===0){
+            if(res.code===200){
               this.$router.push({ path: '/' })
             }else{
 //              this.$message.error(res.errmsg)

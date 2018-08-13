@@ -1,14 +1,19 @@
 import request from '@/utils/request'
 export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password
-  }
+  debugger
+  var params = new URLSearchParams();
+  params.append('account', username);       //你要传给后台的参数值 key/value
+  params.append('password', password);
+  /*const data = {
+    account: username,
+    password:password
+  }*/
   return request({
     // url: '/login/login',
-    url: 'auth/login',
+    // url: 'auth/login',
+    url: 'admin/login',
     method: 'post',
-    data
+    data: params
   })
 }
 
@@ -24,9 +29,11 @@ export function getUserInfo(userId) {
 }
 
 export function logout() {
+
   return request({
-    url: '/login/logout',
-    method: 'post'
+    url: 'user/admin/logout',
+    method: 'get',
+    params: ''
   })
 }
 /*

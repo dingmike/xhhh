@@ -15,7 +15,10 @@ function hasPermission(roles, permissionRoles) {
 }
 
 const whiteList = ['/login', '/authredirect']// no redirect whitelist
-
+/*
+* 用户登录必须鉴权
+*
+* */
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
   if (getToken()) { // determine if there has token

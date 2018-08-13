@@ -95,6 +95,114 @@ export const asyncRouterMap = [
   },
 
   //-----------my navbar start---------------------//
+
+
+  //new add router
+  {
+    path: '/sceneryIntroduce',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: _import('sceneryIntroduce/index'),
+      name: 'sceneryIntroduce',
+      meta: { title: '景点介绍', icon: 'scenery', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+  {
+    path: '/adPlace',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: _import('adPlace/index'),
+      name: 'adPlace',
+      meta: { title: '广告位', icon: 'ad', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+  {
+    path: '/enterPark',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: _import('enterPark/index'),
+      name: 'enterPark',
+      meta: { title: '入园参考', icon: 'park', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+
+  {
+    path: '/userManage',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: _import('userManage/index'),
+      name: 'userManage',
+      meta: { title: '会员管理', icon: 'user', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+  {
+    path: '/editUser',
+    component: Layout,
+    redirect: '/userManage/editUser',
+    children: [{
+      path: 'index',
+      component: _import('userManage/editUser'),
+      name: 'editUser',
+      meta: { title: '编辑会员', icon: 'documentation', noCache: true }
+    }],
+    hidden: true
+  },
+
+
+
+  {
+    path: '/news',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'news',
+    meta: {
+      title: '咨询',
+      icon: 'news'
+    },
+    children: [
+      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '新闻资讯', noCache: true }},
+      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '官方公告', noCache: true }},
+      { path: 'mixchart', component: _import('charts/mixChart'), name: 'mixChart', meta: { title: '视频暂时无', noCache: true }}
+    ]
+  },
+  {
+    path: '/classify',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'classify',
+    meta: {
+      title: '分类管理',
+      icon: 'classify'
+    },
+    children: [
+      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '种酒类别', noCache: true }},
+      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '景点类别', noCache: true }}
+    ]
+  },
+  {
+    path: '/basicFile',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'basicFile',
+    meta: {
+      title: '基本资料',
+      icon: 'basic'
+    },
+    children: [
+      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '公司简介', noCache: true }},
+      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '地址', noCache: true }},
+      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '联系方式', noCache: true }}
+    ]
+  },
+
+
+
+
+  //news end
   {
     path: '/productManage',
     component: Layout,
@@ -102,7 +210,7 @@ export const asyncRouterMap = [
       path: 'index',
       component: _import('productManage/index'),
       name: 'productManage',
-      meta: { title: 'productManage', icon: 'eye', noCache: true }
+      meta: { title: 'productManage', icon: 'scenery', noCache: true, roles: ['admin','editor'] }
     }]
   },
   // { path: '/addProduct', component: _import('productManage/addProduct'), hidden: false },
@@ -114,7 +222,7 @@ export const asyncRouterMap = [
       path: 'index',
       component: _import('productManage/addProduct'),
       name: 'addProduct',
-      meta: { title: 'addProduct', icon: 'documentation', noCache: true }
+      meta: { title: 'addProduct', icon: 'documentation', noCache: true, roles: ['admin','editor'] }
     }],
     hidden: false
   },
