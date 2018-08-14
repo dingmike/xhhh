@@ -20,7 +20,7 @@
           </div>
         </template>
       </el-table-column>-->
-      <el-table-column width="100" align="center" label="会员ID">
+      <el-table-column width="80" align="center" label="会员ID">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
@@ -45,9 +45,7 @@
       <el-table-column width="120" align="center" label="状态">
         <template slot-scope="scope">
           <span>{{scope.row.type == 1 ? "被冻结" : "正常"}}</span>
-          <el-button size="mini" :type="scope.row.type == 1 ? 'success' : 'warning'" @click="showIceUser(scope.row)">
-            {{scope.row.type === 1 ? '解冻' : '冻结'}}
-          </el-button>
+
         </template>
       </el-table-column>
       <el-table-column width="100px" label="真实姓名">
@@ -82,13 +80,15 @@
       </el-table-column>
       <el-table-column class-name="status-col" label="操作" width="300px">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">充值</el-button>
+          <el-button type="primary" size="mini" @click="showUserCharge(scope.row)">充值</el-button>
           <!--<i class="el-icon-edit edit-good-icon" @click="handleEdit(scope.row)"></i>-->
-          <el-button size="mini" type='warning' @click="setRank(scope.row)">设置等级
-          </el-button>
+          <!-- <el-button size="mini" type='primary' @click="showSetRank(scope.row)">设置等级
+           </el-button>-->
           <!--  <el-button size="mini" :type="scope.row.is_on_sale === 1 ? 'warning' : 'success'" @click="showDialog(scope.row)">{{scope.row.is_on_sale === 1?'下架':'上架'}}
            </el-button>-->
-          <el-button type="danger" size="mini" @click="showDeletDialog(scope.row)">冻结账户
+
+          <el-button size="mini" :type="scope.row.type == 1 ? 'warning' : 'danger'" @click="showIceUser(scope.row)">
+            {{scope.row.type === 1 ? '解冻账户' : '冻结账户'}}
           </el-button>
         </template>
       </el-table-column>
@@ -153,10 +153,12 @@
       </el-pagination>
     </div>
 
+    <!--冻结账户弹窗 start-->
     <el-dialog v-el-drag-dialog
                title="账户冻结操作"
                :visible.sync="dialogVisible2"
-                width="30%"
+               width="30%"
+               center
                :before-close="handleClose">
       <el-row>
         <el-col :span="24">
@@ -164,75 +166,131 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible2 = false">取 消</el-button>
-    <el-button type="primary" @click="handleIceUser(goodsObj)">确定</el-button>
-  </span>
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="handleIceUser(goodsObj)">确定</el-button>
+      </span>
     </el-dialog>
+    <!--冻结账户 end-->
 
-
+    <!--用户充值 start-->
     <el-dialog v-el-drag-dialog
-               title="商品删除确认"
+               title="用户充值"
                :visible.sync="dialogVisible3"
-               width="40%"
+               width="30%"
+               center
                :before-close="handleClose">
       <el-row>
-        <el-col :span="24">
-          <span class="down-box">商品删除后不可恢复，买家将无法在店铺中找到该商品。确定删除以下商品？</span>
+        <el-col :span="6">
+          充值账号:
+        </el-col>
+        <el-col :span="6">
+          <el-tag>{{iceUserObj.phone}}</el-tag>
         </el-col>
       </el-row>
-      <el-row style="background: #ffe6e6;border: 1px solid #ffbebe">
-        <el-col :span="4" class="good-pic-head">
-          <img :src="goodsObj.primary_pic_url">
+      <el-row style="margin:20px 0">
+        <el-col :span="6">
+          充值类型:
         </el-col>
-        <el-col :span="20">
-          <span class="goods-name">{{goodsObj.name}}</span>
+        <el-col :span="6">
+          <el-select size="small" v-model="chargeObj.rechargeType" filterable placeholder="充值类型">
+            <el-option
+              v-for="item in rechargeTypes"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+          充值金额:
+        </el-col>
+        <el-col :span="6">
+          <el-input-number v-model="chargeObj.money" size="small" controls-position="right" :min="1"
+                           :max="1000000"></el-input-number>
+        </el-col>
+      </el-row>
+      <el-row style="margin:20px 0">
+        <el-col :span="6">
+          登录密码:
+        </el-col>
+        <el-col :span="6">
+          <el-input size="small" type="password" v-model="chargeObj.password" auto-complete="off"
+                    :maxlength="10"></el-input>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible3 = false">取 消</el-button>
-    <el-button type="danger" @click="handleDeleteGoods(goodsObj)">确认删除</el-button>
-  </span>
+        <el-button @click="dialogVisible3 = false">取 消</el-button>
+        <el-button type="danger" @click="rechargeUser">确认</el-button>
+      </span>
     </el-dialog>
+    <!--用户充值 end-->
 
 
-    <!--更新商品hot状态-->
-    <el-dialog v-el-drag-dialog title="修改商品HOT状态" :visible.sync="dialogVisible4" width="40%">
+    <!-- <el-dialog v-el-drag-dialog
+                title="商品删除确认"
+                :visible.sync="dialogVisible3"
+                width="40%"
+                :before-close="handleClose">
+       <el-row>
+         <el-col :span="24">
+           <span class="down-box">商品删除后不可恢复，买家将无法在店铺中找到该商品。确定删除以下商品？</span>
+         </el-col>
+       </el-row>
+       <el-row style="background: #ffe6e6;border: 1px solid #ffbebe">
+         <el-col :span="4" class="good-pic-head">
+           <img :src="goodsObj.primary_pic_url">
+         </el-col>
+         <el-col :span="20">
+           <span class="goods-name">{{goodsObj.name}}</span>
+         </el-col>
+       </el-row>
+       <span slot="footer" class="dialog-footer">
+     <el-button @click="dialogVisible3 = false">取 消</el-button>
+     <el-button type="danger" @click="handleDeleteGoods(goodsObj)">确认删除</el-button>
+   </span>
+     </el-dialog>
 
-      <el-form>
-        <el-form-item :label-width="formLabelWidth">
-          <el-row>
-            <el-col :span="4" class="good-pic-head">
-              <img :src="goodsObj.primary_pic_url">
-            </el-col>
-            <el-col :span="20">
-              <span class="goods-name">{{goodsObj.name}}</span>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item label="商品目前状态：" :label-width="formLabelWidth">
-          <i v-show="goodsObj.is_hot == 1" class="el-icon-success" style="color: red; font-size: 22px"></i>
-          <i v-show="goodsObj.is_hot == 0" class="el-icon-success" style="color: #cccccc; font-size: 22px"></i>
-        </el-form-item>
-        <el-form-item label="修改HOT状态：" :label-width="formLabelWidth">
-          <!--<el-radio-group v-model="goodsObj.is_hot" size="mini">-->
-          <el-radio v-model="goodsObj.is_hot" label="1" border>HOT</el-radio>
-          <el-radio v-model="goodsObj.is_hot" label="0" border>NOT HOT</el-radio>
-          <!--</el-radio-group>-->
-        </el-form-item>
 
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible4 = false">取 消</el-button>
-        <el-button type="primary" @click="updateHotState(goodsObj)">确 定</el-button>
-      </div>
-    </el-dialog>
+     &lt;!&ndash;更新商品hot状态&ndash;&gt;
+     <el-dialog v-el-drag-dialog title="修改商品HOT状态" :visible.sync="dialogVisible4" width="40%">
 
-    <!--放大图片-->
-    <el-dialog width="40%" :visible.sync="dialogVisible" v-el-drag-dialog>
-      <div style="width: 100%; height:100%">
-        <img width="100%" :src="goodsObj.primary_pic_url">
-      </div>
-    </el-dialog>
+       <el-form>
+         <el-form-item :label-width="formLabelWidth">
+           <el-row>
+             <el-col :span="4" class="good-pic-head">
+               <img :src="goodsObj.primary_pic_url">
+             </el-col>
+             <el-col :span="20">
+               <span class="goods-name">{{goodsObj.name}}</span>
+             </el-col>
+           </el-row>
+         </el-form-item>
+         <el-form-item label="商品目前状态：" :label-width="formLabelWidth">
+           <i v-show="goodsObj.is_hot == 1" class="el-icon-success" style="color: red; font-size: 22px"></i>
+           <i v-show="goodsObj.is_hot == 0" class="el-icon-success" style="color: #cccccc; font-size: 22px"></i>
+         </el-form-item>
+         <el-form-item label="修改HOT状态：" :label-width="formLabelWidth">
+           &lt;!&ndash;<el-radio-group v-model="goodsObj.is_hot" size="mini">&ndash;&gt;
+           <el-radio v-model="goodsObj.is_hot" label="1" border>HOT</el-radio>
+           <el-radio v-model="goodsObj.is_hot" label="0" border>NOT HOT</el-radio>
+           &lt;!&ndash;</el-radio-group>&ndash;&gt;
+         </el-form-item>
+
+       </el-form>
+       <div slot="footer" class="dialog-footer">
+         <el-button @click="dialogVisible4 = false">取 消</el-button>
+         <el-button type="primary" @click="updateHotState(goodsObj)">确 定</el-button>
+       </div>
+     </el-dialog>
+
+     &lt;!&ndash;放大图片&ndash;&gt;
+     <el-dialog width="40%" :visible.sync="dialogVisible" v-el-drag-dialog>
+       <div style="width: 100%; height:100%">
+         <img width="100%" :src="goodsObj.primary_pic_url">
+       </div>
+     </el-dialog>-->
   </div>
 
 
@@ -241,8 +299,12 @@
 <script>
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {
+    recharge, // 会员充值
     enableUser,
     disableUser,
+    mgList, // 获取会员等级列表
+    setUsermg, //设置会员等级
+    setUpmg, //设置用户分红积分
     fetchUsersList,
     searchGoods,
     downUpGoods,
@@ -275,6 +337,18 @@
         dialogVisible3: false,
         dialogVisible4: false,
         iceUserObj: {},
+        chargeObj: {
+          id: '',
+          rechargeType: '',
+          money: '',
+          password: ''
+        },
+        userDegreeList: [],
+        rechargeTypes: [
+          {id: 1, name: "现金余额"},
+          {id: 2, name: "分红积分"},
+          {id: 3, name: "消费积分"},
+        ],
         goodsObj: {
           name: '',
           id: '',
@@ -307,6 +381,7 @@
     },
     mounted() {
       this.getList()
+//      this.getUserDegrees()
     },
     created() {
 //      this.getList()
@@ -338,7 +413,7 @@
         })
       },
       handleSelectionChange(val) {
-        this.multipleSelection = val;
+        this.multipleSelection = val
       },
       showBigImg(row) {
         this.goodsObj = row
@@ -351,11 +426,16 @@
         // this.$route.query.row.xxx 获取参数
 
       },
-      setRank(row) {
+      showUserCharge(row) {
         debugger
-        // 编辑商品跳转
-        this.$router.push({path: '/editUser/index', query: {id: row.id}})
-        // this.$route.query.row.xxx 获取参数
+        this.chargeObj ={
+          id: '',
+          rechargeType: '',
+          money: '',
+          password: ''
+        }
+        this.iceUserObj = row
+        this.dialogVisible3 = true
       },
       // 上架产品
       handleDownUpProduct(row) {
@@ -493,14 +573,44 @@
         if (this.iceUserObj.type == 1) {
           enableUser({id: this.iceUserObj.id}).then(response => {
             console.log('解冻')
+            this.dialogVisible2 = false;
+            this.getList()
           })
         } else {// 冻结
           disableUser({id: this.iceUserObj.id}).then(response => {
             console.log('冻结')
+            this.dialogVisible2 = false;
+            this.getList()
           })
         }
-
-
+      },
+      // 设置会员等级
+      setRank(){
+        setUsermg({id: this.iceUserObj.id, rank: this.iceUserObj.rank}).then(response => {
+          console.log('设置会员等级为:' + this.iceUserObj.rank)
+          this.$message({
+            message: '设置会员等级成功!',
+            type: 'success',
+            showClose: true,
+            duration: 1000
+          });
+//          this.getList()
+        })
+      },
+      // 用户充值
+      rechargeUser(){
+        this.chargeObj.id = this.iceUserObj.id
+        console.log("给用户充值 :" + this.chargeObj)
+        recharge(this.chargeObj).then(response => {
+          this.$message({
+            message: '充值成功!',
+            type: 'success',
+            showClose: true,
+            duration: 1000
+          });
+          this.dialogVisible3 = false;
+          this.getList()
+        })
       }
     }
   }

@@ -15,23 +15,74 @@ export function getRanks() {
   })
 }
 
+// 冻结用户
 export function disableUser(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);       //你要传给后台的参数值 key/value
+
   return request({
     url: 'member/disable',
     method: 'post',
-    data
+    data: params
   })
 }
 
+// 启用用户
 export function enableUser(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);       //你要传给后台的参数值 key/value
   return request({
     url: 'member/enable',
     method: 'post',
-    data
+    data:params
   })
 }
 
+//设置用户等级
+export function setUsermg(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);       //你要传给后台的参数值 key/value
+  return request({
+    url: 'member/setUsermg',
+    method: 'post',
+    data:params
+  })
+}
 
+//设置等级积分
+export function setUpmg(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);
+  params.append('score', data.score);
+  return request({
+    url: 'member/setUpmg',
+    method: 'post',
+    data: params
+  })
+}
+// 获取会员等级列表
+export function mgList() {
+  return request({
+    url: 'member/mgList',
+    method: 'get',
+    params: ''
+  })
+}
+
+// 会员充值
+export function recharge(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);
+  params.append('rechargeType', data.rechargeType);
+  params.append('money', data.money);
+  params.append('password', data.password);
+
+  return request({
+    url: 'member/Recharge',
+    method: 'post',
+    data: params
+  })
+}
 
 export function fetchGoodDetail(query) {
   return request({

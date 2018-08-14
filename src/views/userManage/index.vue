@@ -4,13 +4,13 @@
 
     <el-row :gutter="20">
       <el-col :span="4">
-        <el-button type="primary" icon="el-icon-plus" @click="goAddProduct()">添加商品</el-button>
+        <el-button type="primary" icon="el-icon-setting" @click="goUserDegree">会员等级管理</el-button>
       </el-col>
       <el-col :span="2">
         <el-button type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
       </el-col>
       <el-col :span="4" :offset="20">
-        <el-input placeholder="商品名称搜索" v-model="searchQuery.name" class="input-with-select">
+        <el-input placeholder="名称搜索" v-model="searchQuery.name" class="input-with-select">
           <el-button slot="append" icon="el-icon-search"  @click="search()"></el-button>
         </el-input>
       </el-col>
@@ -55,8 +55,8 @@
         console.log('stop: ' + msg)
         this.refreshLoading = msg
       },
-      goAddProduct() {
-        this.$router.push({ path: '/addProduct/index' })
+      goUserDegree() {
+        this.$router.push({ path: '/userDegree/index' })
       },
       search() {
 

@@ -151,7 +151,18 @@ export const asyncRouterMap = [
     }],
     hidden: true
   },
-
+  {
+    path: '/userDegree',
+    component: Layout,
+    redirect: '/userManage/userDegree',
+    children: [{
+      path: 'index',
+      component: _import('userManage/userDegree'),
+      name: 'userDegree',
+      meta: { title: '编辑会员等级', icon: 'documentation', noCache: true }
+    }],
+    hidden: true
+  },
 
 
   {

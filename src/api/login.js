@@ -11,7 +11,7 @@ export function loginByUsername(username, password) {
   return request({
     // url: '/login/login',
     // url: 'auth/login',
-    url: 'admin/login',
+    url: 'login',
     method: 'post',
     data: params
   })
@@ -31,7 +31,7 @@ export function getUserInfo(userId) {
 export function logout() {
 
   return request({
-    url: 'user/admin/logout',
+    url: 'logout',
     method: 'get',
     params: ''
   })
