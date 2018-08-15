@@ -175,7 +175,8 @@ export const asyncRouterMap = [
       icon: 'news'
     },
     children: [
-      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '新闻资讯', noCache: true }},
+      { path: 'newsList', component: _import('news/newsList'), name: 'newsList', meta: { title: '新闻资讯', noCache: true }},
+      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '假的', noCache: true }},
       { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '官方公告', noCache: true }},
       { path: 'mixchart', component: _import('charts/mixChart'), name: 'mixChart', meta: { title: '视频暂时无', noCache: true }}
     ]
