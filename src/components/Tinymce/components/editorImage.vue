@@ -3,7 +3,7 @@
     <el-button icon='el-icon-upload' size="mini" :style="{background:color,borderColor:color}" @click=" dialogVisible=true" type="primary">上传图片
     </el-button>
     <el-dialog append-to-body :visible.sync="dialogVisible">
-      <el-upload class="editor-slide-upload" action="https://httpbin.org/post" :multiple="true" :file-list="fileList" :show-file-list="true"
+      <el-upload class="editor-slide-upload" action="http://huahai.tunnel.qydev.com/huahai/admin/upload" :multiple="true" :file-list="fileList" :show-file-list="true"
         list-type="picture-card" :on-remove="handleRemove" :on-success="handleSuccess" :before-upload="beforeUpload">
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
@@ -14,7 +14,8 @@
 </template>
 
 <script>
-// import { getToken } from 'api/qiniu'
+// import { getToken } from 'api/qiniu'   //上传图片模拟https://httpbin.org/post
+ import { deleteOssImg } from '@/api/common'   //上传图片模拟https://httpbin.org/post
 
 export default {
   name: 'editorSlideUpload',
@@ -48,11 +49,12 @@ export default {
       this.dialogVisible = false
     },
     handleSuccess(response, file) {
+        debugger
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file
+          this.listObj[objKeyArr[i]].url = response.data
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }
@@ -63,10 +65,17 @@ export default {
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
+            debugger
+          this.handleDeleteOssImg(this.listObj[objKeyArr[i]].url)
           delete this.listObj[objKeyArr[i]]
           return
         }
       }
+    },
+    handleDeleteOssImg(imgUrl){
+      deleteOssImg({imgUrl: imgUrl}).then(response => {
+         console.log("删除oss图片成功")
+      })
     },
     beforeUpload(file) {
       const _self = this

@@ -52,6 +52,16 @@ export default {
     exportZip: 'Export Zip',
     theme: '换肤',
     clipboardDemo: 'Clipboard',
+    news: '咨询',
+    officeNews: '新闻咨询',
+    officeNewsList: '咨询列表',
+    addOfficeNews: '新增咨询',
+    editOfficeNews: '编辑咨询',
+
+    officeNotifice: '官方公告',
+    officeNotificeList: '公告列表',
+    addOfficeNotifice: '新增公告',
+    editOfficeNotifice: '编辑公告',
     i18n: '国际化'
   },
   navbar: {

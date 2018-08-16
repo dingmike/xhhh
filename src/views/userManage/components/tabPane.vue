@@ -420,14 +420,12 @@
         this.dialogVisible = true
       },
       handleEdit(row) {
-        debugger
         // 编辑商品跳转
         this.$router.push({path: '/editProduct/index', query: {id: row.id}})
         // this.$route.query.row.xxx 获取参数
 
       },
       showUserCharge(row) {
-        debugger
         this.chargeObj ={
           id: '',
           rechargeType: '',
@@ -436,120 +434,6 @@
         }
         this.iceUserObj = row
         this.dialogVisible3 = true
-      },
-      // 上架产品
-      handleDownUpProduct(row) {
-        debugger
-        console.log('goods info: ' + row)
-        if (row.is_on_sale === 1) {
-          row.is_on_sale = 0
-        } else {
-          row.is_on_sale = 1
-        }
-        console.log('is on sale : ' + row.is_on_sale)
-        let params = {id: row.id, isOnSale: row.is_on_sale}
-        debugger
-        this.loading = true
-        downUpGoods(params).then(response => {
-          debugger
-          if (response.data.errno === 0 && response.data.data === 1) {
-            this.getList()
-//          this.list = response.data.data.data
-//          this.total = response.data.data.count
-            this.loading = false
-            this.listLoading = false
-            this.dialogVisible2 = false // 关闭dialog
-            this.$message({
-              message: '下架成功！',
-              type: 'success'
-            });
-          } else {
-            this.$message({
-              message: '下架失败！',
-              type: 'warning'
-            });
-          }
-
-        })
-
-      },
-      // 下架产品
-      handleUpProduct(row) {
-        let params = {id: row.id, isOnSale: 1}
-        downUpGoods(params).then(response => {
-          debugger
-
-          if (response.data.errno === 0 && response.data.data === 1) {
-            this.getList()
-//          this.list = response.data.data.data
-//          this.total = response.data.data.count
-            this.loading = false
-            this.listLoading = false
-            this.dialogVisible2 = false // 关闭dialog
-            this.$message({
-              message: '上架成功！',
-              type: 'success'
-            });
-          } else {
-            this.$message({
-              message: '上架失败！',
-              type: 'warning'
-            });
-          }
-
-        })
-      },
-      showDeletDialog(row) {
-        this.goodsObj = row
-        this.dialogVisible3 = true
-      },
-      handleDeleteGoods(row) {
-        let params = {id: row.id, isOnSale: 1}
-        deleteGoods(params).then(response => {
-          debugger
-          this.getList()
-//          this.list = response.data.data.data
-//          this.total = response.data.data.count
-          this.loading = false
-          this.listLoading = false
-          this.dialogVisible3 = false // 关闭dialog
-        })
-      },
-      updateHotGood(row) {
-        this.goodsObj = row
-        console.log('this goods: ' + this.goodsObj.is_hot)
-        this.dialogVisible4 = true;
-      },
-      updateHotState(row) {
-        debugger
-        let params = {id: row.id, isHot: row.is_hot}
-        updateHotStateGoods(params).then(response => {
-          debugger
-          if (response.data.errno === 0 && response.data.data === 1) {
-            this.getList()
-            this.loading = false
-            this.listLoading = false
-            this.dialogVisible4 = false // 关闭dialog
-            this.$message({
-              message: '更新成功！',
-              type: 'success'
-            });
-          } else {
-            this.$message({
-              message: '更新失败！',
-              type: 'warning'
-            });
-          }
-
-        })
-      },
-      handleCurrentChange(val) {
-        this.listQuery.page = val
-        this.getList()
-      },
-      handleSizeChange(val) {
-        this.listQuery.size = val
-        this.getList()
       },
       handleClose() {
         this.dialogVisible = false // 关闭dialog
@@ -567,7 +451,6 @@
         this.iceUserObj = row
       },
       handleIceUser() {
-        debugger;
         // 解冻和冻结用户
         // 解冻
         if (this.iceUserObj.type == 1) {

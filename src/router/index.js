@@ -163,24 +163,107 @@ export const asyncRouterMap = [
     }],
     hidden: true
   },
-
-
   {
     path: '/news',
     component: Layout,
-    redirect: 'noredirect',
+    redirect: '/news/officeNews/office-news-list',
     name: 'news',
     meta: {
-      title: '咨询',
-      icon: 'news'
+      title: 'news',
+      icon: 'example'
     },
     children: [
-      { path: 'newsList', component: _import('news/newsList'), name: 'newsList', meta: { title: '新闻资讯', noCache: true }},
-      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '假的', noCache: true }},
-      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '官方公告', noCache: true }},
-      { path: 'mixchart', component: _import('charts/mixChart'), name: 'mixChart', meta: { title: '视频暂时无', noCache: true }}
+      {
+        path: '/news/office-news',
+        component: _import('news/officeNews/index'),
+        redirect: '/news/officeNews/office-news-list',
+        name: 'officeNews',
+        meta: {
+          title: 'officeNews',
+          icon: 'table'
+        },
+        children: [
+          { path: 'office-news-list', component: _import('news/officeNews/officeNewsList'), name: 'officeNewsList', meta: { title: 'officeNewsList', noCache: true }},
+          { path: 'add-office-news', component: _import('news/officeNews/addOfficeNews'), name: 'addOfficeNews', meta: { title: 'addOfficeNews', noCache: true }},
+          { path: 'edit-office-news', component: _import('news/officeNews/editOfficeNews'), name: 'editOfficeNews', meta: { title: 'editOfficeNews', noCache: true}, hidden: true }
+        ]
+      },
+      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
+      {
+        path: '/news/office-notifice',
+        component: _import('news/officeNotifice/index'),
+        redirect: '/news/officeNotifice/office-notifice-list',
+        name: 'officeNotifice',
+        meta: {
+          title: 'officeNotifice',
+          icon: 'table'
+        },
+        children: [
+          { path: 'office-notifice-list', component: _import('news/officeNotifice/officeNotificeList'), name: 'officeNotificeList', meta: { title: 'officeNotificeList', noCache: true }},
+          { path: 'add-office-notifice', component: _import('news/officeNotifice/addOfficeNotifice'), name: 'addOfficeNotifice', meta: { title: 'addOfficeNotifice', noCache: true }},
+          { path: 'edit-office-notifice', component: _import('news/officeNotifice/editOfficeNotifice'), name: 'editOfficeNotifice', meta: { title: 'editOfficeNotifice', noCache: true}, hidden: true }
+        ]
+      },
     ]
   },
+
+/*  {
+    path: '/news',
+    component: Layout,
+    // redirect: 'noredirect',
+    redirect: '/news/officeNews/index',
+    name: 'news',
+    meta: {
+      title: '新闻咨询',
+      icon: 'news',
+      roles: ['admin','editor']
+    },
+    hidden: false,
+ /!*   children: [
+      { path: 'newsList', component: _import('news/newsList'), name: 'newsList', meta: { title: '新闻资讯', noCache: true }},
+      { path: 'addNews', component: _import('news/addNews'), name: 'addNews', meta: { title: '新增咨询', noCache: true }},
+      { path: 'editNews', component: _import('news/editNews'), name: 'editNews', meta: { title: '修改咨询', noCache: true }}
+    ],*!/
+
+    children: [
+      {
+        path: '/news/officeNews',
+        component: _import('news/officeNews/index'),
+        redirect: '/news/officeNews/index',
+        name: 'officeNews',
+        meta: {
+          title: '新闻咨询',
+          icon: 'table',
+          roles: ['admin','editor']
+        },
+        children: [
+          { path: 'index', component: _import('news/officeNews/index'), name: 'index', meta: { title: '新闻资讯', noCache: true ,roles: ['admin','editor']}},
+          { path: 'addNews', component: _import('news/officeNews/addNews'), name: 'addNews', meta: { title: '新增咨询', noCache: true ,roles: ['admin','editor']}},
+          { path: 'editNews', component: _import('news/officeNews/editNews'), name: 'editNews', meta: { title: '修改咨询', noCache: true ,roles: ['admin','editor']},hidden: true}
+          /!*{ path: 'dynamic-table', component: _import('example/table/dynamicTable/index'), name: 'dynamicTable', meta: { title: 'dynamicTable' }},
+          { path: 'drag-table', component: _import('example/table/dragTable'), name: 'dragTable', meta: { title: 'dragTable' }},
+          { path: 'inline-edit-table', component: _import('example/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'inlineEditTable' }},
+          { path: 'tree-table', component: _import('example/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
+          { path: 'custom-tree-table', component: _import('example/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
+          { path: 'complex-table', component: _import('example/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}*!/
+        ]
+      },
+      { path: '/news/officeNotifice',
+
+        component: _import('news/officeNotifice/index'),
+        redirect: '/news/officeNotifice/index',
+        name: 'officeNotifice',
+        meta: { title: '官方公告',icon: 'tab',roles: ['admin','editor']},
+        children: [
+          { path: 'index', component: _import('news/officeNotifice/index'), name: 'index', meta: { title: '官方公告', noCache: true ,roles: ['admin','editor']}},
+          { path: 'addNews', component: _import('news/officeNotifice/addNews'), name: 'addNews', meta: { title: '新增公告', noCache: true ,roles: ['admin','editor']}},
+          { path: 'editNews', component: _import('news/officeNotifice/editNews'), name: 'editNews', meta: { title: '修改公告', noCache: true ,roles: ['admin','editor']}}
+          ]
+      }
+    ]
+  },*/
+
+
   {
     path: '/classify',
     component: Layout,
@@ -207,7 +290,6 @@ export const asyncRouterMap = [
     children: [
       { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '公司简介', noCache: true }},
       { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '地址', noCache: true }},
-      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '联系方式', noCache: true }}
     ]
   },
 
