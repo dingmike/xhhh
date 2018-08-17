@@ -52,6 +52,26 @@ export default {
     exportZip: 'Export Zip',
     theme: 'Theme',
     clipboardDemo: 'Clipboard',
+
+    news: 'news',
+    officeNews: 'office news',
+    officeNewsList: 'office News List',
+    addOfficeNews: 'add Office News',
+    editOfficeNews: 'edit Office News',
+
+    officeNotifice: 'office Notifice',
+    officeNotificeList: 'office Notifice List',
+    addOfficeNotifice: 'add Office Notifice',
+    editOfficeNotifice: 'edit Office Notifice',
+
+    sceneryManage: 'scenery Manage',
+    parks: 'parks',
+    parksList: 'parks manage',
+
+
+    scenery: 'scenery',
+    sceneryList: 'scenery manage',
+
     i18n: 'I18n'
   },
   navbar: {

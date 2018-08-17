@@ -207,61 +207,52 @@ export const asyncRouterMap = [
     ]
   },
 
-/*  {
-    path: '/news',
+  //园区景区
+  {
+    path: '/scenery-manage',
     component: Layout,
-    // redirect: 'noredirect',
-    redirect: '/news/officeNews/index',
-    name: 'news',
+    redirect: '/scenery-manage/parks/parks-list',
+    name: 'sceneryManage',
     meta: {
-      title: '新闻咨询',
-      icon: 'news',
-      roles: ['admin','editor']
+      title: 'sceneryManage',
+      icon: 'example'
     },
-    hidden: false,
- /!*   children: [
-      { path: 'newsList', component: _import('news/newsList'), name: 'newsList', meta: { title: '新闻资讯', noCache: true }},
-      { path: 'addNews', component: _import('news/addNews'), name: 'addNews', meta: { title: '新增咨询', noCache: true }},
-      { path: 'editNews', component: _import('news/editNews'), name: 'editNews', meta: { title: '修改咨询', noCache: true }}
-    ],*!/
-
     children: [
       {
-        path: '/news/officeNews',
-        component: _import('news/officeNews/index'),
-        redirect: '/news/officeNews/index',
-        name: 'officeNews',
+        path: '/scenery-manage/parks',
+        component: _import('sceneryManage/parks/index'),
+        redirect: '/scenery-manage/parks/parks-list',
+        name: 'parks',
         meta: {
-          title: '新闻咨询',
-          icon: 'table',
-          roles: ['admin','editor']
+          title: 'parks',
+          icon: 'table'
         },
         children: [
-          { path: 'index', component: _import('news/officeNews/index'), name: 'index', meta: { title: '新闻资讯', noCache: true ,roles: ['admin','editor']}},
-          { path: 'addNews', component: _import('news/officeNews/addNews'), name: 'addNews', meta: { title: '新增咨询', noCache: true ,roles: ['admin','editor']}},
-          { path: 'editNews', component: _import('news/officeNews/editNews'), name: 'editNews', meta: { title: '修改咨询', noCache: true ,roles: ['admin','editor']},hidden: true}
-          /!*{ path: 'dynamic-table', component: _import('example/table/dynamicTable/index'), name: 'dynamicTable', meta: { title: 'dynamicTable' }},
-          { path: 'drag-table', component: _import('example/table/dragTable'), name: 'dragTable', meta: { title: 'dragTable' }},
-          { path: 'inline-edit-table', component: _import('example/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'inlineEditTable' }},
-          { path: 'tree-table', component: _import('example/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
-          { path: 'custom-tree-table', component: _import('example/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
-          { path: 'complex-table', component: _import('example/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}*!/
+          { path: 'office-news-list', component: _import('sceneryManage/parks/parksList'), name: 'parksList', meta: { title: 'parksList', noCache: true }},
+          // { path: 'add-office-news', component: _import('news/officeNews/addOfficeNews'), name: 'addOfficeNews', meta: { title: 'addOfficeNews', noCache: true }},
+          // { path: 'edit-office-news', component: _import('news/officeNews/editOfficeNews'), name: 'editOfficeNews', meta: { title: 'editOfficeNews', noCache: true}, hidden: true }
         ]
       },
-      { path: '/news/officeNotifice',
-
-        component: _import('news/officeNotifice/index'),
-        redirect: '/news/officeNotifice/index',
-        name: 'officeNotifice',
-        meta: { title: '官方公告',icon: 'tab',roles: ['admin','editor']},
+      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
+      {
+        path: '/scenery-manage/scenery',
+        component: _import('sceneryManage/scenery/index'),
+        redirect: '/scenery-manage/scenery/scenery-list',
+        name: 'scenery',
+        meta: {
+          title: 'scenery',
+          icon: 'table'
+        },
         children: [
-          { path: 'index', component: _import('news/officeNotifice/index'), name: 'index', meta: { title: '官方公告', noCache: true ,roles: ['admin','editor']}},
-          { path: 'addNews', component: _import('news/officeNotifice/addNews'), name: 'addNews', meta: { title: '新增公告', noCache: true ,roles: ['admin','editor']}},
-          { path: 'editNews', component: _import('news/officeNotifice/editNews'), name: 'editNews', meta: { title: '修改公告', noCache: true ,roles: ['admin','editor']}}
-          ]
+          { path: 'scenery-list', component: _import('sceneryManage/scenery/sceneryList'), name: 'sceneryList', meta: { title: 'sceneryList', noCache: true }},
+          { path: 'add-scenery', component: _import('sceneryManage/scenery/addScenery'), name: 'addScenery', meta: { title: 'addScenery', noCache: true }},
+          { path: 'edit-scenery', component: _import('sceneryManage/scenery/editScenery'), name: 'eidtScenery', meta: { title: 'eidtScenery', noCache: true}, hidden: true }
+        ]
       }
     ]
-  },*/
+  },
+
+
 
 
   {

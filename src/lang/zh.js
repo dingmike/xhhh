@@ -62,6 +62,17 @@ export default {
     officeNotificeList: '公告列表',
     addOfficeNotifice: '新增公告',
     editOfficeNotifice: '编辑公告',
+
+    sceneryManage: '园区管理',
+    parks: '园区管理',
+    parksList: '园区管理',
+
+
+    scenery: '景点管理',
+    sceneryList: '景点列表',
+    addScenery: '新增景点',
+    eidtScenery: '编辑景点',
+
     i18n: '国际化'
   },
   navbar: {
