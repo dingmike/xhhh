@@ -34,7 +34,12 @@
           <span>{{scope.row.categoryName}}</span>
         </template>
       </el-table-column>
-       <el-table-column width="200px" align="center" label="是否众筹项目">
+       <el-table-column width="200px" align="center" label="开放时间">
+         <template slot-scope="scope">
+           <span>{{scope.row.openTime}}</span>
+         </template>
+       </el-table-column>
+      <el-table-column width="200px" align="center" label="是否众筹项目">
          <template slot-scope="scope">
            <span>{{scope.row.inOut==1?'是':'否'}}</span>
          </template>
@@ -285,7 +290,7 @@
       },
       // 新增内容
       handleCreate() {
-        this.$router.push({path: '/scenery-manage/scenery/add-senery'})
+        this.$router.push({path: '/scenery-manage/scenery/add-scenery'})
 //        this.$router.push({path: '/news/addNews', query: {id: row.id}})
       },
       showSureDelete(row){

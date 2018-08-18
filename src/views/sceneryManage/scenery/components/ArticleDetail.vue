@@ -3,20 +3,116 @@
     <div class="filter-container">
       <el-button class="filter-item" type="warning" @click="goBack">返回</el-button>
     </div>
-    <el-form class="form-container" :model="newContent" :rules="rules" ref="postForm" label-width="80px">
+    <el-form class="form-container" :model="sceneryContent" :rules="rules" ref="sceneryContent" label-width="80px">
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="新闻标题" prop="title">
-              <el-input v-model="newContent.title"></el-input>
+            <el-form-item label="景点名称" prop="title">
+              <el-input v-model="sceneryContent.title"></el-input>
             </el-form-item>
 
           </el-col>
         </el-row>
         <el-row>
-        <el-form-item label="新闻内容" prop="content">
+          <el-col :span="12">
+          <el-form-item label="开放时间" prop="openTime">
+            <el-input v-model="sceneryContent.openTime"></el-input>
+          </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item  label="选择园区" prop="pId">
+              <el-select size="small" @change="changeSights" v-model="sceneryContent.pId" filterable placeholder="选择园区">
+                <el-option
+                  v-for="item in parksOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item  label="选择景区" prop="sightCategory">
+              <el-select size="small" v-model="sceneryContent.sightCategory" filterable placeholder="选择景区">
+                <el-option
+                  v-for="item in sightOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item  label="游玩须知" prop="notes">
+            <el-input
+              type="textarea"
+              :rows="6"
+              placeholder="请输入须知"
+              v-model="sceneryContent.notes">
+            </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item  label="是否众筹" prop="inOut">
+              <el-switch
+                v-model="sceneryContent.inOut"
+                active-text="是众筹项目"
+                inactive-text="不是众筹项目"
+                active-value="1"
+                inactive-value="0">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="sceneryContent.inOut==1">
+          <el-col :span="12">
+            <el-form-item  label="众筹资金" prop="requiredMoney">
+              <el-input-number v-model="sceneryContent.requiredMoney" controls-position="right"  :precision="2" :step="0.1" :max="1000000000"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item  label="营业状态" prop="requiredMoney">
+              <el-select v-model="sceneryContent.status" placeholder="请选择">
+                <el-option
+                  v-for="item in statusOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <span style="color: red;">*状态为已营业的项目所在用户会享受分红。</span>
+          </el-col>
+        </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item  label="景点主图" prop="masterImg">
+          <!--上传图片多图-->
+          <div style="margin-bottom: 6px;">
+            <Upload v-model="sceneryContent.masterImg"></Upload>
+          </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+        <el-row>
+        <el-form-item label="景点介绍" prop="spotDetails">
         <div class="editor-container">
-          <tinymce :height=400 ref="editor" v-model="newContent.content"></tinymce>
+          <tinymce :height=400 ref="editor" v-model="sceneryContent.spotDetails"></tinymce>
         </div>
         </el-form-item>
         </el-row>
@@ -33,7 +129,8 @@
 
 <script>
   import Tinymce from '@/components/Tinymce'
-//  import Upload from '@/components/Upload/mutilImage'
+  import VueCropper from 'vue-cropper'
+  import Upload from '@/components/ImgCropper/mutilImage'
 //  import UploadSingle from '@/components/Upload/oneImage'
   import MDinput from '@/components/MDinput'
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
@@ -43,6 +140,10 @@
     import {saveAndUpdateNews,getNewsById} from '@/api/news'
   import {fetchGoodDetail} from '@/api/goods'
   import {userSearch} from '@/api/remoteSearch'
+  import {
+    parkList,
+    selectParkScenery
+  } from '@/api/scenery'
   import {fetchGoodsList, searchGoods, downUpGoods, getSpecifications, getSpecValue} from '@/api/goods'
 
 
@@ -51,6 +152,19 @@
     "title": "",
     "content": "",
     "type": 1 // 咨询
+  }
+  const sceneryContent={
+    id: "",
+    title: "",
+    openTime:"",
+    sightCategory: "",
+    spotDetails: "",
+    masterImg: "",
+    inOut: "",
+    requiredMoney: "",
+    status: "",
+    pId: "",
+    notes: "",
   }
   const defaultForm = {
     status: 'draft',
@@ -86,7 +200,7 @@
 
   export default {
     name: 'articleDetail',
-    components: {Tinymce, MDinput, Multiselect, Sticky},
+    components: {Tinymce, MDinput, Multiselect,Upload, Sticky, VueCropper},
     props: {
       isEdit: {
         type: Boolean,
@@ -98,7 +212,7 @@
       }
     },
     mounted() {
-
+      this.getALLParks()
     },
     data() {
       const validateRequire = (rule, value, callback) => {
@@ -128,6 +242,23 @@
         }
       }
       return {
+        listQuery: {
+          page: 1,
+          size: 50,
+          level: 1 // 1园区
+        },
+        listQuery2: {
+          page: 1,
+          size: 50,
+          pId:''
+        },
+        parksOptions: [],
+        sightOptions: [],
+        statusOptions:[
+          {id:1,name:"已营业"},
+          {id:0,name:"未营业"}
+        ],
+        sceneryContent: Object.assign({}, sceneryContent),
         newContent: Object.assign({}, defaultNews),
         newId: '',
         postForm: Object.assign({}, defaultForm),
@@ -140,12 +271,29 @@
         disableValue: false,
         rules: {
           title: [
-            {required: true, message: '请输入资讯标题', trigger: 'blur'},
-            {min: 3, max: 100, message: '长度在 3 到 100 个字符', trigger: 'blur'}
+            {required: true, message: '请输入景点名称', trigger: 'blur'},
+            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
-          content: [
-            {required: true, message: '请输入资讯内容', trigger: 'blur'},
-            {min: 3, max: 5000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
+          openTime: [
+            {required: true, message: '请输入开放时间', trigger: 'change'},
+            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          ],
+          pId: [
+            {required: true, message: '请选择园区', trigger: 'change'}
+          ],
+          sightCategory: [
+            {required: true, message: '请选择景区', trigger: 'change'}
+          ],
+          status: [
+            {required: true, message: '请选择营业状态', trigger: 'change'}
+          ],
+          spotDetail: [
+            {required: true, message: '请输入景点介绍', trigger: 'blur'},
+            {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
+          ],
+          notes: [
+            {required: true, message: '请输入游玩须知', trigger: 'blur'},
+            {min: 3, max: 2000, message: '长度在 3 到 2000 个字符', trigger: 'blur'}
           ]
         }
       }
@@ -209,6 +357,27 @@
       }
     },
     methods: {
+      //获取所有园区
+      getALLParks(){
+        parkList(this.listQuery).then(response => {
+          this.parksOptions = response.data.data.content
+          this.loading = false
+          this.listLoading = false
+        })
+      },
+      // 获取景区下的景点
+      getSightByPark(pId) {
+        this.loading = true
+        this.listQuery2.pId = pId
+        selectParkScenery(this.listQuery2).then(response => {
+          this.sightOptions = response.data.data
+          this.loading = false
+          this.listLoading = false
+        })
+      },
+      changeSights(pId){
+        this.getSightByPark(pId)
+      },
       submitNews(){
         saveAndUpdateNews(this.newContent).then(response => {
           this.$notify({
