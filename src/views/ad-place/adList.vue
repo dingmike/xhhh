@@ -8,10 +8,9 @@
           </el-button>
         </el-col>
         <el-col :span="2">
-          <el-button class="filter-item" type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
+          <el-button type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
         </el-col>
       </el-row>
-
       <!--<el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download"
                  @click="handleDownload">{{$t('table.export')}}
       </el-button>
@@ -24,46 +23,22 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="景点名称" width="120">
+      <el-table-column align="center" label="广告ID" width="100">
         <template slot-scope="scope">
-          <span>{{scope.row.title}}</span>
+          <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" align="center" label="所属景区">
+      <el-table-column width="500" align="center" label="标题">
         <template slot-scope="scope">
-          <span>{{scope.row.categoryName}}</span>
+          <span>{{scope.row.pName}}</span>
         </template>
       </el-table-column>
-       <el-table-column width="200px" align="center" label="开放时间">
-         <template slot-scope="scope">
-           <span>{{scope.row.openTime}}</span>
-         </template>
-       </el-table-column>
-      <el-table-column width="200px" align="center" label="是否众筹项目">
-         <template slot-scope="scope">
-           <span>{{scope.row.inOut==1?'是':'否'}}</span>
-         </template>
-       </el-table-column>
-      <el-table-column width="200px" align="center" label="众筹所需金额">
+      <el-table-column width="150px" align="center" label="广告类别">
         <template slot-scope="scope">
-          <span>{{scope.row.requiredMoney}}</span>
+          <span>{{scope.row.typeName}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="状态">
-        <template slot-scope="scope">
-          <span>{{scope.row.status==1?'已营业':'待营业'}}</span>
-        </template>
-      </el-table-column>
-      <!--<el-table-column width="200px" align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-        </template>
-      </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="更新时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-        </template>
-      </el-table-column>-->
+
       <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -130,6 +105,7 @@
 
 
 
+
     <!--删除弹窗 start-->
     <el-dialog v-el-drag-dialog
                title="删除数据"
@@ -153,10 +129,9 @@
 </template>
 
 <script>
-  import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
+  import {adList} from '@/api/ad'
   import {deleteNews, getNewsList} from '@/api/news'
-  import { getSightSpotList, deleteSpot} from '@/api/scenery'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
 
@@ -176,8 +151,7 @@
   export default {
     name: 'complexTable',
     directives: {
-      waves,
-      elDragDialog
+      waves
     },
     data() {
       return {
@@ -187,11 +161,21 @@
         total: null,
         listLoading: true,
         listQuery: {
+          type: 1,// 新闻咨询
           page: 1,
           size: 10,
+//          isOnSale: this.type  // 全部:''，在架：1，下架：0
         },
         visibleDelete: false,
-        dataObj:{},
+        dataObj: {},
+        /* listQuery: {
+         page: 1,
+         limit: 20,
+         importance: undefined,
+         title: undefined,
+         type: undefined,
+         sort: '+id'
+         },*/
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
         sortOptions: [{label: 'ID Ascending', key: '+id'}, {label: 'ID Descending', key: '-id'}],
@@ -239,17 +223,13 @@
       this.getList()
     },
     methods: {
-      handleClose() {
-        this.dialogFormVisible = false // 关闭dialog
-        this.dialogPvVisible = false // 关闭dialog
-      },
       reloads(){
         this.refreshLoading = true
         this.getList()
       },
       getList() {
         this.listLoading = true
-        getSightSpotList(this.listQuery).then(response => {
+        adList(this.listQuery).then(response => {
           this.list = response.data.data.content
           this.total = response.data.data.totalElements
           this.listLoading = false
@@ -267,6 +247,7 @@
         this.getList()
       },
       handleCurrentChange(val) {
+        debugger
         this.listQuery.page = val
         this.getList()
       },
@@ -290,14 +271,15 @@
       },
       // 新增内容
       handleCreate() {
-        this.$router.push({path: '/scenery-manage/scenery/add-scenery'})
+          debugger
+        this.$router.push({path: '/ad-place/add-ad'})
 //        this.$router.push({path: '/news/addNews', query: {id: row.id}})
       },
       showSureDelete(row){
         this.dataObj = row
         this.visibleDelete= true
       },
-      handleDeleteNews(row){
+      handleDeleteNews(){
         deleteNews({id: this.dataObj.id}).then(response => {
           this.$notify({
             title: '提示',
@@ -312,7 +294,14 @@
       // 去修改内容
       handleUpdate(row) {
         console.log("修改内容ID:" + row.id)
-        this.$router.push({path: '/scenery-manage/scenery/edit-scenery', query: {id: row.id}})
+        this.$router.push({path: '/ad-place/edit-ad', query: {id: row.id}})
+        /* this.temp = Object.assign({}, row) // copy obj
+         this.temp.timestamp = new Date(this.temp.timestamp)
+         this.dialogStatus = 'update'
+         this.dialogFormVisible = true
+         this.$nextTick(() => {
+         this.$refs['dataForm'].clearValidate()
+         })*/
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -394,6 +383,9 @@
             return v[j]
           }
         }))
+      },
+      handleClose(){
+
       }
     }
   }

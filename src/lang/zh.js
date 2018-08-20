@@ -73,6 +73,10 @@ export default {
     addScenery: '新增景点',
     eidtScenery: '编辑景点',
 
+    adPlace: '广告',
+    adList: '广告列表',
+    editAd: '编辑广告',
+    addAd: '添加广告',
     i18n: '国际化'
   },
   navbar: {

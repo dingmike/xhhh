@@ -72,6 +72,12 @@ export default {
     scenery: 'scenery',
     sceneryList: 'scenery manage',
 
+
+    adPlace: 'AD',
+
+    adList: '广告列表',
+    editAd: '编辑广告',
+    addAd: '添加广告',
     i18n: 'I18n'
   },
   navbar: {

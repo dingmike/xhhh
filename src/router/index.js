@@ -109,14 +109,20 @@ export const asyncRouterMap = [
     }]
   },
   {
-    path: '/adPlace',
+    path: '/ad-place',
     component: Layout,
-    children: [{
-      path: 'index',
-      component: _import('adPlace/index'),
-      name: 'adPlace',
-      meta: { title: '广告位', icon: 'ad', noCache: true, roles: ['admin','editor'] }
-    }]
+    redirect: '/ad-place/ad-list',
+    name: 'adPlace',
+    meta: {
+      title: 'adPlace',
+      icon: 'ad'
+    },
+    children: [
+      { path: 'ad-list', component: _import('ad-place/adList'), name: 'adList', meta: { title: 'adList', noCache: true }},
+      { path: 'add-ad', component: _import('ad-place/addAd'), name: 'addAd', meta: { title: 'addAd', noCache: true }},
+      { path: 'edit-ad', component: _import('ad-place/editAd'), name: 'editAd', meta: { title: 'editAd', noCache: true}, hidden: true }
+    ]
+      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
   },
   {
     path: '/enterPark',
@@ -125,7 +131,7 @@ export const asyncRouterMap = [
       path: 'index',
       component: _import('enterPark/index'),
       name: 'enterPark',
-      meta: { title: '入园参考', icon: 'park', noCache: true, roles: ['admin','editor'] }
+      meta: { title: '入园参考', icon: 'ad', noCache: true, roles: ['admin','editor'] }
     }]
   },
 

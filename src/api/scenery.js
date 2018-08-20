@@ -60,7 +60,15 @@ export function deletePark(data) {
 // 添加/更新景点
 export function saveSightSpot(data) {
   let params = new URLSearchParams();
-  params.append('id', data.id);   // 主键Id
+  params.append('title', data.title);
+  params.append('openTime', data.openTime);
+  params.append('sightCategory', data.sightCategory);
+  params.append('spotDetails', data.spotDetails);
+  params.append('masterImg', data.masterImg);
+  params.append('inOut', data.inOut);
+  params.append('requiredMoney', data.requiredMoney==undefined?null:data.requiredMoney);
+  params.append('status', data.status);
+  params.append('notes', data.notes);
   return request({
     url: 'sightspot/save',
     method: 'post',

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import ArticleDetail from './components/AdDetail'
+  import ArticleDetail from './components/ArticleDetail'
 
   export default {
     name: 'createForm',

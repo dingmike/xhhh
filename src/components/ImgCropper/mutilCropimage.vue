@@ -1,101 +1,107 @@
 <template>
   <div class="upload-container">
- <!--    <el-upload class="image-uploader"
-       :data="dataObj"
-       action="https://httpbin.org/post"
-       :multiple="true"
-       :limit="10"
-       :file-list="picFiles"
-       :on-success="handleImageScucess"
-       list-type="picture-card"
-       :on-preview="handlePictureCardPreview"
-       :on-remove="handleRemove">
-       <i class="el-icon-plus"></i>
-       <div slot="tip" class="el-upload__tip">添加图片(0/10)</div>
-     </el-upload>
-     <el-dialog :visible.sync="dialogVisible">
-       <img width="100%" :src="dialogImageUrl" alt="">
-     </el-dialog>
-    <div class="model" v-show="model" @click="model = false">
-      <div class="model-show">
-        <img :src="modelSrc" alt="">
-      </div>
-    </div>-->
+    <uploadImg class="image-uploader"
+               :data="dataObj"
+               ref="upload"
+               action="https://httpbin.org/post"
+               :multiple="true"
+               :limit="9"
+               :on-change="changeFile"
+               :file-list="picFiles"
+               :before-upload="beforeUpload"
+               :auto-upload="false"
+               :on-success="handleImageScucess"
+               list-type="picture-card"
+               :on-preview="handlePictureCardPreview"
+               :on-remove="handleRemove">
+      <i class="el-icon-plus"></i>
+      <div slot="tip" class="el-upload__tip">添加图片(最多9张)</div>
 
-    <UploadList
-    :disabled="imgList.uploadDisabled"
-    :listType="imgList.listType"
-    :files="imgList.uploadFiles"
-    :on-remove="handleRemove"
-    :handlePreview="handlePictureCardPreview">
-    </UploadList>
+    </uploadImg>
+    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>
 
-    <el-dialog :visible.sync="dialogVisible">
+    <!--new add-->
+    <el-dialog width="50%" v-el-drag-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
-    <el-dialog :visible.sync="model">
+    <el-dialog width="50%" v-el-drag-dialog :visible.sync="model">
       <img width="100%" :src="modelSrc" alt="">
     </el-dialog>
 
-    <div class="test test1">
-      <vueCropper
-        ref="cropper"
-        :img="option.img"
-        :outputSize="option.size"
-        :outputType="option.outputType"
-        :info="true"
-        :full="option.full"
-        :canMove="option.canMove"
-        :canMoveBox="option.canMoveBox"
-        :fixedBox="option.fixedBox"
-        :original="option.original"
-        :autoCrop="option.autoCrop"
-        :autoCropWidth="option.autoCropWidth"
-        :autoCropHeight="option.autoCropHeight"
-        :centerBox="option.centerBox"
-        :high="option.high"
-        :infoTrue="option.infoTrue"
-        @realTime="realTime"
-        @imgLoad="imgLoad"
-      ></vueCropper>
-    </div>
-    <div class="test-button">
-      <button @click="changeImg" class="btn">changeImg</button>
-      <label class="btn" for="uploads">upload</label>
-      <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">
-      <button @click="startCrop" v-if="!crap" class="btn">start</button>
-      <button @click="stopCrop" v-else class="btn">stop</button>
-      <button @click="clearCrop" class="btn">clear</button>
-      <button @click="refreshCrop" class="btn">refresh</button>
-      <button @click="changeScale(1)" class="btn">+</button>
-      <button @click="changeScale(-1)" class="btn">-</button>
-      <button @click="rotateLeft" class="btn">rotateLeft</button>
-      <button @click="rotateRight" class="btn">rotateRight</button>
-      <button @click="finish('base64')" class="btn">preview(base64)</button>
-      <button @click="finish('blob')" class="btn">preview(blob)</button>
-      <a @click="down('base64')" class="btn">download(base64)</a>
-      <a @click="down('blob')" class="btn">download(blob)</a>
-    </div>
-    <div class="show-preview" :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
-      <div :style="previews.div">
-        <img :src="previews.url" :style="previews.img">
+
+    <el-dialog width="60%" v-el-drag-dialog :visible.sync="dialogCorpperBox">
+      <div class="test test1">
+        <vueCropper
+          ref="cropper"
+          :img="option.img"
+          :outputSize="option.size"
+          :outputType="option.outputType"
+          :info="true"
+          :full="option.full"
+          :canMove="option.canMove"
+          :canMoveBox="option.canMoveBox"
+          :fixedBox="option.fixedBox"
+          :original="option.original"
+          :autoCrop="option.autoCrop"
+          :autoCropWidth="option.autoCropWidth"
+          :autoCropHeight="option.autoCropHeight"
+          :centerBox="option.centerBox"
+          :high="option.high"
+          :infoTrue="option.infoTrue"
+          @realTime="realTime"
+          @imgLoad="imgLoad"
+        ></vueCropper>
       </div>
-    </div>
+      <div class="test-button">
+        <!--<button @click="changeImg" class="btn">changeImg</button>-->
+        <label class="btn" for="uploads">选择一张图片</label>
+        <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
+               accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">
+        <!--<button @click="startCrop" v-if="!crap" class="btn">start</button>-->
+        <!--<button @click="stopCrop" v-else class="btn">stop</button>-->
+        <!--<button @click="clearCrop" class="btn">clear</button>-->
+        <!--<button @click="refreshCrop" class="btn">refresh</button>-->
+        <button @click="changeScale(1)" class="btn">放大</button>
+        <button @click="changeScale(-1)" class="btn">缩小</button>
+        <button @click="rotateLeft" class="btn">左旋转</button>
+        <button @click="rotateRight" class="btn">右旋转</button>
+        <button @click="finish('base64')" class="btn">预览</button>
+        <!--<button @click="finish('blob')" class="btn">preview(blob)</button>-->
+        <a @click="down('base64')" class="btn">下载</a>
+        <!--<a @click="down('blob')" class="btn">download(blob)</a>-->
+        <el-row style="margin-top: 20px">
+          <el-col>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="startInitImg('base64')">裁剪图片</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="warning" @click="dialogCorpperBox=false">确 定</el-button>
+          </el-col>
+        </el-row>
+
+      </div>
+      <!-- <div class="show-preview"
+            :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
+         <div :style="previews.div">
+           <img :src="previews.url" :style="previews.img">
+         </div>
+       </div>-->
+
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
+  import uploadImg from "./compontants/index"
   import UploadList from './upload-list';
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import VueCropper from 'vue-cropper'
-  import { getToken } from '@/api/qiniu'
+  import {getToken} from '@/api/qiniu'
   import ElProgress from 'element-ui/packages/progress'
   import Migrating from 'element-ui/src/mixins/migrating'
 
   export default {
     name: 'mutilImageUpload',
-    directives: { elDragDialog},
-    components :{VueCropper, UploadList,   ElProgress,},
+    directives: {elDragDialog},
+    components: {VueCropper, UploadList, ElProgress, uploadImg},
     props: {
       fileLists: {
         type: Array,
@@ -114,11 +120,12 @@
         showCorpper: true,
         dialogImageUrl: '',
         dialogVisible: false,
+        dialogCorpperBox: false,
         tempUrl: '',
         picFiles: this.fileLists,
-        dataObj: { token: '', key: '' },
-        imgList:{
-        uploadDisabled: false,
+        dataObj: {token: '', key: ''},
+        imgList: {
+          uploadDisabled: false,
           listType: 'picture-card',
           uploadFiles: [{
             url: 'http://ofyaji162.bkt.clouddn.com/touxiang.jpg'
@@ -170,7 +177,7 @@
           // 只有自动截图开启 宽度高度才生效
           autoCropWidth: 500,
           autoCropHeight: 300,
-          centerBox: false,
+          centerBox: true,
           high: true
         },
         dialogImageUrl: '',
@@ -194,15 +201,10 @@
       }
     },
     mounted() {
-      console.log('picFiles:')
-      console.log(this.picFiles)
-      this.changeImg()
-      // hljs.configure({useBR: true})
       var list = [].slice.call(document.querySelectorAll('pre code'))
       list.forEach((val, index) => {
         hljs.highlightBlock(val)
       })
-      // console.log(this.$refs.cropper)
     },
     methods: {
       rmImage() {
@@ -214,21 +216,41 @@
       handleImageScucess(file) {
         this.emitInput(file.files.file)
       },
-      beforeUpload() {
+
+      changeFile(file, fileList){
+          debugger
+        var num = 1
+        file = file.raw
+        var reader = new FileReader()
+        reader.onload = (e) => {
+          let data
+          if (typeof e.target.result === 'object') {
+            // 把Array Buffer转化为blob 如果是base64不需要
+            data = window.URL.createObjectURL(new Blob([e.target.result]))
+          } else {
+            data = e.target.result
+          }
+          if (num === 1) {
+            this.option.img = data
+            this.dialogCorpperBox = true
+          } else if (num === 2) {
+            this.example2.img = data
+          }
+        }
+        // 转化为base64
+        reader.readAsDataURL(file)
+        // 转化为blob
+//        reader.readAsArrayBuffer(file)
+      },
+      beforeUpload(file) {
         const _self = this
-        return new Promise((resolve, reject) => {
-          getToken().then(response => {
-            const key = response.data.qiniu_key
-            const token = response.data.qiniu_token
-            _self._data.dataObj.token = token
-            _self._data.dataObj.key = key
-            this.tempUrl = response.data.qiniu_url
-            resolve(true)
-          }).catch(err => {
-            console.log(err)
-            reject(false)
-          })
-        })
+        const isLt2M = file.size / 1024 / 1024 < 2
+
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!')
+        }
+
+        return isLt2M;
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -238,7 +260,7 @@
         this.dialogVisible = true;
       },
       uploadImg (e, num) {
-          debugger
+        debugger
         //上传图片
         // this.option.img
         var file = e.target.files[0]
@@ -262,12 +284,9 @@
           }
         }
         // 转化为base64
-         reader.readAsDataURL(file)
+        reader.readAsDataURL(file)
         // 转化为blob
 //        reader.readAsArrayBuffer(file)
-      },
-      changeImg () {
-        this.option.img = this.lists[~~(Math.random() * this.lists.length)].img
       },
       startCrop () {
         // start
@@ -308,11 +327,20 @@
         };
         doRemove();
       },
-      finish (type) {
-          debugger
+      startInitImg () {
         // 输出
-        // var test = window.open('about:blank')
-        // test.document.body.innerHTML = '图片生成中..'
+        this.$refs.cropper.getCropData((data) => {
+          let newPic = this.dataURLtoFile(data, "tupian")
+//          this.$refs.upload.submit(newPic);
+          // 开始上传
+          this.$refs.upload.handleStart(newPic)
+        })
+
+      },
+      submitImgs(){
+        this.$refs.upload.submit();
+      },
+      finish (type) {
         if (type === 'blob') {
           this.$refs.cropper.getCropBlob((data) => {
             var img = window.URL.createObjectURL(data)
@@ -337,17 +365,31 @@
         // 输出
         if (type === 'blob') {
           this.$refs.cropper.getCropBlob((data) => {
+            debugger
             this.downImg = window.URL.createObjectURL(data)
             aLink.href = window.URL.createObjectURL(data)
             aLink.click()
           })
         } else {
           this.$refs.cropper.getCropData((data) => {
+            debugger
+
+            let newPic = this.dataURLtoFile(data, "tupian")
+
+            console.log(newPic)
             this.downImg = data
             aLink.href = data
             aLink.click()
           })
         }
+      },
+      dataURLtoFile(dataurl, filename) {//将base64转换为文件
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {type: mime});
       },
       imgLoad (msg) {
         console.log(msg)
@@ -358,6 +400,7 @@
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "src/styles/mixin.scss";
+
   .upload-container {
     /*width: 100%;*/
     position: relative;
@@ -440,7 +483,7 @@
       text-align: center;
       box-sizing: border-box;
       outline: none;
-      margin:20px 10px 0px 0px;
+      margin: 20px 10px 0px 0px;
       padding: 9px 15px;
       font-size: 14px;
       border-radius: 4px;
@@ -482,7 +525,7 @@
       user-select: none;
       background-position: 0px 0px, 10px 10px;
       background-size: 20px 20px;
-      background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+      background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
     }
 
   }
