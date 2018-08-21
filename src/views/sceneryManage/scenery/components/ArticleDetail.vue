@@ -37,7 +37,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item  label="选择景区" prop="sightCategory">
-              <el-select size="small" v-model="sceneryContent.sightCategory" filterable placeholder="选择景区">
+              <el-select size="small" :clearable="true" v-model="sceneryContent.sightCategory" ref="clearSelect" filterable placeholder="选择景区">
                 <el-option
                   v-for="item in sightOptions"
                   :key="item.id"
@@ -86,9 +86,9 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="sceneryContent.inOut==1">
           <el-col :span="6">
-            <el-form-item  label="营业状态" prop="requiredMoney">
+            <el-form-item  label="营业状态" prop="status">
               <el-select v-model="sceneryContent.status" placeholder="请选择">
                 <el-option
                   v-for="item in statusOptions"
@@ -108,7 +108,9 @@
           <el-form-item  label="景点主图" prop="masterImg">
           <!--上传图片多图-->
           <div style="margin-bottom: 6px;">
-            <Upload v-model="sceneryContent.masterImg"></Upload>
+            <Upload v-model="sceneryContent.masterImg" :file-lists="sceneryImgArr2" ></Upload>
+            {{sceneryContent.masterImg}}
+            {{sceneryImgArr2}}
           </div>
           </el-form-item>
         </el-col>
@@ -259,6 +261,8 @@
           size: 50,
           pId:''
         },
+        sceneryImgArr:[],
+        sceneryImgArr2:[],
         parksOptions: [],
         sightOptions: [],
         statusOptions:[
@@ -294,6 +298,9 @@
           status: [
             {required: true, message: '请选择营业状态', trigger: 'change'}
           ],
+          masterImg: [
+            {required: true, message: '请上传景点主图', trigger: 'change'}
+          ],
           spotDetails: [
             {required: true, message: '请输入景点介绍', trigger: 'blur'},
             {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
@@ -303,12 +310,6 @@
             {min: 3, max: 2000, message: '长度在 3 到 2000 个字符', trigger: 'blur'}
           ]
         }
-      }
-    },
-    watch: {
-      checkboxVal(valArr) {
-        this.formThead = this.formTheadOptions.filter(i => valArr.indexOf(i) >= 0)
-        this.key = this.key + 1// 为了保证table 每次都会重渲 In order to ensure the table will be re-rendered each time
       }
     },
     computed: {
@@ -378,12 +379,16 @@
         this.listQuery2.pId = pId
         selectParkScenery(this.listQuery2).then(response => {
           this.sightOptions = response.data.data
+          debugger
           this.loading = false
           this.listLoading = false
         })
       },
       changeSights(pId){
+          debugger
         this.getSightByPark(pId)
+//        this.sceneryContent.sightCategory =  this.sightOptions[0].id
+
       },
       submitNews(){
           debugger
@@ -412,6 +417,14 @@
         getSpotDetail({id:this.$route.query.id}).then(response => {
           this.sceneryContent = response.data.data
           this.getSightByPark(response.data.data.pId)
+
+          // 编辑修改
+          this.sceneryImgArr=this.sceneryContent.masterImg.split(',')
+          debugger
+          for(let i=0; i<this.sceneryImgArr.length;i++){
+            let obj={name:'tupian'+i, url:this.sceneryImgArr[i]}
+            this.sceneryImgArr2.push(obj)
+          }
         })
       },
       submitForm() {

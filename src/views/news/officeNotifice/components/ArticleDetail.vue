@@ -7,14 +7,14 @@
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="新闻标题" prop="title">
+            <el-form-item label="公告标题" prop="title">
               <el-input v-model="newContent.title"></el-input>
             </el-form-item>
 
           </el-col>
         </el-row>
         <el-row>
-          <el-form-item label="新闻内容" prop="content">
+          <el-form-item label="公告内容" prop="content">
             <div class="editor-container">
               <tinymce :height=400 ref="editor" v-model="newContent.content"></tinymce>
             </div>

@@ -6,7 +6,10 @@ import request from '@/utils/request'
 // 添加广告
 export function saveAd(data) {
   let params = new URLSearchParams();
-  params.append('parkName', data.parkName);       //你要传给后台的参数值 key/value
+  params.append('id', data.id);
+  params.append('imgUrl', data.imgUrl);
+  params.append('pId', data.pId);
+  params.append('type', data.type);
   return request({
     url: 'productSow/save',
     method: 'post',
@@ -28,6 +31,14 @@ export function adList(query) {
 export function adCategoryList(query) {
   return request({
     url: 'productSow/categoryList',
+    method: 'get',
+    params: query
+  })
+}
+// 查看广告分类列表
+export function categoryLevel(query) {
+  return request({
+    url: 'productSow/categoryLevel',
     method: 'get',
     params: query
   })

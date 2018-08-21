@@ -44,7 +44,7 @@ export const constantRouterMap = [
     }]
   },
 
-  {
+/*  {
     path: '/documentation',
     component: Layout,
     redirect: '/documentation/index',
@@ -54,7 +54,7 @@ export const constantRouterMap = [
       name: 'documentation',
       meta: { title: 'documentation', icon: 'documentation', noCache: true }
     }]
-  }
+  }*/
 ]
 
 export default new Router({
@@ -65,7 +65,7 @@ export default new Router({
 
 // 异步动态路由表
 export const asyncRouterMap = [
-  {
+ /* {
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',
@@ -92,7 +92,7 @@ export const asyncRouterMap = [
         // if do not set roles, means: this page does not require permission
       }
     }]
-  },
+  },*/
 
   //-----------my navbar start---------------------//
 
@@ -294,7 +294,7 @@ export const asyncRouterMap = [
 
 
   //news end
-  {
+/*  {
     path: '/productManage',
     component: Layout,
     children: [{
@@ -303,9 +303,9 @@ export const asyncRouterMap = [
       name: 'productManage',
       meta: { title: 'productManage', icon: 'scenery', noCache: true, roles: ['admin','editor'] }
     }]
-  },
+  },*/
   // { path: '/addProduct', component: _import('productManage/addProduct'), hidden: false },
-  {
+ /* {
     path: '/addProduct',
     component: Layout,
     redirect: '/productManage/addProduct',
@@ -316,8 +316,8 @@ export const asyncRouterMap = [
       meta: { title: 'addProduct', icon: 'documentation', noCache: true, roles: ['admin','editor'] }
     }],
     hidden: false
-  },
-  {
+  },*/
+  /*{
     path: '/editProduct',
     component: Layout,
     redirect: '/productManage/editProduct',
@@ -328,7 +328,7 @@ export const asyncRouterMap = [
       meta: { title: 'editProduct', icon: 'documentation', noCache: true }
     }],
     hidden: false
-  },
+  },*/
 
 
 

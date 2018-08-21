@@ -1,6 +1,11 @@
 <template>
   <div class="dashboard-editor-container">
-    <github-corner></github-corner>
+
+
+    <el-row>
+      一片花海
+    </el-row>
+    <!--<github-corner></github-corner>
 
     <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
 
@@ -36,7 +41,7 @@
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}" style="margin-bottom:30px;" >
         <box-card></box-card>
       </el-col>
-    </el-row>
+    </el-row>-->
 
   </div>
 </template>

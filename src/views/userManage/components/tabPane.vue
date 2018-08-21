@@ -6,6 +6,7 @@
               size="middle"
               tooltip-effect="dark"
               v-loading="listLoading"
+              element-loading-text="给我一点时间"
               ref="multipleTable"
               @selection-change="handleSelectionChange">
       <el-table-column
@@ -388,15 +389,14 @@
     },
     methods: {
       getList() {
-        debugger
-        this.loading = true
+        this.listLoading = true
 //        this.$emit('create') // for test
 //        this.$emit('refreshLoading', true)
         fetchUsersList(this.listQuery).then(response => {
           debugger
           this.list = response.data.data.content
           this.total = response.data.data.totalElements
-          this.loading = false
+//          this.loading = false
           this.listLoading = false
           this.$emit('refreshLoading', false)
         })
@@ -494,7 +494,15 @@
           this.dialogVisible3 = false;
           this.getList()
         })
-      }
+      },
+      handleCurrentChange(val) {
+        this.listQuery.page = val
+        this.getList()
+      },
+      handleSizeChange(val) {
+        this.listQuery.size = val
+        this.getList()
+      },
     }
   }
 </script>

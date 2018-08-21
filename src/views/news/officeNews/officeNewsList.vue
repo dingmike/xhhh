@@ -142,6 +142,7 @@
   import {deleteNews, getNewsList} from '@/api/news'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
+  import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
 
   const calendarTypeOptions = [
     {key: 'CN', display_name: 'China'},
@@ -159,7 +160,8 @@
   export default {
     name: 'complexTable',
     directives: {
-      waves
+      waves,
+      elDragDialog
     },
     data() {
       return {
@@ -295,7 +297,7 @@
             type: 'success',
             duration: 1500
           })
-          this.disableValue = false
+          this.visibleDelete = false
           this.getList()
         })
       },
@@ -391,6 +393,9 @@
             return v[j]
           }
         }))
+      },
+      handleClose(){
+
       }
     }
   }

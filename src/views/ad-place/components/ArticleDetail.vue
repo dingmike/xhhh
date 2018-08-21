@@ -7,10 +7,10 @@
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="广告类别" prop="title">
+            <el-form-item label="广告类别" prop="type">
               <!--<el-input v-model="newContent.title"></el-input>-->
               <el-select size="small" v-model="newContent.type" filterable allow-create placeholder="选择类别"
-                         @change="renderAddSpec(index, spec.name)">
+                         @change="renderAddSpec">
                 <el-option
                   v-for="item in adCategoryOptions"
                   :key="item.code"
@@ -24,16 +24,48 @@
           </el-col>
         </el-row>
         <el-row>
-        <el-form-item label="新闻内容" prop="content">
+          <el-col :span="12">
+            <el-form-item label="广告内容" prop="pId">
+              <!--<el-input v-model="newContent.title"></el-input>-->
+              <el-select size="small" v-model="newContent.pId" filterable allow-create placeholder="选择对应内容"
+                         @change="chooseContent">
+                <el-option
+                  v-for="item in adContentOptions"
+                  :key="item.id"
+                  :value-key="item.title!=null?item.title:item.name"
+                  :label="item.title!=null?item.title:item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+          </el-col>
+    <!--    <el-form-item label="新闻内容" prop="content">
         <div class="editor-container">
           <tinymce :height=400 ref="editor" v-model="newContent.content"></tinymce>
         </div>
-        </el-form-item>
+        </el-form-item>-->
         </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item  label="封面图" prop="imgUrl">
+              <!--上传图片多图-->
+              <div style="margin-bottom: 6px;">
+                <Upload v-model="newContent.imgUrl"></Upload>
+                {{newContent.imgUrl}}
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <span style="color: red; font-size: 14px">*建议图片宽高尺寸为5：2  如：1380 * 600，大小不超过1M</span>
+          </el-col>
+        </el-row>
+
         <el-row style=" float: right">
           <el-button type="warning" @click="goBack">返回</el-button>
-          <el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">确认发布</el-button>
-          <el-button type="primary" v-if="newId" :loading="false" @click="saveNews">确认修改</el-button>
+          <el-button type="primary" :loading="false" @click="saveNews">确认发布</el-button>
+          <!--<el-button type="primary" v-if="newId" :loading="false" @click="saveNews">确认修改</el-button>-->
         </el-row>
       </div>
     </el-form>
@@ -54,14 +86,14 @@
   import {fetchGoodDetail} from '@/api/goods'
   import {userSearch} from '@/api/remoteSearch'
   import {fetchGoodsList, searchGoods, downUpGoods, getSpecifications, getSpecValue} from '@/api/goods'
-  import {adCategoryList, save} from '@/api/ad'
-
+  import {adCategoryList, categoryLevel, saveAd} from '@/api/ad'
+  import Upload from '@/components/ImgCropper/oneCropimage'
 
   const defaultNews={
     "id": '',
-    "title": "",
-    "content": "",
-    "type": 1 // 咨询
+    "pId": "",
+    "imgUrl": "",
+    "type": "" //
   }
   const defaultForm = {
     status: 'draft',
@@ -97,15 +129,11 @@
 
   export default {
     name: 'articleDetail',
-    components: {Tinymce, MDinput, Multiselect, Sticky},
+    components: {Tinymce, MDinput, Multiselect, Sticky, Upload},
     props: {
       isEdit: {
         type: Boolean,
         default: false
-      },
-      newsId:{
-          type: String,
-          default:''
       }
     },
     mounted() {
@@ -150,14 +178,16 @@
         isShowValue: false,
         disableValue: false,
         adCategoryOptions:[],
+        adContentOptions:[],
         rules: {
-          title: [
-            {required: true, message: '请输入资讯标题', trigger: 'blur'},
-            {min: 3, max: 100, message: '长度在 3 到 100 个字符', trigger: 'blur'}
+          type: [
+            {required: true, message: '请选择分类', trigger: 'blur'},
           ],
-          content: [
-            {required: true, message: '请输入资讯内容', trigger: 'blur'},
-            {min: 3, max: 5000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
+          pId: [
+            {required: true, message: '请选择内容', trigger: 'blur'},
+          ],
+          imgUrl: [
+            {required: true, message: '请上传封面图', trigger: 'blur'},
           ]
         }
       }
@@ -190,13 +220,14 @@
       }
     },
     created() {
-      console.log("编辑的ID："+this.newsId)
       if (this.isEdit) {
 
         this.newId = this.$route.query.id
         this.fetchNewsContent()
       } else {
+        this.getAdCategoryList()
         this.newContent = Object.assign({}, defaultNews)
+
       }
       this.specs = []
       this.specPrices = []
@@ -220,11 +251,11 @@
         this.specPrices = _obj
       }
 
-      this.getAdCategoryList()
+//
     },
     methods: {
       submitNews(){
-        saveAndUpdateNews(this.newContent).then(response => {
+        saveAd(this.newContent).then(response => {
           this.$notify({
             title: '提示',
             message: '数据提交成功',
@@ -250,9 +281,22 @@
           this.newContent = response.data.data
         })
       },
+      renderAddSpec(code){
+        this.getCategoryLevel(code)
+      },
+      chooseContent(){
+
+      },
+      // 分类列表
       getAdCategoryList(){
         adCategoryList().then(response => {
           this.adCategoryOptions = response.data.data
+        })
+      },
+      // 分类下的内容
+      getCategoryLevel(code){
+        categoryLevel({type: code}).then(response => {
+          this.adContentOptions = response.data.data
         })
       },
       submitForm() {
@@ -301,7 +345,7 @@
 
       },
       goBack(){
-        this.$router.push({path: '/news/office-news/office-news-list'})
+        this.$router.push({path: '/ad-place/ad-list'})
       }
     }
   }

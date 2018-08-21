@@ -142,6 +142,7 @@
   import {deleteNews, getNewsList} from '@/api/news'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
+  import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
 
   const calendarTypeOptions = [
     {key: 'CN', display_name: 'China'},
@@ -159,7 +160,8 @@
   export default {
     name: 'complexTable',
     directives: {
-      waves
+      waves,
+      elDragDialog
     },
     data() {
       return {
@@ -270,7 +272,7 @@
       },
       // 新增内容
       handleCreate() {
-        this.$router.push({path: '/news/office-news/add-office-news'})
+        this.$router.push({path: '/news/office-notifice/add-office-notifice'})
 //        this.$router.push({path: '/news/addNews', query: {id: row.id}})
       },
       showSureDelete(row){
@@ -285,7 +287,7 @@
             type: 'success',
             duration: 1500
           })
-          this.disableValue = false
+          this.visibleDelete = false
           this.getList()
         })
       },
@@ -374,6 +376,9 @@
             return v[j]
           }
         }))
+      },
+      handleClose(){
+
       }
     }
   }

@@ -68,8 +68,14 @@ export default {
       const _this = this
       window.tinymce.init({
         selector: `#${this.tinymceId}`,
+        theme: 'modern',
         height: this.height,
         body_class: 'panel-body ',
+        image_advtab: false,
+        content_css: [
+          '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+          '//www.tinymce.com/css/codepen.min.css'
+        ],
         object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
         menubar: this.menubar,

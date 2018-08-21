@@ -138,7 +138,7 @@ export default {
 
   methods: {
     handleStart(rawFile) {
-        debugger
+
         rawFile.uid = Date.now() + this.tempIndex++;
         let file = {
           status: 'ready',
@@ -162,7 +162,7 @@ export default {
         }
       };
         for (let i=0; i< this.uploadFiles.length; i++){
-          if(this.uploadFiles[i].name!=='tupian'){
+          if(this.uploadFiles[i].name!=='tupian.png'){
              this.uploadFiles.remove(this.uploadFiles[i]);
           }
         }

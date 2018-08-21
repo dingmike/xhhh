@@ -41,7 +41,7 @@
 
       <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <!--<el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>-->
           <el-button size="mini" type="success" @click="showSureDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -130,10 +130,11 @@
 
 <script>
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
-  import {adList} from '@/api/ad'
+  import {adList,deletePark } from '@/api/ad'
   import {deleteNews, getNewsList} from '@/api/news'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
+  import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
 
   const calendarTypeOptions = [
     {key: 'CN', display_name: 'China'},
@@ -151,7 +152,8 @@
   export default {
     name: 'complexTable',
     directives: {
-      waves
+      waves,
+     elDragDialog
     },
     data() {
       return {
@@ -280,14 +282,14 @@
         this.visibleDelete= true
       },
       handleDeleteNews(){
-        deleteNews({id: this.dataObj.id}).then(response => {
+        deletePark({id: this.dataObj.id}).then(response => {
           this.$notify({
             title: '提示',
             message: '删除成功',
             type: 'success',
             duration: 1500
           })
-          this.disableValue = false
+          this.visibleDelete = false
           this.getList()
         })
       },

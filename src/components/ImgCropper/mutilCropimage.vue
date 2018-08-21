@@ -3,8 +3,9 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="https://httpbin.org/post"
+               action="http://huahai.tunnel.qydev.com/huahai/admin/upload"
                :multiple="true"
+               :show-file-list='true'
                :limit="9"
                :on-change="changeFile"
                :file-list="picFiles"
@@ -108,7 +109,7 @@
         default: function () {
           return []
         }
-      }
+      },
     },
     computed: {
       imageUrl() {
@@ -147,6 +148,8 @@
         modelSrc: '',
         crap: false,
         previews: {},
+        imgUrlList:'',
+        imgsArr:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
         lists: [
           {
             img: 'http://ofyaji162.bkt.clouddn.com/touxiang.jpg'
@@ -201,6 +204,7 @@
       }
     },
     mounted() {
+        debugger
       var list = [].slice.call(document.querySelectorAll('pre code'))
       list.forEach((val, index) => {
         hljs.highlightBlock(val)
@@ -213,8 +217,13 @@
       emitInput(val) {
         this.$emit('input', val)
       },
-      handleImageScucess(file) {
-        this.emitInput(file.files.file)
+      handleImageScucess(file,data,raw) {
+          debugger
+        this.imgUrlList +=file.data+','
+        console.log(file.data)
+        console.log(this.imgUrlList)
+        this.imgUrlList = this.imgUrlList.substring(0, this.imgUrlList.length-1)
+        this.emitInput(this.imgUrlList)
       },
 
       changeFile(file, fileList){
@@ -330,7 +339,7 @@
       startInitImg () {
         // 输出
         this.$refs.cropper.getCropData((data) => {
-          let newPic = this.dataURLtoFile(data, "tupian")
+          let newPic = this.dataURLtoFile(data, "tupian.png")
 //          this.$refs.upload.submit(newPic);
           // 开始上传
           this.$refs.upload.handleStart(newPic)
@@ -374,7 +383,7 @@
           this.$refs.cropper.getCropData((data) => {
             debugger
 
-            let newPic = this.dataURLtoFile(data, "tupian")
+            let newPic = this.dataURLtoFile(data, "tupian.png")
 
             console.log(newPic)
             this.downImg = data
@@ -384,11 +393,13 @@
         }
       },
       dataURLtoFile(dataurl, filename) {//将base64转换为文件
+        debugger
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n);
         }
+        debugger
         return new File([u8arr], filename, {type: mime});
       },
       imgLoad (msg) {
@@ -409,65 +420,6 @@
       /*width: 10%;*/
       float: left;
     }
-    /* .image-preview {
-       width: 100px;
-       height: 100px;
-       position: relative;
-       border: 1px dashed #d9d9d9;
-       float: left;
-       margin-left: 50px;
-       .image-preview-wrapper {
-         position: relative;
-         width: 100%;
-         height: 100%;
-         img {
-           width: 100%;
-           height: 100%;
-         }
-       }
-       .image-preview-action {
-         position: absolute;
-         width: 100%;
-         height: 100%;
-         left: 0;
-         top: 0;
-         cursor: default;
-         text-align: center;
-         color: #fff;
-         opacity: 0;
-         font-size: 20px;
-         background-color: rgba(0, 0, 0, .5);
-         transition: opacity .3s;
-         cursor: pointer;
-         text-align: center;
-         line-height: 200px;
-         .el-icon-delete {
-           font-size: 36px;
-         }
-       }
-       &:hover {
-         .image-preview-action {
-           opacity: 1;
-         }
-       }
-     }
-
-     .image-app-preview {
-       width: 320px;
-       height: 180px;
-       position: relative;
-       border: 1px dashed #d9d9d9;
-       float: left;
-       margin-left: 50px;
-       .app-fake-conver {
-         height: 44px;
-         position: absolute;
-         width: 100%; // background: rgba(0, 0, 0, .1);
-         text-align: center;
-         line-height: 64px;
-         color: #fff;
-       }
-     }*/
 
     .test {
       height: 500px;
