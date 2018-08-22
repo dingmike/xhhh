@@ -285,8 +285,8 @@ export const asyncRouterMap = [
       icon: 'basic'
     },
     children: [
-      { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '公司简介', noCache: true }},
-      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '地址', noCache: true }},
+      { path: 'basic-info', component: _import('basicFile/basicInfo'), name: 'basicInfo', meta: { title: 'basicInfo', noCache: true }},
+      { path: 'edit-info', component: _import('basicFile/editInfo'), name: 'editInfo', meta: { title: 'editInfo', noCache: true }},
     ]
   },
 

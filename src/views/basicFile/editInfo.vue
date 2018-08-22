@@ -7,135 +7,94 @@
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="12">
-            <el-form-item  label="是否众筹" prop="inOut">
-              <!-- <el-switch
-                 v-model="sceneryContent.inOut"
-                 active-text="是众筹项目"
-                 inactive-text="不是众筹项目"
-                 active-value="1"
-                 inactive-value="0">
-               </el-switch>-->
-
-              <el-radio-group @change="changeZong" v-model="sceneryContent.inOut" size="mini">
-                <el-radio :label="1" border>是众筹项目</el-radio>
-                <el-radio :label="0" border>不是众筹项目</el-radio>
-              </el-radio-group>
+            <el-form-item label="微信账号" prop="wechatAccount">
+              <el-input v-model="sceneryContent.wechatAccount"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
+
+
         <el-row>
           <el-col :span="12">
-            <el-form-item label="景点名称" prop="title">
-              <el-input v-model="sceneryContent.title"></el-input>
+            <el-form-item label="微博账号" prop="blogAccount">
+              <el-input v-model="sceneryContent.blogAccount"></el-input>
             </el-form-item>
 
           </el-col>
         </el-row>
+
+
+
         <el-row>
           <el-col :span="12">
-          <el-form-item label="开放时间" prop="openTime">
-            <el-input v-model="sceneryContent.openTime"></el-input>
+            <el-form-item label="联系电话" prop="telephone">
+              <el-input v-model="sceneryContent.telephone"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="联系邮箱" prop="mailbox">
+              <el-input v-model="sceneryContent.mailbox"></el-input>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="联系QQ" prop="contactQq">
+              <el-input v-model="sceneryContent.contactQq"></el-input>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="公司地址" prop="companyAddress">
+              <el-input v-model="sceneryContent.companyAddress"></el-input>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="4">
+            <el-form-item  label="微信二维码" prop="wechatCode">
+              <!--上传图片多图-->
+              <div style="margin-bottom: 6px;">
+                <Upload v-model="sceneryContent.wechatCode" :file-lists="sceneryImgArr2" ></Upload>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item  label="微博二维码" prop="blogCode">
+            <div style="margin-bottom: 6px;">
+              <Upload v-model="sceneryContent.blogCode" :file-lists="sceneryImgArr4" ></Upload>
+            </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-form-item label="公司简介" prop="companyDetails">
+            <div class="editor-container">
+              <tinymce :height=400 ref="editor" v-model="sceneryContent.companyDetails"></tinymce>
+            </div>
           </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item  label="选择园区" prop="pId">
-              <el-select size="small" @change="changeSights" v-model="sceneryContent.pId" filterable placeholder="选择园区">
-                <el-option
-                  v-for="item in parksOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item  label="选择景区" prop="sightCategory">
-              <el-select size="small" :clearable="true" v-model="sceneryContent.sightCategory" ref="clearSelect" filterable placeholder="选择景区">
-                <el-option
-                  v-for="item in sightOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
         </el-row>
 
-        <el-row>
-          <el-col :span="12">
-            <el-form-item  :label="sceneryContent.inOut==0?'游玩须知':'众筹须知'" prop="notes">
-            <el-input
-              type="textarea"
-              :rows="6"
-              placeholder="请输入须知"
-              v-model="sceneryContent.notes">
-            </el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <!--  <el-row>
+          <el-form-item :label="sceneryContent.inOut==0?'景点介绍2':'众筹介绍2'" prop="spotDetails">
+          <div class="editor-container">
 
-        <el-row v-if="sceneryContent.inOut==1">
-          <el-col :span="12">
-            <el-form-item  label="众筹资金" prop="requiredMoney">
-              <el-input-number v-model="sceneryContent.requiredMoney" controls-position="right"  :precision="2" :step="0.1" :max="1000000000"></el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="sceneryContent.inOut==1">
-          <el-col :span="6">
-            <el-form-item  label="营业状态" prop="status">
-              <el-select v-model="sceneryContent.status" placeholder="请选择">
-                <el-option
-                  v-for="item in statusOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <span style="color: red;">*状态为已营业的项目所在用户会享受分红。</span>
-          </el-col>
-        </el-row>
-      <el-row>
-        <el-col :span="10">
-          <el-form-item  label="景点主图" prop="masterImg">
-          <!--上传图片多图-->
-          <div style="margin-bottom: 6px;">
-            <Upload v-model="sceneryContent.masterImg" :file-lists="sceneryImgArr2" ></Upload>
+            <UE :defaultMsg="sceneryContent.spotDetails" :config="config" :id="ue1" ref="ue"></UE>
+            {{sceneryContent.spotDetails}}
           </div>
+
           </el-form-item>
-        </el-col>
-        <el-col :span="2">
-          <span style="color: red; font-size: 14px">（最多9张图片，建议图片宽高比例为  5：3  如： 1500 * 900 ，单张图片不超过2M）</span>
-        </el-col>
-      </el-row>
-
-        <el-row>
-        <el-form-item :label="sceneryContent.inOut==0?'景点介绍':'众筹介绍'" prop="spotDetails">
-        <div class="editor-container">
-          <tinymce :height=400 ref="editor" v-model="sceneryContent.spotDetails"></tinymce>
-        </div>
-        </el-form-item>
-        </el-row>
-
-      <!--  <el-row>
-        <el-form-item :label="sceneryContent.inOut==0?'景点介绍2':'众筹介绍2'" prop="spotDetails">
-        <div class="editor-container">
-
-          <UE :defaultMsg="sceneryContent.spotDetails" :config="config" :id="ue1" ref="ue"></UE>
-          {{sceneryContent.spotDetails}}
-        </div>
-
-        </el-form-item>
-        </el-row>-->
+          </el-row>-->
         <el-row style=" float: right">
           <el-button type="warning" @click="goBack">返回</el-button>
           <el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">确认发布</el-button>
@@ -150,15 +109,16 @@
 <script>
   import Tinymce from '@/components/Tinymce'
   import VueCropper from 'vue-cropper'
-//  import Upload from '@/components/ImgCropper/mutilImage'
-  import Upload from '@/components/ImgCropper/mutilCropimage'
-//  import UploadSingle from '@/components/Upload/oneImage'
+  //  import Upload from '@/components/ImgCropper/mutilImage'
+  import Upload from '@/components/ImgCropper/oneCropimage'
+  //  import UploadSingle from '@/components/Upload/oneImage'
   import MDinput from '@/components/MDinput'
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   import Sticky from '@/components/Sticky' // 粘性header组件
   import {validateURL} from '@/utils/validate'
-    import {saveAndUpdateNews,getNewsById} from '@/api/news'
+  import {saveAndUpdateNews,getNewsById} from '@/api/news'
+  import {getBasicInfo, save} from '@/api/basicInfo'
   import {fetchGoodDetail} from '@/api/goods'
   import {userSearch} from '@/api/remoteSearch'
   import {
@@ -179,16 +139,15 @@
   }
   const sceneryContent={
     id: "",
-    title: "",
-    openTime:"",
-    sightCategory: "",
-    spotDetails: "",
-    masterImg: "",
-    inOut: 0,
-    requiredMoney: "",
-    status: "",
-    pId: "",
-    notes: "",
+    companyDetails: "",
+    companyAddress:"",
+    wechatAccount: "",
+    wechatCode: "",
+    blogAccount: "",
+    blogCode: '',
+    telephone: "",
+    mailbox: "",
+    contactQq: "",
   }
   const defaultForm = {
     status: 'draft',
@@ -280,6 +239,8 @@
         },
         sceneryImgArr:[],
         sceneryImgArr2:[],
+        sceneryImgArr3:[],
+        sceneryImgArr4:[],
         parksOptions: [],
         sightOptions: [],
         statusOptions:[
@@ -301,33 +262,36 @@
         isShowValue: false,
         disableValue: false,
         rules: {
-          title: [
-            {required: true, message: '请输入景点名称', trigger: 'blur'},
+          wechatAccount: [
+            {required: true, message: '请输入微信账号', trigger: 'blur'},
             {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
-          openTime: [
-            {required: true, message: '请输入开放时间', trigger: 'change'},
+          blogAccount: [
+            {required: true, message: '请输入微博账号', trigger: 'change'},
             {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
-          pId: [
-            {required: true, message: '请选择园区', trigger: 'change'}
+          telephone: [
+            {required: true, message: '请输入电话号码', trigger: 'change'},
+            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
-          sightCategory: [
-            {required: true, message: '请选择景区', trigger: 'change'}
+          mailbox: [
+            {required: true, message: '请输入邮箱', trigger: 'change'},
+            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
-          status: [
-            {required: true, message: '请选择营业状态', trigger: 'change'}
+          contactQq: [
+            {required: true, message: '请输入qq', trigger: 'change'},
+            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
           masterImg: [
             {required: true, message: '请上传景点主图', trigger: 'change'}
           ],
-          spotDetails: [
-            {required: true, message: '请输入介绍', trigger: 'blur'},
+          companyDetails: [
+            {required: true, message: '请输入公司简介', trigger: 'blur'},
             {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
           ],
-          notes: [
-            {required: true, message: '请输入须知', trigger: 'blur'},
-            {min: 3, max: 2000, message: '长度在 3 到 2000 个字符', trigger: 'blur'}
+          companyAddress: [
+            {required: true, message: '请输入公司地址', trigger: 'blur'},
+            {min: 3, max: 200, message: '长度在 3 到 200 个字符', trigger: 'blur'}
           ]
         }
       }
@@ -354,7 +318,7 @@
       }
     },
     created() {
-      if (this.isEdit) {
+      if (true) {
 
         this.newId = this.$route.query.id
 
@@ -414,21 +378,14 @@
         })
       },
       changeSights(pId){
-          debugger
+        debugger
         this.getSightByPark(pId)
 //        this.sceneryContent.sightCategory =  this.sightOptions[0].id
 
       },
       submitNews(){
         debugger
-
-      /*  if(this.sceneryImgArr){
-          let newImgsArrStr = this.sceneryImgArr.join(',')
-        this.sceneryContent.masterImg +=newImgsArrStr
-        }*/
-//        let newImgsArrStr = this.sceneryImgArr.join(',')
-//        this.sceneryContent.masterImg +=newImgsArrStr
-        saveSightSpot(this.sceneryContent).then(response => {
+        save(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
             message: '数据提交成功',
@@ -450,21 +407,24 @@
         })
       },
       fetchNewsContent(){
-        getSpotDetail({id:this.$route.query.id}).then(response => {
+        getBasicInfo({id:1}).then(response => {
           this.sceneryContent = response.data.data
-          this.getSightByPark(response.data.data.pId)
 
           // 编辑修改
           debugger
-          this.sceneryImgArr=this.sceneryContent.masterImg.split(',')
+          this.sceneryImgArr=this.sceneryContent.wechatCode.split(',')
           debugger
           for(let i=0; i<this.sceneryImgArr.length;i++){
             let obj={name:'tupian.png', url:this.sceneryImgArr[i]}
             this.sceneryImgArr2.push(obj)
           }
-         /* if(this.sceneryImgArr2.length!=1){
-            this.sceneryImgArr2.pop()
-          }*/
+          debugger
+          this.sceneryImgArr3=this.sceneryContent.blogCode.split(',')
+          debugger
+          for(let i=0; i<this.sceneryImgArr3.length;i++){
+            let obj={name:'tupian.png', url:this.sceneryImgArr3[i]}
+            this.sceneryImgArr4.push(obj)
+          }
         })
       },
       submitForm() {
@@ -587,3 +547,4 @@
   }
 
 </style>
+

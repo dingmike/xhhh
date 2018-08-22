@@ -77,6 +77,7 @@ export default {
     adList: '广告列表',
     editAd: '编辑广告',
     addAd: '添加广告',
+    editInfo: '编辑基本资料',
     i18n: '国际化'
   },
   navbar: {
