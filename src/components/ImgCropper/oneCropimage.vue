@@ -3,7 +3,7 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="http://huahai.tunnel.qydev.com/huahai/admin/upload"
+               action="http://192.168.9.102:8080/huahai/admin/upload"
                :multiple="true"
                :limit="1"
                :on-change="changeFile"

@@ -266,8 +266,11 @@
         parksOptions: [],
         sightOptions: [],
         statusOptions:[
-          {id:1,name:"已营业"},
-          {id:0,name:"未营业"}
+          {id:4,name:"已营业"},
+          {id:3,name:"已建"},
+          {id:2,name:"在建"},
+          {id:1,name:"已众筹"},
+          {id:0,name:"众筹中"}
         ],
         sceneryContent: Object.assign({}, sceneryContent),
         newContent: Object.assign({}, defaultNews),
@@ -391,7 +394,14 @@
 
       },
       submitNews(){
-          debugger
+        debugger
+
+      /*  if(this.sceneryImgArr){
+          let newImgsArrStr = this.sceneryImgArr.join(',')
+        this.sceneryContent.masterImg +=newImgsArrStr
+        }*/
+//        let newImgsArrStr = this.sceneryImgArr.join(',')
+//        this.sceneryContent.masterImg +=newImgsArrStr
         saveSightSpot(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
@@ -419,12 +429,16 @@
           this.getSightByPark(response.data.data.pId)
 
           // 编辑修改
+          debugger
           this.sceneryImgArr=this.sceneryContent.masterImg.split(',')
           debugger
           for(let i=0; i<this.sceneryImgArr.length;i++){
-            let obj={name:'tupian'+i, url:this.sceneryImgArr[i]}
+            let obj={name:'tupian.png', url:this.sceneryImgArr[i]}
             this.sceneryImgArr2.push(obj)
           }
+         /* if(this.sceneryImgArr2.length!=1){
+            this.sceneryImgArr2.pop()
+          }*/
         })
       },
       submitForm() {

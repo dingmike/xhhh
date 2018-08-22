@@ -39,7 +39,7 @@
            <span>{{scope.row.openTime}}</span>
          </template>
        </el-table-column>
-      <el-table-column width="200px" align="center" label="是否众筹项目">
+      <!--<el-table-column width="200px" align="center" label="是否众筹项目">
          <template slot-scope="scope">
            <span>{{scope.row.inOut==1?'是':'否'}}</span>
          </template>
@@ -53,7 +53,7 @@
         <template slot-scope="scope">
           <span>{{scope.row.status==1?'已营业':'待营业'}}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <!--<el-table-column width="200px" align="center" label="创建时间">
         <template slot-scope="scope">
           <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>

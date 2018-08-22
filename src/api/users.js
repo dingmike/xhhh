@@ -37,6 +37,28 @@ export function enableUser(data) {
     data:params
   })
 }
+// 不激活用户
+export function notActivationUser(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);       //你要传给后台的参数值 key/value
+
+  return request({
+    url: 'member/notActivation',
+    method: 'post',
+    data: params
+  })
+}
+
+// 激活用户
+export function isActivationUser(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);       //你要传给后台的参数值 key/value
+  return request({
+    url: 'member/isActivation',
+    method: 'post',
+    data:params
+  })
+}
 
 //设置用户等级
 export function setUsermg(data) {

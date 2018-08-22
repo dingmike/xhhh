@@ -3,7 +3,7 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="http://huahai.tunnel.qydev.com/huahai/admin/upload"
+               action="http://192.168.9.102:8080/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="9"
@@ -149,7 +149,7 @@
         crap: false,
         previews: {},
         imgUrlList:'',
-        imgsArr:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        imgsArr:[],
         lists: [
           {
             img: 'http://ofyaji162.bkt.clouddn.com/touxiang.jpg'
@@ -219,11 +219,35 @@
       },
       handleImageScucess(file,data,raw) {
           debugger
-        this.imgUrlList +=file.data+','
-        console.log(file.data)
-        console.log(this.imgUrlList)
-        this.imgUrlList = this.imgUrlList.substring(0, this.imgUrlList.length-1)
-        this.emitInput(this.imgUrlList)
+        /*let uid = data.uid
+        let imgsArr = []
+        for(let i=0;i<raw.length;i++){
+              if(uid!=raw[i].uid){
+                this.imgsArr.push(raw[i].url)
+              }else{
+                this.imgsArr.push(raw[i].response.data)
+               //this.imgUrlList+=raw[i].response.data+','
+              }
+        }*/
+
+       //this.imgUrlList +=file.data+','
+       //console.log(file.data)
+       // console.log(this.imgUrlList)
+//        this.imgUrlList = this.imgUrlList.substring(0, this.imgUrlList.length-1)
+//        this.emitInput(this.imgUrlList)
+        if(data.uid==raw[raw.length-1].uid){
+
+          let uid = data.uid
+           for(let i=0;i<raw.length;i++){
+           if(uid!=raw[i].uid){
+           this.imgsArr.push(raw[i].url)
+           }else{
+           this.imgsArr.push(raw[i].response.data)
+           //this.imgUrlList+=raw[i].response.data+','
+           }
+           }
+          this.emitInput(this.imgsArr.join(','))
+        }
       },
 
       changeFile(file, fileList){
@@ -261,9 +285,9 @@
 
         return isLt2M;
       },
-      handleRemove(file, fileList) {
+     /* handleRemove(file, fileList) {
         console.log(file, fileList);
-      },
+      },*/
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
@@ -330,11 +354,20 @@
         this.dialogVisible = true;
       },
       handleRemove(file, raw) {
+          debugger
         let doRemove = () => {
-          let fileList = this.imgList.uploadFiles;
+          let fileList = this.fileLists;
           fileList.splice(fileList.indexOf(file), 1);
+
         };
         doRemove();
+
+         let imgsArr = []
+         for(let i=0;i<this.fileLists.length;i++){
+         imgsArr.push(this.fileLists[i].url)
+         //this.imgUrlList+=raw[i].response.data+','
+         }
+        this.emitInput(imgsArr.join(','))
       },
       startInitImg () {
         // 输出

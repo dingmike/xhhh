@@ -45,8 +45,12 @@
       </el-table-column>
       <el-table-column width="120" align="center" label="状态">
         <template slot-scope="scope">
-          <span>{{scope.row.type == 1 ? "被冻结" : "正常"}}</span>
-
+          <span>{{scope.row.type == 1 ? "禁用" : "启用"}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="120" align="center" label="激活状态">
+        <template slot-scope="scope">
+          <span>{{scope.row.status == 1 ? "激活" : "冻结"}}</span>
         </template>
       </el-table-column>
       <el-table-column width="100px" label="真实姓名">
@@ -89,7 +93,10 @@
            </el-button>-->
 
           <el-button size="mini" :type="scope.row.type == 1 ? 'warning' : 'danger'" @click="showIceUser(scope.row)">
-            {{scope.row.type === 1 ? '解冻账户' : '冻结账户'}}
+            {{scope.row.type === 1 ? '启用账户' : '禁用账户'}}
+          </el-button>
+          <el-button size="mini" :type="scope.row.status == 1 ? 'warning' : 'danger'" @click="showActiveUser(scope.row)">
+            {{scope.row.status === 1 ? '冻结账户' : '激活账户'}}
           </el-button>
         </template>
       </el-table-column>
@@ -163,15 +170,33 @@
                :before-close="handleClose">
       <el-row>
         <el-col :span="24">
-          <span class="down-box">真的需要{{iceUserObj.type == 1 ? "解冻账户 " : "冻结账户 "}}&nbsp;<el-tag>{{iceUserObj.phone}}</el-tag>&nbsp;吗？</span>
+          <span class="down-box">真的需要{{iceUserObj.type == 1 ? "启用账户 " : "禁用账户 "}}&nbsp;<el-tag>{{iceUserObj.phone}}</el-tag>&nbsp;吗？</span>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="handleIceUser(goodsObj)">确定</el-button>
+        <el-button type="primary" @click="handleIceUser">确定</el-button>
       </span>
     </el-dialog>
     <!--冻结账户 end-->
+    <!--激活账户弹窗 start-->
+    <el-dialog v-el-drag-dialog
+               title="账户激活操作"
+               :visible.sync="dialogVisible4"
+               width="30%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <el-col :span="24">
+          <span class="down-box">真的需要{{iceUserObj.status == 1 ? "冻结账户 " : "激活账户 "}}&nbsp;<el-tag>{{iceUserObj.phone}}</el-tag>&nbsp;吗？</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">取 消</el-button>
+        <el-button type="primary" @click="handleActiveUser">确定</el-button>
+      </span>
+    </el-dialog>
+    <!--激活账户 end-->
 
     <!--用户充值 start-->
     <el-dialog v-el-drag-dialog
@@ -306,6 +331,8 @@
     mgList, // 获取会员等级列表
     setUsermg, //设置会员等级
     setUpmg, //设置用户分红积分
+    isActivationUser,
+    notActivationUser,
     fetchUsersList,
     searchGoods,
     downUpGoods,
@@ -450,19 +477,64 @@
         this.dialogVisible2 = true
         this.iceUserObj = row
       },
+      showActiveUser(row){
+        this.dialogVisible4 = true
+        this.iceUserObj = row
+      },
+      handleActiveUser() {
+          debugger
+        // 激活和不激活用户
+        if (this.iceUserObj.status == 0) {
+          isActivationUser({id: this.iceUserObj.id}).then(response => {
+            console.log('激活')
+            this.dialogVisible4 = false;
+            this.$notify({
+              title: '成功',
+              message: '激活成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.getList()
+          })
+        } else {// 冻结
+          notActivationUser({id: this.iceUserObj.id}).then(response => {
+            console.log('冻结')
+            this.dialogVisible4 = false;
+            this.$notify({
+              title: '成功',
+              message: '冻结成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.getList()
+          })
+        }
+      },
       handleIceUser() {
         // 解冻和冻结用户
         // 解冻
         if (this.iceUserObj.type == 1) {
           enableUser({id: this.iceUserObj.id}).then(response => {
-            console.log('解冻')
+            console.log('启用')
             this.dialogVisible2 = false;
+            this.$notify({
+              title: '成功',
+              message: '启用成功',
+              type: 'success',
+              duration: 2000
+            })
             this.getList()
           })
         } else {// 冻结
           disableUser({id: this.iceUserObj.id}).then(response => {
-            console.log('冻结')
+            console.log('禁用')
             this.dialogVisible2 = false;
+            this.$notify({
+              title: '成功',
+              message: '禁用成功',
+              type: 'success',
+              duration: 2000
+            })
             this.getList()
           })
         }

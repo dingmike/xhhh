@@ -162,6 +162,7 @@ export default {
         }
       };
         for (let i=0; i< this.uploadFiles.length; i++){
+            debugger
           if(this.uploadFiles[i].name!=='tupian.png'){
              this.uploadFiles.remove(this.uploadFiles[i]);
           }
