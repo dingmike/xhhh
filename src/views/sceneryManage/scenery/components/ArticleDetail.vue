@@ -303,7 +303,7 @@
         rules: {
           title: [
             {required: true, message: '请输入景点名称', trigger: 'blur'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+            {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
           ],
           openTime: [
             {required: true, message: '请输入开放时间', trigger: 'change'},

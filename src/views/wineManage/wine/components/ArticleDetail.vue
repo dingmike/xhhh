@@ -1,39 +1,29 @@
 <template>
   <div class="createPost-container">
     <div class="filter-container">
-      <!--<el-button class="filter-item" type="warning" @click="goBack">返回</el-button>-->
+      <el-button class="filter-item" type="warning" @click="goBack">返回</el-button>
     </div>
-    <el-form class="form-container" :model="sceneryContent" :rules="rules" ref="postForm" label-width="100px">
+    <el-form class="form-container" :model="sceneryContent" :rules="rules" ref="postForm" label-width="110px">
       <div class="createPost-main-container">
+
         <el-row>
           <el-col :span="12">
-            <el-form-item label="微信账号" prop="wechatAccount">
-              <el-input v-model="sceneryContent.wechatAccount"></el-input>
+            <el-form-item  label="种酒类别" prop="liquorCategory">
+              <el-select size="small" v-model="sceneryContent.liquorCategory" filterable placeholder="选择种酒类别">
+                <el-option
+                  v-for="item in wineCategoryOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="12">
-            <el-form-item label="微博账号" prop="blogAccount">
-              <el-input v-model="sceneryContent.blogAccount"></el-input>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="联系电话" prop="telephone">
-              <el-input v-model="sceneryContent.telephone"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="联系邮箱" prop="mailbox">
-              <el-input v-model="sceneryContent.mailbox"></el-input>
+            <el-form-item label="种酒名称" prop="name">
+              <el-input v-model="sceneryContent.name"></el-input>
             </el-form-item>
 
           </el-col>
@@ -41,50 +31,75 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="联系QQ" prop="contactQq">
-              <el-input v-model="sceneryContent.contactQq"></el-input>
+            <el-form-item  label="单笔酒量" prop="standard">
+              <el-input-number v-model="sceneryContent.standard" controls-position="right"  :precision="2" :step="0.1" :max="1000000"></el-input-number>
             </el-form-item>
-
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="公司地址" prop="companyAddress">
-              <el-input v-model="sceneryContent.companyAddress"></el-input>
+            <el-form-item  label="赠送分红积分" prop="largessIntegral">
+              <el-input-number v-model="sceneryContent.largessIntegral" controls-position="right"  :precision="2" :step="0.1" :max="10000000"></el-input-number>
             </el-form-item>
-
           </el-col>
         </el-row>
-
         <el-row>
-          <el-col :span="4">
-            <el-form-item  label="微信二维码" prop="wechatCode">
-              <!--上传图片多图-->
-              <div style="margin-bottom: 6px;">
-                <Upload v-model="sceneryContent.wechatCode" :file-lists="sceneryImgArr2" ></Upload>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item  label="微博二维码" prop="blogCode">
-            <div style="margin-bottom: 6px;">
-              <Upload v-model="sceneryContent.blogCode" :file-lists="sceneryImgArr4" ></Upload>
-            </div>
+          <el-col :span="12">
+            <el-form-item  label="单笔窖酒价格" prop="money">
+              <el-input-number v-model="sceneryContent.money" controls-position="right"  :precision="2" :step="0.1" :max="10000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
-          <el-form-item label="公司简介" prop="companyDetails">
-            <div class="editor-container">
-              <tinymce :height=400 ref="editor" v-model="sceneryContent.companyDetails"></tinymce>
-            </div>
+          <el-col :span="12">
+            <el-form-item label="酒品须知" prop="context">
+            <el-input
+              type="textarea"
+              :rows="6"
+              placeholder="请输入须知"
+              v-model="sceneryContent.context">
+            </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      <el-row>
+        <el-col :span="10">
+          <el-form-item  label="种酒主图" prop="img">
+          <!--上传图片多图-->
+          <div style="margin-bottom: 6px;">
+            <Upload v-model="sceneryContent.img" :file-lists="sceneryImgArr2" ></Upload>
+          </div>
           </el-form-item>
+        </el-col>
+        <el-col :span="2">
+          <span style="color: red; font-size: 14px">（最多9张图片，建议图片宽高比例为  5：3  如： 1500 * 900 ，单张图片不超过2M）</span>
+        </el-col>
+      </el-row>
+
+        <el-row>
+        <el-form-item label="种酒详情" prop="imgDesc">
+        <div class="editor-container">
+          <tinymce :height=400 ref="editor" v-model="sceneryContent.imgDesc"></tinymce>
+        </div>
+        </el-form-item>
         </el-row>
-        <el-row style=" float: right; margin-bottom: 20px">
-          <!--<el-button type="warning" @click="goBack">返回</el-button>-->
-          <!--<el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">确认发布</el-button>-->
-          <el-button type="primary" :loading="false" @click="saveNews">确认修改</el-button>
+
+      <!--  <el-row>
+        <el-form-item :label="sceneryContent.inOut==0?'景点介绍2':'众筹介绍2'" prop="spotDetails">
+        <div class="editor-container">
+
+          <UE :defaultMsg="sceneryContent.spotDetails" :config="config" :id="ue1" ref="ue"></UE>
+          {{sceneryContent.spotDetails}}
+        </div>
+
+        </el-form-item>
+        </el-row>-->
+        <el-row style=" float: right">
+          <el-button type="warning" @click="goBack">返回</el-button>
+          <el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">确认发布</el-button>
+          <el-button type="primary" v-if="newId" :loading="false" @click="saveNews">确认修改</el-button>
         </el-row>
       </div>
     </el-form>
@@ -95,16 +110,16 @@
 <script>
   import Tinymce from '@/components/Tinymce'
   import VueCropper from 'vue-cropper'
-  //  import Upload from '@/components/ImgCropper/mutilImage'
-  import Upload from '@/components/ImgCropper/oneImage'
-  //  import UploadSingle from '@/components/Upload/oneImage'
+//  import Upload from '@/components/ImgCropper/mutilImage'
+  import Upload from '@/components/ImgCropper/mutilCropimage'
+//  import UploadSingle from '@/components/Upload/oneImage'
   import MDinput from '@/components/MDinput'
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   import Sticky from '@/components/Sticky' // 粘性header组件
   import {validateURL} from '@/utils/validate'
-  import {saveAndUpdateNews,getNewsById} from '@/api/news'
-  import {getBasicInfo, save} from '@/api/basicInfo'
+    import {saveAndUpdateNews,getNewsById} from '@/api/news'
+    import {wineClassifyList, saveWine, wineDetail, deleteWineClassify} from '@/api/wine'
   import {fetchGoodDetail} from '@/api/goods'
   import {userSearch} from '@/api/remoteSearch'
   import {
@@ -125,15 +140,16 @@
   }
   const sceneryContent={
     id: "",
-    companyDetails: "",
-    companyAddress:"",
-    wechatAccount: "",
-    wechatCode: "",
-    blogAccount: "",
-    blogCode: '',
-    telephone: "",
-    mailbox: "",
-    contactQq: "",
+    name: "",
+    standard:"",
+    money: "",
+    largessIntegral: "",
+    img: "",
+    imgDesc: "",
+    context: "",
+//    type: "",
+    liquorCategory: ""
+//    cellarNumber: "",
   }
   const defaultForm = {
     status: 'draft',
@@ -177,8 +193,7 @@
       }
     },
     mounted() {
-      this.getALLParks()
-
+      this.getWineCategory()
     },
     data() {
       const validateRequire = (rule, value, callback) => {
@@ -225,17 +240,7 @@
         },
         sceneryImgArr:[],
         sceneryImgArr2:[],
-        sceneryImgArr3:[],
-        sceneryImgArr4:[],
-        parksOptions: [],
-        sightOptions: [],
-        statusOptions:[
-          {id:0,name:"众筹中"},
-          {id:1,name:"已众筹"},
-          {id:2,name:"在建"},
-          {id:3,name:"已建"},
-          {id:4,name:"已营业"}
-        ],
+        wineCategoryOptions: [],
         sceneryContent: Object.assign({}, sceneryContent),
         newContent: Object.assign({}, defaultNews),
         newId: '',
@@ -248,36 +253,33 @@
         isShowValue: false,
         disableValue: false,
         rules: {
-          wechatAccount: [
-            {required: true, message: '请输入微信账号', trigger: 'blur'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          liquorCategory: [
+            {required: true, message: '请选择种酒分类', trigger: 'change'}
           ],
-          blogAccount: [
-            {required: true, message: '请输入微博账号', trigger: 'change'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          name: [
+            {required: true, message: '请输入种酒名称', trigger: 'blur'},
+            {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
           ],
-          telephone: [
-            {required: true, message: '请输入电话号码', trigger: 'change'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          money: [
+            {required: true, message: '请输入价格', trigger: 'change'}
           ],
-          mailbox: [
-            {required: true, message: '请输入邮箱', trigger: 'change'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          largessIntegral: [
+            {required: true, message: '请输入积分', trigger: 'change'}
           ],
-          contactQq: [
-            {required: true, message: '请输入qq', trigger: 'change'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          standard: [
+            {required: true, message: '请输入单笔酒量', trigger: 'change'}
           ],
-          masterImg: [
+
+          img: [
             {required: true, message: '请上传景点主图', trigger: 'change'}
           ],
-          companyDetails: [
-            {required: true, message: '请输入公司简介', trigger: 'blur'},
+          imgDesc: [
+            {required: true, message: '请输入详情介绍', trigger: 'blur'},
             {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
           ],
-          companyAddress: [
-            {required: true, message: '请输入公司地址', trigger: 'blur'},
-            {min: 3, max: 200, message: '长度在 3 到 200 个字符', trigger: 'blur'}
+          context: [
+            {required: true, message: '请输入须知', trigger: 'blur'},
+            {min: 3, max: 2000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
           ]
         }
       }
@@ -304,10 +306,9 @@
       }
     },
     created() {
-      if (true) {
+      if (this.isEdit) {
 
         this.newId = this.$route.query.id
-
         this.fetchNewsContent()
       } else {
         this.sceneryContent = Object.assign({}, sceneryContent)
@@ -335,43 +336,15 @@
       }
     },
     methods: {
-      changeZong(){
-        this.sceneryContent.status=this.statusOptions[0].id
-        this.sceneryContent.spotDetails=''
-        this.sceneryContent.notes=''
-        if(this.sceneryContent.inOut!=1){
-          this.sceneryContent.status=''
-          this.sceneryContent.requiredMoney=0
-        }
-      },
-      //获取所有园区
-      getALLParks(){
-        parkList(this.listQuery).then(response => {
-          this.parksOptions = response.data.data.content
+      getWineCategory(){
+        wineClassifyList(this.listQuery).then(response => {
+          this.wineCategoryOptions = response.data.data.content
           this.loading = false
           this.listLoading = false
         })
-      },
-      // 获取景区下的景点
-      getSightByPark(pId) {
-        this.loading = true
-        this.listQuery2.pId = pId
-        selectParkScenery(this.listQuery2).then(response => {
-          this.sightOptions = response.data.data
-          debugger
-          this.loading = false
-          this.listLoading = false
-        })
-      },
-      changeSights(pId){
-        debugger
-        this.getSightByPark(pId)
-//        this.sceneryContent.sightCategory =  this.sightOptions[0].id
-
       },
       submitNews(){
-        debugger
-        save(this.sceneryContent).then(response => {
+        saveWine(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
             message: '数据提交成功',
@@ -393,61 +366,15 @@
         })
       },
       fetchNewsContent(){
-        getBasicInfo({id:1}).then(response => {
+        wineDetail({id:this.$route.query.id}).then(response => {
           this.sceneryContent = response.data.data
-
           // 编辑修改
-          debugger
-          this.sceneryImgArr=this.sceneryContent.wechatCode.split(',')
-          debugger
+          this.sceneryImgArr=this.sceneryContent.img.split(',')
           for(let i=0; i<this.sceneryImgArr.length;i++){
             let obj={name:'tupian.png', url:this.sceneryImgArr[i]}
             this.sceneryImgArr2.push(obj)
           }
-          debugger
-          this.sceneryImgArr3=this.sceneryContent.blogCode.split(',')
-          debugger
-          for(let i=0; i<this.sceneryImgArr3.length;i++){
-            let obj={name:'tupian.png', url:this.sceneryImgArr3[i]}
-            this.sceneryImgArr4.push(obj)
-          }
         })
-      },
-      submitForm() {
-        this.postForm.display_time = parseInt(this.display_time / 1000)
-        console.log(this.postForm)
-        this.$refs.postForm.validate(valid => {
-          if (valid) {
-            this.loading = true
-            this.$notify({
-              title: '成功',
-              message: '发布成功',
-              type: 'success',
-              duration: 2000
-            })
-            this.postForm.status = 'published'
-            this.loading = false
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
-      draftForm() {
-        if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
-          this.$message({
-            message: '请填写必要的标题和内容',
-            type: 'warning'
-          })
-          return
-        }
-        this.$message({
-          message: '保存成功',
-          type: 'success',
-          showClose: true,
-          duration: 1000
-        })
-        this.postForm.status = 'draft'
       },
       showPopover(index) {
 
@@ -459,7 +386,7 @@
 
       },
       goBack(){
-        this.$router.push({path: '/scenery-manage/scenery/scenery-list'})
+        this.$router.push({path: '/wine-manage/wine/wine-list'})
       }
     }
   }
@@ -533,4 +460,3 @@
   }
 
 </style>
-

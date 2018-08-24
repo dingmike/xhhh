@@ -146,11 +146,11 @@
         rules: {
           parkName: [
             {required: true, message: '请输入园区名称', trigger: 'blur'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+            {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
           ],
           sceneryName: [
             {required: true, message: '请输入景区名称', trigger: 'blur'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+            {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
           ],
           park: [
             {required: true, message: '请选择园区', trigger: 'change'}

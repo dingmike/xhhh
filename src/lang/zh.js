@@ -52,6 +52,12 @@ export default {
     exportZip: 'Export Zip',
     theme: '换肤',
     clipboardDemo: 'Clipboard',
+
+
+    userWithdraw:'会员提现',
+    userManage:'会员管理',
+    editUser:'编辑会员',
+    userDegree:'编辑会员等级',
     news: '资讯',
     officeNews: '新闻资讯',
     officeNewsList: '资讯列表',
@@ -78,6 +84,17 @@ export default {
     editAd: '编辑广告',
     addAd: '添加广告',
     editInfo: '编辑基本资料',
+    wineClassify: '种酒分类',
+
+
+    wineManage: '种酒管理',
+    wine: '种酒',
+    wineList: '种酒列表',
+    addWine: '添加种酒',
+    editWine: '编辑种酒',
+    wineOrder: '种酒订单',
+    wineOrderList: '种酒订单',
+    wineOrderDetail: '种酒订单详情',
     i18n: '国际化'
   },
   navbar: {

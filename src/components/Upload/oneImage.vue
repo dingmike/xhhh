@@ -1,18 +1,35 @@
 <template>
   <div class="upload-container">
-
 <!--:before-upload="beforeUpload"-->
+<!--
     <el-upload
       class="avatar-uploader"
-      action="https://httpbin.org/post"
+      action="http://192.168.9.102:8080/huahai/admin/upload"
       :show-file-list="false"
       :before-upload="beforeUpload"
       :on-success="handleImageScucess">
       <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
-<!--https://jsonplaceholder.typicode.com/posts/-->
+-->
 
+    <el-upload
+      action="http://192.168.9.102:8080/huahai/admin/upload"
+      list-type="picture-card"
+      :limit="1"
+      :show-file-list='true'
+      :file-list="picFiles"
+      :before-upload="beforeUpload"
+      :on-preview="handlePictureCardPreview"
+      :on-remove="handleRemove">
+      <i class="el-icon-plus"></i>
+    </el-upload>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
+
+
+<!--https://jsonplaceholder.typicode.com/posts/-->
   </div>
 </template>
 <script>
@@ -74,14 +91,14 @@ export default {
     beforeUpload(file) {
       const _self = this
 
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpeg'||'image/png';
+      const isLt2M = file.size / 1024 / 1024 < 1;
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+        this.$message.error('上传头像图片只能是 JPG 和 PNG 格式!');
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+        this.$message.error('上传头像图片大小不能超过 1MB!');
       }
       return isJPG && isLt2M;
       /*return new Promise((resolve, reject) => {

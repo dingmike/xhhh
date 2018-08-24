@@ -93,12 +93,9 @@ export const asyncRouterMap = [
       }
     }]
   },*/
-
   //-----------my navbar start---------------------//
-
-
   //new add router
-  {
+  /*{
     path: '/sceneryIntroduce',
     component: Layout,
     children: [{
@@ -107,24 +104,9 @@ export const asyncRouterMap = [
       name: 'sceneryIntroduce',
       meta: { title: '景点介绍', icon: 'scenery', noCache: true, roles: ['admin','editor'] }
     }]
-  },
-  {
-    path: '/ad-place',
-    component: Layout,
-    redirect: '/ad-place/ad-list',
-    name: 'adPlace',
-    meta: {
-      title: 'adPlace',
-      icon: 'ad'
-    },
-    children: [
-      { path: 'ad-list', component: _import('ad-place/adList'), name: 'adList', meta: { title: 'adList', noCache: true }},
-      { path: 'add-ad', component: _import('ad-place/addAd'), name: 'addAd', meta: { title: 'addAd', noCache: true }},
-      { path: 'edit-ad', component: _import('ad-place/editAd'), name: 'editAd', meta: { title: 'editAd', noCache: true}, hidden: true }
-    ]
-      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
-  },
-  {
+  },*/
+
+ /* {
     path: '/enterPark',
     component: Layout,
     children: [{
@@ -133,7 +115,7 @@ export const asyncRouterMap = [
       name: 'enterPark',
       meta: { title: '入园参考', icon: 'ad', noCache: true, roles: ['admin','editor'] }
     }]
-  },
+  },*/
 
   {
     path: '/userManage',
@@ -142,7 +124,17 @@ export const asyncRouterMap = [
       path: 'index',
       component: _import('userManage/index'),
       name: 'userManage',
-      meta: { title: '会员管理', icon: 'user', noCache: true, roles: ['admin','editor'] }
+      meta: { title: 'userManage', icon: 'user', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+  {
+    path: '/userWithdraw',
+    component: Layout,
+    children: [{
+      path: 'withdraw-table',
+      component: _import('userWithdraw/withdrawTable'),
+      name: 'userWithdraw',
+      meta: { title: 'userWithdraw', icon: 'user', noCache: true, roles: ['admin','editor'] }
     }]
   },
   {
@@ -153,7 +145,7 @@ export const asyncRouterMap = [
       path: 'index',
       component: _import('userManage/editUser'),
       name: 'editUser',
-      meta: { title: '编辑会员', icon: 'documentation', noCache: true }
+      meta: { title: 'editUser', icon: 'documentation', noCache: true }
     }],
     hidden: true
   },
@@ -165,7 +157,7 @@ export const asyncRouterMap = [
       path: 'index',
       component: _import('userManage/userDegree'),
       name: 'userDegree',
-      meta: { title: '编辑会员等级', icon: 'documentation', noCache: true }
+      meta: { title: 'userDegree', icon: 'documentation', noCache: true }
     }],
     hidden: true
   },
@@ -260,21 +252,98 @@ export const asyncRouterMap = [
 
 
 
+  //窖酒
+  {
+    path: '/wine-manage',
+    component: Layout,
+    redirect: '/wine-manage/parks/parks-list',
+    name: 'wineManage',
+    meta: {
+      title: 'wineManage',
+      icon: 'example'
+    },
+    children: [
+
+      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
+      {
+        path: '/wine-manage/wine',
+        component: _import('wineManage/wine/index'),
+        redirect: '/wine-manage/wine/wine-list',
+        name: 'wine',
+        meta: {
+          title: 'wine',
+          icon: 'table'
+        },
+        children: [
+          { path: 'wine-list', component: _import('wineManage/wine/wineList'), name: 'wineList', meta: { title: 'wineList', noCache: true }},
+          { path: 'add-wine', component: _import('wineManage/wine/addWine'), name: 'addWine', meta: { title: 'addWine', noCache: true }},
+          { path: 'edit-wine', component: _import('wineManage/wine/editWine'), name: 'editWine', meta: { title: 'editWine', noCache: true}, hidden: true }
+        ]
+      },
+      {
+        path: '/wine-manage/wine-order',
+        component: _import('wineManage/wineOrder/index'),
+        redirect: '/wine-manage/wine-order/wine-order-list',
+        name: 'wineOrder',
+        meta: {
+          title: 'wineOrder',
+          icon: 'table'
+        },
+        children: [
+          { path: 'wine-order-list', component: _import('wineManage/wineOrder/wineOrderList'), name: 'wineOrderList', meta: { title: 'wineOrderList', noCache: true }},
+          { path: 'wine-order-detail', component: _import('wineManage/wineOrder/wineOrderDetail'), name: 'wineOrderDetail', meta: { title: 'wineOrderDetail', noCache: true },hidden: true},
+          // { path: 'edit-office-news', component: _import('news/officeNews/editOfficeNews'), name: 'editOfficeNews', meta: { title: 'editOfficeNews', noCache: true}, hidden: true }
+        ]
+      }
+    ]
+  },
 
   {
+    path: '/ad-place',
+    component: Layout,
+    redirect: '/ad-place/ad-list',
+    name: 'adPlace',
+    meta: {
+      title: 'adPlace',
+      icon: 'ad'
+    },
+    children: [
+      { path: 'ad-list', component: _import('ad-place/adList'), name: 'adList', meta: { title: 'adList', noCache: true }},
+      { path: 'add-ad', component: _import('ad-place/addAd'), name: 'addAd', meta: { title: 'addAd', noCache: true }},
+      { path: 'edit-ad', component: _import('ad-place/editAd'), name: 'editAd', meta: { title: 'editAd', noCache: true}, hidden: true }
+    ]
+    // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
+  },
+  /*{
     path: '/classify',
     component: Layout,
     redirect: 'noredirect',
     name: 'classify',
     meta: {
-      title: '分类管理',
+      title: '种酒分类',
       icon: 'classify'
     },
     children: [
       { path: 'keyboard', component: _import('charts/keyboard'), name: 'keyboardChart', meta: { title: '种酒类别', noCache: true }},
       { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: '景点类别', noCache: true }}
     ]
+  },*/
+
+  {
+    path: '/classify',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'classify',
+    children: [{
+      path: 'index',
+      component: _import('classify/wineClassify'),
+      name: 'wineClassify',
+      meta: { title: 'wineClassify', icon: 'documentation', noCache: true }
+    }],
+    hidden: false
   },
+
+  //基本资料
   {
     path: '/basicFile',
     component: Layout,
@@ -285,7 +354,7 @@ export const asyncRouterMap = [
       icon: 'basic'
     },
     children: [
-      { path: 'basic-info', component: _import('basicFile/basicInfo'), name: 'basicInfo', meta: { title: 'basicInfo', noCache: true }},
+      // { path: 'basic-info', component: _import('basicFile/basicInfo'), name: 'basicInfo', meta: { title: 'basicInfo', noCache: true }},
       { path: 'edit-info', component: _import('basicFile/editInfo'), name: 'editInfo', meta: { title: 'editInfo', noCache: true }},
     ]
   },

@@ -24,21 +24,36 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="景点名称" width="120">
+      <el-table-column align="center" label="种酒名称" width="120">
         <template slot-scope="scope">
-          <span>{{scope.row.title}}</span>
+          <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" align="center" label="所属景区">
+      <el-table-column align="center" label="类别名称" width="120">
         <template slot-scope="scope">
           <span>{{scope.row.categoryName}}</span>
         </template>
       </el-table-column>
-       <el-table-column width="200px" align="center" label="开放时间">
+      <el-table-column width="200" align="center" label="酒量（kg）">
+        <template slot-scope="scope">
+          <span>{{scope.row.standard}}</span>
+        </template>
+      </el-table-column>
+   <!--    <el-table-column width="200px" align="center" label="售价">
          <template slot-scope="scope">
-           <span>{{scope.row.openTime}}</span>
+           <span>{{scope.row.money}}</span>
+         </template>
+       </el-table-column>-->
+      <el-table-column width="200px" align="center" label="赠送积分">
+         <template slot-scope="scope">
+           <span>{{scope.row.largessIntegral}}</span>
          </template>
        </el-table-column>
+ <!--     <el-table-column width="200px" align="center" label="窖藏人数">
+         <template slot-scope="scope">
+           <span>{{scope.row.cellarNumber}}</span>
+         </template>
+       </el-table-column>-->
       <!--<el-table-column width="200px" align="center" label="是否众筹项目">
          <template slot-scope="scope">
            <span>{{scope.row.inOut==1?'是':'否'}}</span>
@@ -156,6 +171,7 @@
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
   import {deleteNews, getNewsList} from '@/api/news'
+  import {wineList, deleteWine} from '@/api/wine'
   import { getSightSpotList, deleteSpot} from '@/api/scenery'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
@@ -249,7 +265,7 @@
       },
       getList() {
         this.listLoading = true
-        getSightSpotList(this.listQuery).then(response => {
+        wineList(this.listQuery).then(response => {
           this.list = response.data.data.content
           this.total = response.data.data.totalElements
           this.listLoading = false
@@ -298,21 +314,21 @@
         this.visibleDelete= true
       },
       handleDeleteNews(row){
-        deleteSpot({id: this.dataObj.id}).then(response => {
+        deleteWine({id: this.dataObj.id}).then(response => {
           this.$notify({
             title: '提示',
             message: '删除成功',
             type: 'success',
             duration: 1500
           })
-          this.visibleDelete = false
+          this.visibleDelete= true
           this.getList()
         })
       },
       // 去修改内容
       handleUpdate(row) {
         console.log("修改内容ID:" + row.id)
-        this.$router.push({path: '/scenery-manage/scenery/edit-scenery', query: {id: row.id}})
+        this.$router.push({path: '/wine-manage/wine/edit-wine', query: {id: row.id}})
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {

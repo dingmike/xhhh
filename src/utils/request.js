@@ -13,7 +13,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // request interceptor
 service.interceptors.request.use(config => {
-  debugger
   // Do something before request is sent
   if (store.getters.token) {
     config.headers['token'] = getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
@@ -36,7 +35,6 @@ service.interceptors.response.use(
 
     const res = response.data;
        if (res.code !== 200) {
-         debugger
          Message({
            message: res.msg,
            type: 'error',
@@ -59,7 +57,6 @@ service.interceptors.response.use(
          return response;
        }
  },
-
 
 
 

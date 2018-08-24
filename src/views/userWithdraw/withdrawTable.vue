@@ -1,73 +1,95 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-row>
-        <el-col :span="2">
-          <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
-                     icon="el-icon-edit">新增
-          </el-button>
-        </el-col>
-        <el-col :span="2">
-          <el-button class="filter-item" type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
-        </el-col>
-      </el-row>
-
-      <!--<el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download"
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
+                :placeholder="$t('table.title')" v-model="listQuery.title">
+      </el-input>
+      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance"
+                 :placeholder="$t('table.importance')">
+        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
+        </el-option>
+      </el-select>
+      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type"
+                 :placeholder="$t('table.type')">
+        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'"
+                   :value="item.key">
+        </el-option>
+      </el-select>
+      <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.sort">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
+        </el-option>
+      </el-select>
+      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">
+        {{$t('table.search')}}
+      </el-button>
+      <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
+                  icon="el-icon-edit">{{$t('table.add')}}
+       </el-button>-->
+      <el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download"
                  @click="handleDownload">{{$t('table.export')}}
       </el-button>
-      <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">
+      <!--<el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">
         {{$t('table.reviewer')}}
       </el-checkbox>-->
     </div>
 
-    <!--列表-->
+
+    <!--提现明细-->
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="景点名称" width="120">
+      <el-table-column align="center" label="用户ID" width="65">
         <template slot-scope="scope">
-          <span>{{scope.row.title}}</span>
+          <span>{{scope.row.userId}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" align="center" label="所属景区">
+      <el-table-column width="100px" align="center" label="姓名">
         <template slot-scope="scope">
-          <span>{{scope.row.categoryName}}</span>
+          <!--<span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>-->
+          <span>{{scope.row.realName }}</span>
         </template>
       </el-table-column>
-       <el-table-column width="200px" align="center" label="开放时间">
-         <template slot-scope="scope">
-           <span>{{scope.row.openTime}}</span>
-         </template>
-       </el-table-column>
-      <!--<el-table-column width="200px" align="center" label="是否众筹项目">
-         <template slot-scope="scope">
-           <span>{{scope.row.inOut==1?'是':'否'}}</span>
-         </template>
-       </el-table-column>
-      <el-table-column width="200px" align="center" label="众筹所需金额">
+      <el-table-column width="120px" label="提现金额">
         <template slot-scope="scope">
-          <span>{{scope.row.requiredMoney}}</span>
+          <!--<el-tag>{{scope.row.type | typeFilter}}</el-tag>-->
+          <el-tag>{{scope.row.money}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="状态">
+      <el-table-column width="140px" align="center" label="累计提现金额">
         <template slot-scope="scope">
-          <span>{{scope.row.status==1?'已营业':'待营业'}}</span>
+          <span>{{scope.row.totalMoney}}</span>
         </template>
-      </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="创建时间">
+      </el-table-column>
+
+      <el-table-column width="120px" align="center" label="实际金额">
         <template slot-scope="scope">
-          <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.actualMoney}}</span>
         </template>
-      </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="更新时间">
+      </el-table-column>
+      <el-table-column width="180px" align="center" label="提现至账号">
         <template slot-scope="scope">
-          <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.targetAccount}}</span>
         </template>
-      </el-table-column>-->
-      <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
+      </el-table-column>
+      <el-table-column width="120px" align="center" label="提现方式">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="success" @click="showSureDelete(scope.row)">删除</el-button>
+          <span>{{scope.row.type | typeFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="110px" align="center" label="状态">
+        <template slot-scope="scope">
+          <span>{{scope.row.status | statusFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="110px" align="center" label="备注">
+        <template slot-scope="scope">
+          <span>{{scope.row.remarks }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('table.actions')" width="240" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button type="primary" size="middle" @click="handleStatus(scope.row)">修改状态</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,6 +100,27 @@
                      layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
+
+
+    <!--激活账户弹窗 start-->
+    <el-dialog v-el-drag-dialog
+               title="操作"
+               :visible.sync="dialogVisible4"
+               width="30%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <el-col :span="24">
+          <span class="down-box">提现通过吗？</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4 = false">取 消</el-button>
+        <el-button type="primary" @click="handleActiveUser">确定</el-button>
+      </span>
+    </el-dialog>
+    <!--激活账户 end-->
+
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="70px"
@@ -129,34 +172,12 @@
     </el-dialog>
 
 
-
-    <!--删除弹窗 start-->
-    <el-dialog v-el-drag-dialog
-               title="删除数据"
-               :visible.sync="visibleDelete"
-               width="30%"
-               center
-               :before-close="handleClose">
-      <el-row>
-        <el-col :span="24">
-          <span class="down-box">确定删除数据吗？</span>
-        </el-col>
-      </el-row>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="visibleDelete = false">取 消</el-button>
-        <el-button type="primary" @click="handleDeleteNews">确定</el-button>
-      </span>
-    </el-dialog>
-    <!--删除弹窗 end-->
-
   </div>
 </template>
 
 <script>
-  import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
-  import {deleteNews, getNewsList} from '@/api/news'
-  import { getSightSpotList, deleteSpot} from '@/api/scenery'
+  import {getWithDrawList, idPassed} from '@/api/users'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
 
@@ -166,7 +187,6 @@
     {key: 'JP', display_name: 'Japan'},
     {key: 'EU', display_name: 'Eurozone'}
   ]
-
   // arr to obj ,such as { CN : "China", US : "USA" }
   const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
     acc[cur.key] = cur.display_name
@@ -176,22 +196,18 @@
   export default {
     name: 'complexTable',
     directives: {
-      waves,
-      elDragDialog
+      waves
     },
     data() {
       return {
-        refreshLoading: false,
         tableKey: 0,
-        list: [],
+        list: null,
         total: null,
         listLoading: true,
         listQuery: {
           page: 1,
-          size: 10,
+          size: 10
         },
-        visibleDelete: false,
-        dataObj:{},
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
         sortOptions: [{label: 'ID Ascending', key: '+id'}, {label: 'ID Descending', key: '-id'}],
@@ -206,7 +222,9 @@
           type: '',
           status: 'published'
         },
+        oneObj: {},
         dialogFormVisible: false,
+        dialogVisible4: false,
         dialogStatus: '',
         textMap: {
           update: 'Edit',
@@ -232,24 +250,40 @@
         return statusMap[status]
       },
       typeFilter(type) {
-        return calendarTypeKeyValue[type]
+
+        switch (type) {
+          case 1:
+            return '支付宝'
+          case 2:
+            return '微信'
+          case 3:
+            return "银行卡"
+          default:
+            break
+        }
+      },
+      statusFilter(status){
+        switch (status) {
+          case 0:
+            return '待审核'
+          case 1:
+            return '审核通过'
+          case 2:
+            return '未通过审核'
+          case 3:
+            return "异常"
+          default:
+            break
+        }
       }
     },
     created() {
       this.getList()
     },
     methods: {
-      handleClose() {
-        this.dialogFormVisible = false // 关闭dialog
-        this.dialogPvVisible = false // 关闭dialog
-      },
-      reloads(){
-        this.refreshLoading = true
-        this.getList()
-      },
       getList() {
         this.listLoading = true
-        getSightSpotList(this.listQuery).then(response => {
+        getWithDrawList(this.listQuery).then(response => {
           this.list = response.data.data.content
           this.total = response.data.data.totalElements
           this.listLoading = false
@@ -267,6 +301,7 @@
         this.getList()
       },
       handleCurrentChange(val) {
+        debugger
         this.listQuery.page = val
         this.getList()
       },
@@ -288,31 +323,13 @@
           type: ''
         }
       },
-      // 新增内容
       handleCreate() {
-        this.$router.push({path: '/scenery-manage/scenery/add-scenery'})
-//        this.$router.push({path: '/news/addNews', query: {id: row.id}})
-      },
-      showSureDelete(row){
-        this.dataObj = row
-        this.visibleDelete= true
-      },
-      handleDeleteNews(row){
-        deleteSpot({id: this.dataObj.id}).then(response => {
-          this.$notify({
-            title: '提示',
-            message: '删除成功',
-            type: 'success',
-            duration: 1500
-          })
-          this.visibleDelete = false
-          this.getList()
+        this.resetTemp()
+        this.dialogStatus = 'create'
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
         })
-      },
-      // 去修改内容
-      handleUpdate(row) {
-        console.log("修改内容ID:" + row.id)
-        this.$router.push({path: '/scenery-manage/scenery/edit-scenery', query: {id: row.id}})
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -330,6 +347,31 @@
               })
             })
           }
+        })
+      },
+      handleStatus(row){
+        this.oneObj = row
+        this.dialogVisible4 = true
+      },
+      handleActiveUser(){
+        idPassed({id: this.oneObj.id}).then(response => {
+          this.dialogVisible4 = false
+          this.$notify({
+            title: '成功',
+            message: '激活成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        })
+      },
+      handleUpdate(row) {
+        this.temp = Object.assign({}, row) // copy obj
+        this.temp.timestamp = new Date(this.temp.timestamp)
+        this.dialogStatus = 'update'
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
         })
       },
       updateData() {
@@ -375,8 +417,8 @@
       handleDownload() {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-          const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+          const tHeader = ['姓名', '电话号码', '提现方式(1：支付宝；2：微信；3：银行卡)', '提现账户', '实际提现金额', '提现金额', '累计提现金额', '状态(0：已申请，待审核；1：已通过审核  2：未通过审核，退款   3：异常)', '备注',]
+          const filterVal = ['realName', 'phone', 'type', 'targetAccount', 'actualMoney', 'money', 'totalMoney', 'status', 'remarks']
           const data = this.formatJson(filterVal, this.list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -394,6 +436,9 @@
             return v[j]
           }
         }))
+      },
+      handleClose(){
+
       }
     }
   }

@@ -106,6 +106,36 @@ export function recharge(data) {
   })
 }
 
+// 获取提现列表
+export function getWithDrawList() {
+  return request({
+    url: 'userWithdraw/list',
+    method: 'get',
+    params: ''
+  })
+}
+
+// 通过提现
+export function idPassed(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);
+  return request({
+    url: 'userWithdraw/idPassed',
+    method: 'post',
+    data: params
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
 export function fetchGoodDetail(query) {
   return request({
     url: 'goods/detail',
