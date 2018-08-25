@@ -1,11 +1,10 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
+
       <el-row>
         <el-col :span="2">
-          <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
-                     icon="el-icon-edit">新增
-          </el-button>
+          <el-button class="filter-item" type="warning" @click="goBack">返回</el-button>
         </el-col>
         <el-col :span="2">
           <el-button class="filter-item" type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
@@ -24,47 +23,52 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="种酒名称" width="120">
+      <el-table-column align="center" label="会员账号" width="120">
         <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+          <span>{{scope.row.phone}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="类别名称" width="120">
+      <el-table-column width="200" align="center" label="姓名">
         <template slot-scope="scope">
-          <span>{{scope.row.categoryName}}</span>
+          <span>{{scope.row.realName}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" align="center" label="酒量（kg）">
+      <el-table-column width="200" align="center" label="居住地">
         <template slot-scope="scope">
-          <span>{{scope.row.standard}}</span>
+          <span>{{scope.row.realName}}</span>
         </template>
       </el-table-column>
-   <!--    <el-table-column width="200px" align="center" label="售价">
+      <el-table-column width="200" align="center" label="投资金额">
+        <template slot-scope="scope">
+          <span>{{scope.row.money}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="200" align="center" label="历史分红记录">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="historyRecord(scope.row)">查看</el-button>
+        </template>
+      </el-table-column>
+     <!--  <el-table-column width="200px" align="center" label="开放时间">
          <template slot-scope="scope">
-           <span>{{scope.row.money}}</span>
+           <span>{{scope.row.openTime}}</span>
          </template>
        </el-table-column>-->
-      <el-table-column width="200px" align="center" label="赠送积分">
-         <template slot-scope="scope">
-           <span>{{scope.row.largessIntegral}}</span>
-         </template>
-       </el-table-column>
- <!--     <el-table-column width="200px" align="center" label="窖藏人数">
-         <template slot-scope="scope">
-           <span>{{scope.row.cellarNumber}}</span>
-         </template>
-       </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="是否众筹项目">
+     <!-- <el-table-column width="200px" align="center" label="是否众筹项目">
          <template slot-scope="scope">
            <span>{{scope.row.inOut==1?'是':'否'}}</span>
          </template>
-       </el-table-column>
-      <el-table-column width="200px" align="center" label="众筹所需金额">
+       </el-table-column>-->
+     <!-- <el-table-column width="200px" align="center" label="众筹所需总金额">
         <template slot-scope="scope">
-          <span>{{scope.row.requiredMoney}}</span>
+          <span>{{scope.row.money}}</span>
         </template>
-      </el-table-column>
-      <el-table-column width="200px" align="center" label="状态">
+      </el-table-column>-->
+     <!-- <el-table-column width="200px" align="center" label="已众筹金额">
+        <template slot-scope="scope">
+          <span>{{scope.row.accomplishMoney}}</span>
+        </template>
+      </el-table-column>-->
+     <!-- <el-table-column width="200px" align="center" label="状态">
         <template slot-scope="scope">
           <span>{{scope.row.status==1?'已营业':'待营业'}}</span>
         </template>
@@ -73,18 +77,23 @@
         <template slot-scope="scope">
           <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
-      </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="更新时间">
+      </el-table-column>
+      <el-table-column width="200px" align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>-->
+     <!-- <el-table-column align="center" label="参与人数" width="400" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="takePartPerson(scope.row)">查看</el-button>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button size="mini" type="success" @click="showSureDelete(scope.row)">删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
 
     <div class="pagination-container">
@@ -144,26 +153,6 @@
     </el-dialog>
 
 
-
-    <!--删除弹窗 start-->
-    <el-dialog v-el-drag-dialog
-               title="删除数据"
-               :visible.sync="visibleDelete"
-               width="30%"
-               center
-               :before-close="handleClose">
-      <el-row>
-        <el-col :span="24">
-          <span class="down-box">确定删除数据吗？</span>
-        </el-col>
-      </el-row>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="visibleDelete = false">取 消</el-button>
-        <el-button type="primary" @click="handleDeleteNews">确定</el-button>
-      </span>
-    </el-dialog>
-    <!--删除弹窗 end-->
-
   </div>
 </template>
 
@@ -171,8 +160,8 @@
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
   import {deleteNews, getNewsList} from '@/api/news'
-  import {wineList, deleteWine} from '@/api/wine'
   import { getSightSpotList, deleteSpot} from '@/api/scenery'
+  import {partInFundPersonList, deleteFund} from '@/api/fund'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
 
@@ -255,6 +244,9 @@
       this.getList()
     },
     methods: {
+      takePartPerson(row){
+        this.$router.push({path: '/fund-product/fund-scenery/add-fund',query: {id: row.fundingNumber}})
+      },
       handleClose() {
         this.dialogFormVisible = false // 关闭dialog
         this.dialogPvVisible = false // 关闭dialog
@@ -265,12 +257,21 @@
       },
       getList() {
         this.listLoading = true
-        wineList(this.listQuery).then(response => {
-          this.list = response.data.data.content
-          this.total = response.data.data.totalElements
-          this.listLoading = false
-          this.refreshLoading = false
-          this.$emit('refreshLoading', false)
+        partInFundPersonList( {fundingNumber:this.$route.query.id}).then(response => {
+            if(response.data.data){
+              this.list = response.data.data.content
+              this.total = response.data.data.totalElements
+              this.listLoading = false
+              this.refreshLoading = false
+              this.$emit('refreshLoading', false)
+            }else{
+              this.listLoading = false
+              this.$message({
+                message: '暂无数据',
+                type: 'warning'
+              })
+            }
+
         })
       },
 
@@ -306,7 +307,7 @@
       },
       // 新增内容
       handleCreate() {
-        this.$router.push({path: '/wine-manage/wine/add-wine'})
+        this.$router.push({path: '/fund-product/fund-scenery/add-fund'})
 //        this.$router.push({path: '/news/addNews', query: {id: row.id}})
       },
       showSureDelete(row){
@@ -314,21 +315,22 @@
         this.visibleDelete= true
       },
       handleDeleteNews(row){
-        deleteWine({id: this.dataObj.id}).then(response => {
+        deleteSpot({id: this.dataObj.id}).then(response => {
           this.$notify({
             title: '提示',
             message: '删除成功',
             type: 'success',
             duration: 1500
           })
-          this.visibleDelete= true
+          this.visibleDelete = false
           this.getList()
         })
       },
       // 去修改内容
       handleUpdate(row) {
-        console.log("修改内容ID:" + row.id)
-        this.$router.push({path: '/wine-manage/wine/edit-wine', query: {id: row.id}})
+          debugger
+        console.log("修改内容ID:" + row.spotId)
+        this.$router.push({path: '/fund-product/fund-scenery/edit-fund', query: {id: row.spotId}})
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -410,6 +412,13 @@
             return v[j]
           }
         }))
+      },
+      goBack(){
+        this.$router.push({path: '/fund-product/fund-scenery/fund-list'})
+      },
+      // 历史分红记录
+      historyRecord(){
+
       }
     }
   }

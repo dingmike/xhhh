@@ -16,7 +16,7 @@
                :on-preview="handlePictureCardPreview"
                :on-remove="handleRemove">
       <i class="el-icon-plus"></i>
-      <div slot="tip" class="el-upload__tip">添加图片(最多9张)</div>
+      <div slot="tip" class="el-upload__tip">点+添加图片(最多9张)</div>
 
     </uploadImg>
     <el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>
@@ -183,8 +183,6 @@
           centerBox: true,
           high: true
         },
-        dialogImageUrl: '',
-        dialogVisible: false,
 
         example2: {
           img: 'http://ofyaji162.bkt.clouddn.com/bg1.jpg',
@@ -354,7 +352,6 @@
         this.dialogVisible = true;
       },
       handleRemove(file, raw) {
-          debugger
         let doRemove = () => {
           let fileList = this.fileLists;
           fileList.splice(fileList.indexOf(file), 1);
@@ -407,18 +404,13 @@
         // 输出
         if (type === 'blob') {
           this.$refs.cropper.getCropBlob((data) => {
-            debugger
             this.downImg = window.URL.createObjectURL(data)
             aLink.href = window.URL.createObjectURL(data)
             aLink.click()
           })
         } else {
           this.$refs.cropper.getCropData((data) => {
-            debugger
-
             let newPic = this.dataURLtoFile(data, "tupian.png")
-
-            console.log(newPic)
             this.downImg = data
             aLink.href = data
             aLink.click()

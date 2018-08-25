@@ -10,14 +10,16 @@
             <el-form-item label="公告标题" prop="title">
               <el-input v-model="newContent.title"></el-input>
             </el-form-item>
-
           </el-col>
         </el-row>
         <el-row>
           <el-form-item label="公告内容" prop="content">
-            <div class="editor-container">
-              <tinymce :height=400 ref="editor" v-model="newContent.content"></tinymce>
-            </div>
+              <el-input
+                type="textarea"
+                :rows="5"
+                placeholder="请输入内容"
+                v-model="newContent.content">
+              </el-input>
           </el-form-item>
         </el-row>
         <el-row style=" float: right">
@@ -27,7 +29,6 @@
         </el-row>
       </div>
     </el-form>
-
   </div>
 </template>
 
@@ -145,7 +146,7 @@
           ],
           content: [
             {required: true, message: '请输入公告内容', trigger: 'blur'},
-            {min: 3, max: 5000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
+            {min: 3, max: 1000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
           ]
         }
       }

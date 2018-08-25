@@ -226,12 +226,11 @@ export const asyncRouterMap = [
           icon: 'table'
         },
         children: [
-          { path: 'office-news-list', component: _import('sceneryManage/parks/parksList'), name: 'parksList', meta: { title: 'parksList', noCache: true }},
+          { path: 'office-news-list', component: _import('sceneryManage/parks/parksList'), name: 'parksList', meta: { title: 'parksList',  icon: 'table', noCache: true }},
           // { path: 'add-office-news', component: _import('news/officeNews/addOfficeNews'), name: 'addOfficeNews', meta: { title: 'addOfficeNews', noCache: true }},
           // { path: 'edit-office-news', component: _import('news/officeNews/editOfficeNews'), name: 'editOfficeNews', meta: { title: 'editOfficeNews', noCache: true}, hidden: true }
         ]
       },
-      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
       {
         path: '/scenery-manage/scenery',
         component: _import('sceneryManage/scenery/index'),
@@ -251,6 +250,68 @@ export const asyncRouterMap = [
   },
 
 
+  //入园参考
+  {
+    path: '/park-see',
+    component: Layout,
+    redirect: '/park-see/park-in/park-in-list',
+    name: 'parkSee',
+    meta: {
+      title: 'parkSee',
+      icon: 'example'
+    },
+    children: [
+      {
+        path: '/park-see/park-in',
+        component: _import('parkSee/parkIn/index'),
+        redirect: '/park-see/park-in/park-in-list',
+        name: 'parkIn',
+        meta: {
+          title: 'parkIn',
+          icon: 'table'
+        },
+        children: [
+          { path: 'park-in-list', component: _import('parkSee/parkIn/parkInList'), name: 'parkInList', meta: { title: 'parkInList', noCache: true }},
+          { path: 'add-parkin', component: _import('parkSee/parkIn/addParkin'), name: 'addParkin', meta: { title: 'addParkin', noCache: true }},
+          { path: 'edit-parkin', component: _import('parkSee/parkIn/editParkin'), name: 'editParkin', meta: { title: 'editParkin', noCache: true}, hidden: true }
+        ]
+      }
+    ]
+  },
+
+
+
+  //众筹景点
+  {
+    path: '/fund-product',
+    component: Layout,
+    redirect: '/fund-product/fund-scenery/fund-list',
+    name: 'fundProduct',
+    meta: {
+      title: 'fundProduct',
+      icon: 'example'
+    },
+    children: [
+      {
+        path: '/fund-product/fund-scenery',
+        component: _import('fundProduct/fundScenery/index'),
+        redirect: '/fund-product/fund-scenery/fund-list',
+        name: 'fundScenery',
+        meta: {
+          title: 'fundScenery',
+          icon: 'table'
+        },
+        children: [
+          { path: 'fund-list', component: _import('fundProduct/fundScenery/fundList'), name: 'fundList', meta: { title: 'fundList', noCache: true }},
+          { path: 'fund-user-list', component: _import('fundProduct/fundScenery/fundUserList'), name: 'fundUserList', meta: { title: 'fundUserList', noCache: true },hidden:true},
+          { path: 'add-fund', component: _import('fundProduct/fundScenery/addFund'), name: 'addFund', meta: { title: 'addFund', noCache: true }},
+          { path: 'edit-fund', component: _import('fundProduct/fundScenery/editFund'), name: 'editFund', meta: { title: 'editFund', noCache: true}, hidden: true }
+        ]
+      }
+    ]
+  },
+
+
 
   //窖酒
   {
@@ -264,7 +325,23 @@ export const asyncRouterMap = [
     },
     children: [
 
-      // { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
+      {
+        path: '/wine-manage/classify',
+        component: _import('wineManage/classify/index'),
+        redirect: '/wine-manage/classify/wine-classify',
+        name: 'classify',
+        meta: {
+          title: 'classify',
+          icon: 'table'
+        },
+        children: [{
+          path: 'wine-classify',
+          component: _import('wineManage/classify/wineClassify'),
+          name: 'wineClassify',
+          meta: { title: 'wineClassify', icon: 'documentation', noCache: true }
+        }],
+        hidden: false
+      },
       {
         path: '/wine-manage/wine',
         component: _import('wineManage/wine/index'),
@@ -290,7 +367,7 @@ export const asyncRouterMap = [
           icon: 'table'
         },
         children: [
-          { path: 'wine-order-list', component: _import('wineManage/wineOrder/wineOrderList'), name: 'wineOrderList', meta: { title: 'wineOrderList', noCache: true }},
+          { path: 'wine-order-list', component: _import('wineManage/wineOrder/wineOrderList'), name: 'wineOrderList', meta: { title: 'wineOrderList',icon: 'documentation', noCache: true }},
           { path: 'wine-order-detail', component: _import('wineManage/wineOrder/wineOrderDetail'), name: 'wineOrderDetail', meta: { title: 'wineOrderDetail', noCache: true },hidden: true},
           // { path: 'edit-office-news', component: _import('news/officeNews/editOfficeNews'), name: 'editOfficeNews', meta: { title: 'editOfficeNews', noCache: true}, hidden: true }
         ]
@@ -329,19 +406,7 @@ export const asyncRouterMap = [
     ]
   },*/
 
-  {
-    path: '/classify',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'classify',
-    children: [{
-      path: 'index',
-      component: _import('classify/wineClassify'),
-      name: 'wineClassify',
-      meta: { title: 'wineClassify', icon: 'documentation', noCache: true }
-    }],
-    hidden: false
-  },
+
 
   //基本资料
   {
@@ -403,7 +468,7 @@ export const asyncRouterMap = [
 
 
   //-----------my navbar end---------------------//
-  {
+/*  {
     path: '/icon',
     component: Layout,
     children: [{
@@ -570,5 +635,5 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
 
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true }*/
 ]

@@ -1,11 +1,10 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
+
       <el-row>
         <el-col :span="2">
-          <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
-                     icon="el-icon-edit">新增
-          </el-button>
+          <el-button class="filter-item" type="warning" @click="goBack">返回</el-button>
         </el-col>
         <el-col :span="2">
           <el-button class="filter-item" type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
@@ -24,61 +23,22 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="种酒名称" width="120">
+      <el-table-column align="center" label="套餐标题" width="120">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="类别名称" width="120">
+      <el-table-column width="200" align="center" label="套餐介绍">
         <template slot-scope="scope">
-          <span>{{scope.row.categoryName}}</span>
+          <el-button type="primary" size="mini" @click="showIntro(scope.row)">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column width="200" align="center" label="酒量（kg）">
+      <el-table-column width="200" align="center" label="封面图">
         <template slot-scope="scope">
-          <span>{{scope.row.standard}}</span>
+          <el-button type="primary" size="mini" @click="showPic(scope.row)">查看</el-button>
         </template>
       </el-table-column>
-   <!--    <el-table-column width="200px" align="center" label="售价">
-         <template slot-scope="scope">
-           <span>{{scope.row.money}}</span>
-         </template>
-       </el-table-column>-->
-      <el-table-column width="200px" align="center" label="赠送积分">
-         <template slot-scope="scope">
-           <span>{{scope.row.largessIntegral}}</span>
-         </template>
-       </el-table-column>
- <!--     <el-table-column width="200px" align="center" label="窖藏人数">
-         <template slot-scope="scope">
-           <span>{{scope.row.cellarNumber}}</span>
-         </template>
-       </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="是否众筹项目">
-         <template slot-scope="scope">
-           <span>{{scope.row.inOut==1?'是':'否'}}</span>
-         </template>
-       </el-table-column>
-      <el-table-column width="200px" align="center" label="众筹所需金额">
-        <template slot-scope="scope">
-          <span>{{scope.row.requiredMoney}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="200px" align="center" label="状态">
-        <template slot-scope="scope">
-          <span>{{scope.row.status==1?'已营业':'待营业'}}</span>
-        </template>
-      </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-        </template>
-      </el-table-column>-->
-      <!--<el-table-column width="200px" align="center" label="更新时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.creteTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-        </template>
-      </el-table-column>-->
+
       <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -93,58 +53,43 @@
                      layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="70px"
-               style='width: 400px; margin-left:50px;'>
-        <el-form-item :label="$t('table.type')" prop="type">
-          <el-select class="filter-item" v-model="temp.type" placeholder="Please select">
-            <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name"
-                       :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.date')" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item :label="$t('table.title')" prop="title">
-          <el-input v-model="temp.title"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('table.status')">
-          <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
-            <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.importance')">
-          <el-rate style="margin-top:8px;" v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                   :max='3'></el-rate>
-        </el-form-item>
-        <el-form-item :label="$t('table.remark')">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please input"
-                    v-model="temp.remark">
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog title="Reading statistics" :visible.sync="dialogPvVisible">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel"></el-table-column>
-        <el-table-column prop="pv" label="Pv"></el-table-column>
-      </el-table>
+    <!--查看弹窗 start-->
+    <el-dialog v-el-drag-dialog
+               title="查看"
+               :visible.sync="dialogVisible4"
+               width="30%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <el-col :span="24">
+          <span class="down-box">{{oneObj.intro}}</span>
+        </el-col>
+      </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">{{$t('table.confirm')}}</el-button>
+        <el-button @click="dialogVisible4 = false">关闭</el-button>
       </span>
     </el-dialog>
+    <!--查看弹窗 end-->
 
-
-
+    <!--查看弹窗 start-->
+    <el-dialog v-el-drag-dialog
+               title="查看"
+               :visible.sync="dialogVisible3"
+               width="50%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <!--<el-col :span="24">-->
+          <el-col :span="4"  v-for="(item, index) in oneObj.img" :key="index">
+            <img style="width: 100%" :src="item" alt="">
+          </el-col>
+        <!--</el-col>-->
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">关闭</el-button>
+      </span>
+    </el-dialog>
+    <!--查看弹窗 end-->
     <!--删除弹窗 start-->
     <el-dialog v-el-drag-dialog
                title="删除数据"
@@ -171,8 +116,9 @@
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
   import {deleteNews, getNewsList} from '@/api/news'
-  import {wineList, deleteWine} from '@/api/wine'
   import { getSightSpotList, deleteSpot} from '@/api/scenery'
+  import {partInFundPersonList, deleteFund} from '@/api/fund'
+  import {deletParkin, parkinList} from '@/api/parkin'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
 
@@ -208,6 +154,7 @@
         },
         visibleDelete: false,
         dataObj:{},
+        oneObj:{},
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
         sortOptions: [{label: 'ID Ascending', key: '+id'}, {label: 'ID Descending', key: '-id'}],
@@ -229,6 +176,8 @@
           create: 'Create'
         },
         dialogPvVisible: false,
+        dialogVisible3: false,
+        dialogVisible4: false,
         pvData: [],
         rules: {
           type: [{required: true, message: 'type is required', trigger: 'change'}],
@@ -255,9 +204,42 @@
       this.getList()
     },
     methods: {
+      showIntro(row){
+
+        this.oneObj = row
+        if(!row.intro){
+          this.$message({
+            message: '没有介绍',
+            type: 'warning'
+          })
+        }else{
+          this.dialogVisible4 = true
+        }
+      },
+      showPic(row){
+          this.oneObj = row
+        if(!row.img){
+          this.$message({
+            message: '没有图片',
+            type: 'warning'
+          })
+        }else{
+          if( !(this.oneObj.img instanceof Array)){
+            this.oneObj.img=this.oneObj.img.split(',')
+          }
+
+          this.dialogVisible3 = true
+        }
+
+      },
+      takePartPerson(row){
+        this.$router.push({path: '/fund-product/fund-scenery/add-fund',query: {id: row.fundingNumber}})
+      },
       handleClose() {
         this.dialogFormVisible = false // 关闭dialog
         this.dialogPvVisible = false // 关闭dialog
+        this.dialogVisible3 = false
+        this.dialogVisible4 = false
       },
       reloads(){
         this.refreshLoading = true
@@ -265,12 +247,21 @@
       },
       getList() {
         this.listLoading = true
-        wineList(this.listQuery).then(response => {
-          this.list = response.data.data.content
-          this.total = response.data.data.totalElements
-          this.listLoading = false
-          this.refreshLoading = false
-          this.$emit('refreshLoading', false)
+        parkinList(this.listQuery).then(response => {
+            if(response.data.data){
+              this.list = response.data.data.content
+              this.total = response.data.data.totalElements
+              this.listLoading = false
+              this.refreshLoading = false
+              this.$emit('refreshLoading', false)
+            }else{
+              this.listLoading = false
+              this.$message({
+                message: '暂无数据',
+                type: 'warning'
+              })
+            }
+
         })
       },
 
@@ -306,7 +297,7 @@
       },
       // 新增内容
       handleCreate() {
-        this.$router.push({path: '/wine-manage/wine/add-wine'})
+        this.$router.push({path: '/fund-product/fund-scenery/add-fund'})
 //        this.$router.push({path: '/news/addNews', query: {id: row.id}})
       },
       showSureDelete(row){
@@ -314,21 +305,22 @@
         this.visibleDelete= true
       },
       handleDeleteNews(row){
-        deleteWine({id: this.dataObj.id}).then(response => {
+        deletParkin({id: this.dataObj.id}).then(response => {
           this.$notify({
             title: '提示',
             message: '删除成功',
             type: 'success',
             duration: 1500
           })
-          this.visibleDelete= true
+          this.visibleDelete = false
           this.getList()
         })
       },
       // 去修改内容
       handleUpdate(row) {
-        console.log("修改内容ID:" + row.id)
-        this.$router.push({path: '/wine-manage/wine/edit-wine', query: {id: row.id}})
+          debugger
+        console.log("修改内容ID:" + row.spotId)
+        this.$router.push({path: '/fund-product/fund-scenery/edit-fund', query: {id: row.spotId}})
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -410,6 +402,13 @@
             return v[j]
           }
         }))
+      },
+      goBack(){
+        this.$router.push({path: '/fund-product/fund-scenery/fund-list'})
+      },
+      // 历史分红记录
+      historyRecord(){
+
       }
     }
   }

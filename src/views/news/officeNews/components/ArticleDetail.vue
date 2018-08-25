@@ -145,7 +145,7 @@
           ],
           content: [
             {required: true, message: '请输入资讯内容', trigger: 'blur'},
-            {min: 3, max: 5000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
+            {min: 3, max: 1000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
           ]
         }
       }

@@ -73,11 +73,16 @@ export default {
     parks: '园区管理',
     parksList: '园区管理',
 
-
     scenery: '景点管理',
     sceneryList: '景点列表',
     addScenery: '新增景点',
     eidtScenery: '编辑景点',
+
+    fundProduct: '众筹管理',
+    fundScenery: '众筹景点',
+    fundList: '项目列表',
+    addFund: '添加项目',
+    fundUserList: '参与会员',
 
     adPlace: '广告',
     adList: '广告列表',

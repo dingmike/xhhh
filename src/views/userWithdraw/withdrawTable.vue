@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
+     <!-- <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
                 :placeholder="$t('table.title')" v-model="listQuery.title">
       </el-input>
       <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance"
@@ -21,7 +21,7 @@
       </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">
         {{$t('table.search')}}
-      </el-button>
+      </el-button>-->
       <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
                   icon="el-icon-edit">{{$t('table.add')}}
        </el-button>-->

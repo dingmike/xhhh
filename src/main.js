@@ -26,6 +26,21 @@ import '../static/UE/lang/zh-cn/zh-cn.js'
 import '../static/UE/ueditor.parse.min.js'
 
 
+import  VueQuillEditor,{Quill} from 'vue-quill-editor'
+// require styles 引入样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+
+
+import { ImageDrop } from 'quill-image-drop-module'
+// import {ImageResize} from 'quill-image-resize-module'
+Quill.register('modules/imageDrop', ImageDrop)
+// Quill.register('modules/imageResize', ImageResize)
+
+Vue.use(VueQuillEditor)
+
 
 Vue.use(Element, {
   size: 'medium', // set element-ui default size

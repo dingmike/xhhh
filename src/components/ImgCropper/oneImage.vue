@@ -184,9 +184,6 @@
           centerBox: true,
           high: true
         },
-        dialogImageUrl: '',
-        dialogVisible: false,
-
         example2: {
           img: 'http://ofyaji162.bkt.clouddn.com/bg1.jpg',
           info: true,
@@ -205,7 +202,6 @@
       }
     },
     mounted() {
-      debugger
       var list = [].slice.call(document.querySelectorAll('pre code'))
       list.forEach((val, index) => {
         hljs.highlightBlock(val)
@@ -219,7 +215,6 @@
         this.$emit('input', val)
       },
       handleImageScucess(file,data,raw) {
-        debugger
         /*let uid = data.uid
          let imgsArr = []
          for(let i=0;i<raw.length;i++){
@@ -252,7 +247,6 @@
       },
 
       changeFile(file, fileList){
-        debugger
         let num = 1
         file = file.raw
         let reader = new FileReader()
@@ -294,7 +288,6 @@
         this.dialogVisible = true;
       },
       uploadImg (e, num) {
-        debugger
         //上传图片
         // this.option.img
         var file = e.target.files[0]
@@ -355,7 +348,6 @@
         this.dialogVisible = true;
       },
       handleRemove(file, raw) {
-        debugger
         let doRemove = () => {
           let fileList = this.fileLists;
           fileList.splice(fileList.indexOf(file), 1);
@@ -408,18 +400,13 @@
         // 输出
         if (type === 'blob') {
           this.$refs.cropper.getCropBlob((data) => {
-            debugger
             this.downImg = window.URL.createObjectURL(data)
             aLink.href = window.URL.createObjectURL(data)
             aLink.click()
           })
         } else {
           this.$refs.cropper.getCropData((data) => {
-            debugger
-
             let newPic = this.dataURLtoFile(data, "tupian.png")
-
-            console.log(newPic)
             this.downImg = data
             aLink.href = data
             aLink.click()
@@ -427,13 +414,11 @@
         }
       },
       dataURLtoFile(dataurl, filename) {//将base64转换为文件
-        debugger
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n);
         }
-        debugger
         return new File([u8arr], filename, {type: mime});
       },
       imgLoad (msg) {
