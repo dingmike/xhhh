@@ -27,7 +27,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            {{sceneryContent.pId}}
           </el-col>
         </el-row>
 

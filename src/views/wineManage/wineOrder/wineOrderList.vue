@@ -24,7 +24,7 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="订单号" width="160">
+      <el-table-column align="center" label="订单号" width="220">
         <template slot-scope="scope">
           <span>{{scope.row.orderId}}</span>
         </template>
@@ -47,12 +47,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="200" align="center" label="支付现金余额">
+      <el-table-column width="120" align="center" label="支付现金余额">
         <template slot-scope="scope">
           <span>{{scope.row.payMoney}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="种酒名称" width="120">
+      <el-table-column align="center" label="种酒名称" width="200">
         <template slot-scope="scope">
           <span>{{scope.row.liquorProductName}}</span>
         </template>
@@ -62,7 +62,7 @@
               <span>{{scope.row.money}}</span>
             </template>
           </el-table-column>-->
-      <el-table-column width="200px" align="center" label="数量">
+      <el-table-column width="120px" align="center" label="数量">
         <template slot-scope="scope">
           <span>{{scope.row.number}}</span>
         </template>
