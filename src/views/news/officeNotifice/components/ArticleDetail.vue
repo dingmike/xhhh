@@ -55,11 +55,6 @@
   }
   const defaultForm = {
     status: 'draft',
-    goods_brief: '', // 商品卖点介绍
-    name: '', // 商品标题
-    goods_desc: '', // 商品详情
-    content_short: '', // 文章摘要
-    source_uri: '', // 文章外链
     newContent:{},
     gallery: [{
       "name": "",
@@ -77,10 +72,7 @@
         "name": "",
         "url": "http://yanxuan.nosdn.127.net/5c1d28e86ccb89980e6054a49571cdec.jpg"
       }],
-    source_name: '', // 文章外部作者
-    display_time: undefined, // 前台展示时间
     id: undefined,
-    product_specs_prices: [], // 价格
     platforms: ['a-platform'],
     comment_disabled: false
   }
@@ -93,10 +85,10 @@
         type: Boolean,
         default: false
       },
-      newsId:{
+     /* newsId:{
         type: String,
         default:''
-      }
+      }*/
     },
     mounted() {
 
@@ -181,7 +173,6 @@
     created() {
       console.log("编辑的ID："+this.newsId)
       if (this.isEdit) {
-
         this.newId = this.$route.query.id
         this.fetchNewsContent()
       } else {

@@ -82,7 +82,16 @@ export default {
     fundScenery: '众筹景点',
     fundList: '项目列表',
     addFund: '添加项目',
+    editFund: '编辑项目',
     fundUserList: '参与会员',
+
+
+
+    parkSee: '入园参考',
+    parkIn: '入园管理',
+    parkInList: '参考列表',
+    addParkin: '添加参考',
+    editParkin: '编辑参考',
 
     adPlace: '广告',
     adList: '广告列表',

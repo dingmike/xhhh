@@ -134,7 +134,7 @@ export const asyncRouterMap = [
       path: 'withdraw-table',
       component: _import('userWithdraw/withdrawTable'),
       name: 'userWithdraw',
-      meta: { title: 'userWithdraw', icon: 'user', noCache: true, roles: ['admin','editor'] }
+      meta: { title: 'userWithdraw', icon: 'withdraw', noCache: true, roles: ['admin','editor'] }
     }]
   },
   {
@@ -416,11 +416,11 @@ export const asyncRouterMap = [
     name: 'basicFile',
     meta: {
       title: '基本资料',
-      icon: 'basic'
+      icon: 'personCenter'
     },
     children: [
       // { path: 'basic-info', component: _import('basicFile/basicInfo'), name: 'basicInfo', meta: { title: 'basicInfo', noCache: true }},
-      { path: 'edit-info', component: _import('basicFile/editInfo'), name: 'editInfo', meta: { title: 'editInfo', noCache: true }},
+      { path: 'edit-info', component: _import('basicFile/editInfo'), name: 'editInfo', meta: { title: 'editInfo', icon: 'personCenter', noCache: true }},
     ]
   },
 

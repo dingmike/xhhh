@@ -52,8 +52,7 @@
             <el-form-item  label="封面图" prop="imgUrl">
               <!--上传图片多图-->
               <div style="margin-bottom: 6px;">
-                <Upload v-model="newContent.imgUrl"></Upload>
-                {{newContent.imgUrl}}
+                <Upload v-model="newContent.imgUrl" :crop-width="500"  :crop-height="200" ></Upload>
               </div>
             </el-form-item>
           </el-col>

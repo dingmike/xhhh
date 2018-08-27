@@ -5,24 +5,7 @@
     </div>
     <el-form class="form-container" :model="sceneryContent" :rules="rules" ref="postForm" label-width="120px">
       <div class="createPost-main-container">
-  <!--      <el-row>
-          <el-col :span="12">
-            <el-form-item  label="是否众筹" prop="inOut">
-              &lt;!&ndash; <el-switch
-                 v-model="sceneryContent.inOut"
-                 active-text="是众筹项目"
-                 inactive-text="不是众筹项目"
-                 active-value="1"
-                 inactive-value="0">
-               </el-switch>&ndash;&gt;
 
-              <el-radio-group @change="changeZong" v-model="sceneryContent.inOut" size="mini">
-                <el-radio :label="1" border>是众筹项目</el-radio>
-                <el-radio :label="0" border>不是众筹项目</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>-->
         <el-row>
           <el-col :span="12">
             <el-form-item label="套餐标题" prop="name">
@@ -34,28 +17,8 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="套餐介绍" prop="intro">
-              <el-input
-                type="textarea"
-                :rows="6"
-                placeholder="请输入介绍"
-                v-model="sceneryContent.intro">
-              </el-input>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-       <!-- <el-row>
-          <el-col :span="12">
-          <el-form-item label="开放时间" prop="openTime">
-            <el-input v-model="sceneryContent.openTime"></el-input>
-          </el-form-item>
-          </el-col>
-        </el-row>-->
-        <el-row>
-          <el-col :span="12">
             <el-form-item  label="添加景点" prop="pId">
-              <el-select size="small" @change="changeSights" v-model="sceneryContent.pId" filterable placeholder="选择要添加的景点">
+              <el-select  size="middle" multiple  @change="changeSights" v-model="sceneryContent.pId" filterable placeholder="选择要添加的景点">
                 <el-option
                   v-for="item in sightOptions"
                   :key="item.id"
@@ -64,6 +27,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            {{sceneryContent.pId}}
           </el-col>
         </el-row>
 
@@ -73,15 +37,29 @@
           <el-form-item  label="套餐封面" prop="img">
             <!--上传图片多图-->
             <div style="margin-bottom: 6px;">
-              <Upload v-model="sceneryContent.img" :file-lists="sceneryImgArr2" ></Upload>
+              <Upload v-model="sceneryContent.img" :file-lists="sceneryImgArr2" :crop-width="500" :crop-height="200" ></Upload>
             </div>
           </el-form-item>
 
         </el-col>
         <el-col :span="2">
-          <span style="color: red; font-size: 14px">（最多9张图片，建议图片宽高比例为  5：3  如： 1500 * 900 ，单张图片不超过2M）</span>
+          <span style="color: red; font-size: 14px">（建议宽高尺寸为5：2   如： 1380 * 504 ，图片大小不超过1M）</span>
         </el-col>
       </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="套餐介绍" prop="intro">
+              <el-input
+                type="textarea"
+                :rows="5"
+                placeholder="请输入介绍"
+                v-model="sceneryContent.intro">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row style="float: right">
           <el-button type="warning" @click="goBack">返回</el-button>
           <el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">确认发布</el-button>
@@ -100,7 +78,7 @@
 
 import quillor from '@/components/QuillEditor'
 //import { quillEditor } from 'vue-quill-editor' //调用编辑器
-import Upload from '@/components/ImgCropper/oneImage'
+import Upload from '@/components/ImgCropper/oneCropimage'
 
   import Tinymce from '@/components/Tinymce'
 //  import QuillEditor from '@/components/QuillEditor'
@@ -112,16 +90,12 @@ import Upload from '@/components/ImgCropper/oneImage'
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   import Sticky from '@/components/Sticky' // 粘性header组件
   import {validateURL} from '@/utils/validate'
-    import {saveAndUpdateNews,getNewsById} from '@/api/news'
-    import {getSightSpotList} from '@/api/scenery'
   import {userSearch} from '@/api/remoteSearch'
   import {
     parkList,
-    saveSightSpot,
-    getSpotDetail,
-    selectParkScenery
+    getSightSpotList
   } from '@/api/scenery'
-  import { fundingProductDetail, saveFund} from '@/api/fund'
+  import { saveParkin, parkinDetail} from '@/api/parkin'
 
   import UE from '@/components/Ue/ue.vue';
 
@@ -133,17 +107,12 @@ import Upload from '@/components/ImgCropper/oneImage'
     "type": 1 // 咨询
   }
   const sceneryContent={
-    spotId: "",
+    id: "",
     name: "",
-    openTime:"",
-    sightCategory: "",
-    spotDetails: "",
-    masterImg: "",
-    inOut: 0,
-    money: "",
+    img: "",
     status: "",
-    pId: "",
-    notes: "",
+    spotId: "",
+    intro: "",
   }
   const defaultForm = {
     status: 'draft',
@@ -193,7 +162,7 @@ import Upload from '@/components/ImgCropper/oneImage'
     },
     mounted() {
       this.getALLParks()
-
+      this.getSightByPark()
     },
     data() {
       const validateRequire = (rule, value, callback) => {
@@ -272,28 +241,14 @@ import Upload from '@/components/ImgCropper/oneImage'
             {required: true, message: '请输入项目景点名称', trigger: 'blur'},
             {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
           ],
-          openTime: [
-            {required: true, message: '请输入开放时间', trigger: 'change'},
-            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+          pId: [
+            {required: true, message: '请选择参考景点', trigger: 'change'}
           ],
-          money: [
-            {required: true, message: '请填写金额', trigger: 'change'},
+          img: [
+            {required: true, message: '请上传入园参考主图', trigger: 'change'}
           ],
-          sightCategory: [
-            {required: true, message: '请选择项目所属景区', trigger: 'change'}
-          ],
-          status: [
-            {required: true, message: '请选择营业状态', trigger: 'change'}
-          ],
-          masterImg: [
-            {required: true, message: '请上传项目景点主图', trigger: 'change'}
-          ],
-          spotDetails: [
+          intro: [
             {required: true, message: '请输入介绍', trigger: 'blur'},
-            {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
-          ],
-          notes: [
-            {required: true, message: '请输入须知', trigger: 'blur'},
             {min: 3, max: 2000, message: '长度在 3 到 2000 个字符', trigger: 'blur'}
           ]
         }
@@ -370,29 +325,28 @@ import Upload from '@/components/ImgCropper/oneImage'
         })
       },
       // 获取景区下的景点
-      getSightByPark(pId) {
+      getSightByPark() {
         this.loading = true
         getSightSpotList(this.listQuery2).then(response => {
-          this.sightOptions = response.data.data
+          this.sightOptions = response.data.data.content
           this.loading = false
           this.listLoading = false
         })
       },
       changeSights(pId){
-          debugger
         this.getSightByPark(pId)
 //        this.sceneryContent.sightCategory =  this.sightOptions[0].id
       },
       submitNews(){
-        debugger
-
       /*  if(this.sceneryImgArr){
           let newImgsArrStr = this.sceneryImgArr.join(',')
         this.sceneryContent.masterImg +=newImgsArrStr
         }*/
 //        let newImgsArrStr = this.sceneryImgArr.join(',')
 //        this.sceneryContent.masterImg +=newImgsArrStr
-        saveFund(this.sceneryContent).then(response => {
+        this.sceneryContent.pId=this.sceneryContent.pId.join(',')
+        console.log( this.sceneryContent.pId)
+        saveParkin(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
             message: '数据提交成功',
@@ -414,26 +368,22 @@ import Upload from '@/components/ImgCropper/oneImage'
         })
       },
       fetchNewsContent(){
-          debugger
-        fundingProductDetail({spotId:this.$route.query.id}).then(response => {
+        parkinDetail({id:this.$route.query.id}).then(response => {
+            if( response.data.data.pid){
+              response.data.data.pid=response.data.data.pid.split(',')
+            }
           this.sceneryContent = response.data.data
           this.getSightByPark(response.data.data.pId)
           // 编辑修改
-          debugger
-          this.sceneryImgArr=this.sceneryContent.masterImg.split(',')
-          debugger
+          this.sceneryImgArr=this.sceneryContent.img.split(',')
           for(let i=0; i<this.sceneryImgArr.length;i++){
             let obj={name:'tupian.png', url:this.sceneryImgArr[i]}
             this.sceneryImgArr2.push(obj)
           }
-         /* if(this.sceneryImgArr2.length!=1){
-            this.sceneryImgArr2.pop()
-          }*/
         })
       },
       submitForm() {
         this.postForm.display_time = parseInt(this.display_time / 1000)
-        console.log(this.postForm)
         this.$refs.postForm.validate(valid => {
           if (valid) {
             this.loading = true

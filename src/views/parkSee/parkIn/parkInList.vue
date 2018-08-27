@@ -55,7 +55,7 @@
     </div>
     <!--查看弹窗 start-->
     <el-dialog v-el-drag-dialog
-               title="查看"
+               title="查看介绍"
                :visible.sync="dialogVisible4"
                width="30%"
                center
@@ -73,7 +73,7 @@
 
     <!--查看弹窗 start-->
     <el-dialog v-el-drag-dialog
-               title="查看"
+               title="查看封面图片"
                :visible.sync="dialogVisible3"
                width="50%"
                center
@@ -320,7 +320,7 @@
       handleUpdate(row) {
           debugger
         console.log("修改内容ID:" + row.spotId)
-        this.$router.push({path: '/fund-product/fund-scenery/edit-fund', query: {id: row.spotId}})
+        this.$router.push({path: '/park-see/park-in/edit-parkin', query: {id: row.id}})
       },
       createData() {
         this.$refs['dataForm'].validate((valid) => {

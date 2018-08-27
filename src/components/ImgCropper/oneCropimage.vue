@@ -111,6 +111,14 @@
           return []
         }
       },
+      cropWidth:{
+          type: Number,
+          default:500
+      },
+      cropHeight:{
+        type: Number,
+        default:300
+      }
     },
     computed: {
       imageUrl() {
@@ -179,8 +187,8 @@
           canMoveBox: true,
           autoCrop: true,
           // 只有自动截图开启 宽度高度才生效
-          autoCropWidth: 500,
-          autoCropHeight: 300,
+          autoCropWidth: this.cropWidth,
+          autoCropHeight: this.cropHeight,
           centerBox: true,
           high: true
         },
