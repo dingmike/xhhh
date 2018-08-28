@@ -2,11 +2,11 @@
   <div class="app-container calendar-list-container">
     <div class="filter-container">
       <el-row>
-        <el-col :span="2">
+        <!--<el-col :span="2">
           <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
                      icon="el-icon-edit">新增
           </el-button>
-        </el-col>
+        </el-col>-->
         <el-col :span="2">
           <el-button class="filter-item" type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
         </el-col>
@@ -41,11 +41,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="取货方式" width="120">
+      <!--<el-table-column align="center" label="取货方式" width="120">
         <template slot-scope="scope">
-          <span>{{scope.row.mailType==1?'自提':'快递'}}</span>
+          <span>{{scope.row |statusFilter}}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
       <el-table-column width="120" align="center" label="支付现金余额">
         <template slot-scope="scope">
@@ -343,13 +343,8 @@
       }
     },
     filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'info',
-          deleted: 'danger'
-        }
-        return statusMap[status]
+      statusFilter(row) {
+        return row
       },
       typeFilter(type) {
         return calendarTypeKeyValue[type]
@@ -360,9 +355,7 @@
     },
     methods: {
       changeStatus(row){
-          debugger
         this.oneObj=row
-        console.log(row)
         //0-代窖藏, 1-已窖藏。2-申请启坛，3-已启坛，4-已失效
         switch (row.orderStatus){
          case 0:
@@ -466,10 +459,14 @@
         })
       },
       handleClose() {
+        this.oneObj={};
+        this.waitContent={};
+        this.readyContent={};
         this.dialogFormVisible1 = false // 关闭dialog
         this.dialogPvVisible = false // 关闭dialog
         this.dialogFormVisible2= false
         this.dialogFormVisible3= false
+
       },
       reloads(){
         this.refreshLoading = true

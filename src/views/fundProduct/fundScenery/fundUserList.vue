@@ -33,11 +33,11 @@
           <span>{{scope.row.realName}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" align="center" label="居住地">
+     <!-- <el-table-column width="200" align="center" label="居住地">
         <template slot-scope="scope">
           <span>{{scope.row.realName}}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column width="200" align="center" label="投资金额">
         <template slot-scope="scope">
           <span>{{scope.row.money}}</span>

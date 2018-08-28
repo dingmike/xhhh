@@ -3,7 +3,7 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="http://192.168.9.102:8080/huahai/admin/upload"
+               action="http://192.168.9.109:8080/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="9"
@@ -76,15 +76,7 @@
             <el-button style="margin-left: 10px;" size="small" type="warning" @click="dialogCorpperBox=false">确 定</el-button>
           </el-col>
         </el-row>
-
       </div>
-      <!-- <div class="show-preview"
-            :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
-         <div :style="previews.div">
-           <img :src="previews.url" :style="previews.img">
-         </div>
-       </div>-->
-
     </el-dialog>
 
   </div>
@@ -202,7 +194,6 @@
       }
     },
     mounted() {
-        debugger
       var list = [].slice.call(document.querySelectorAll('pre code'))
       list.forEach((val, index) => {
         hljs.highlightBlock(val)
@@ -216,7 +207,6 @@
         this.$emit('input', val)
       },
       handleImageScucess(file,data,raw) {
-          debugger
         /*let uid = data.uid
         let imgsArr = []
         for(let i=0;i<raw.length;i++){
@@ -249,7 +239,6 @@
       },
 
       changeFile(file, fileList){
-          debugger
         var num = 1
         file = file.raw
         var reader = new FileReader()
@@ -291,7 +280,6 @@
         this.dialogVisible = true;
       },
       uploadImg (e, num) {
-        debugger
         //上传图片
         // this.option.img
         var file = e.target.files[0]
@@ -418,13 +406,11 @@
         }
       },
       dataURLtoFile(dataurl, filename) {//将base64转换为文件
-        debugger
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n);
         }
-        debugger
         return new File([u8arr], filename, {type: mime});
       },
       imgLoad (msg) {
