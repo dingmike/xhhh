@@ -17,9 +17,8 @@
                :on-remove="handleRemove">
       <i class="el-icon-plus"></i>
       <div slot="tip" class="el-upload__tip">点+添加图片(最多9张)</div>
-
     </uploadImg>
-    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>
+    <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>-->
 
     <!--new add-->
     <el-dialog width="50%" v-el-drag-dialog :visible.sync="dialogVisible">
@@ -73,7 +72,7 @@
         <el-row style="margin-top: 20px">
           <el-col>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="startInitImg('base64')">裁剪图片</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="warning" @click="dialogCorpperBox=false">确 定</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="warning" @click="sureUpload">确定上传</el-button>
           </el-col>
         </el-row>
       </div>
@@ -108,8 +107,14 @@
         return this.value
       }
     },
+    watch: {
+      fileLists(val){
+          this.picFiles = val
+      }
+    },
     data() {
       return {
+        flag: true,
         showCorpper: true,
         dialogImageUrl: '',
         dialogVisible: false,
@@ -200,13 +205,19 @@
       })
     },
     methods: {
+        sureUpload(){
+          this.submitImgs()
+          this.dialogCorpperBox=false
+
+        },
       rmImage() {
         this.emitInput('')
       },
       emitInput(val) {
         this.$emit('input', val)
       },
-      handleImageScucess(file,data,raw) {
+      handleImageScucess(file, data,raw) {
+            debugger
         /*let uid = data.uid
         let imgsArr = []
         for(let i=0;i<raw.length;i++){
@@ -239,28 +250,30 @@
       },
 
       changeFile(file, fileList){
-        var num = 1
-        file = file.raw
-        var reader = new FileReader()
-        reader.onload = (e) => {
-          let data
-          if (typeof e.target.result === 'object') {
-            // 把Array Buffer转化为blob 如果是base64不需要
-            data = window.URL.createObjectURL(new Blob([e.target.result]))
-          } else {
-            data = e.target.result
+          debugger
+          var num = 1
+          file = file.raw
+          var reader = new FileReader()
+          reader.onload = (e) => {
+            let data
+            if (typeof e.target.result === 'object') {
+              // 把Array Buffer转化为blob 如果是base64不需要
+              data = window.URL.createObjectURL(new Blob([e.target.result]))
+            } else {
+              data = e.target.result
+            }
+            if (num === 1) {
+              this.option.img = data
+              this.dialogCorpperBox = true
+            } else if (num === 2) {
+              this.example2.img = data
+            }
           }
-          if (num === 1) {
-            this.option.img = data
-            this.dialogCorpperBox = true
-          } else if (num === 2) {
-            this.example2.img = data
-          }
-        }
-        // 转化为base64
-        reader.readAsDataURL(file)
-        // 转化为blob
+          // 转化为base64
+          reader.readAsDataURL(file)
+          // 转化为blob
 //        reader.readAsArrayBuffer(file)
+
       },
       beforeUpload(file) {
         const _self = this
@@ -339,20 +352,26 @@
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
+      doRemove(file){
+//        let fileList = this.fileLists;
+        this.fileLists.splice(this.fileLists.indexOf(file), 1);
+      },
       handleRemove(file, raw) {
-        let doRemove = () => {
-          let fileList = this.fileLists;
-          fileList.splice(fileList.indexOf(file), 1);
-
-        };
-        doRemove();
-
+       debugger
+        /* this.doRemove(file);
          let imgsArr = []
          for(let i=0;i<this.fileLists.length;i++){
          imgsArr.push(this.fileLists[i].url)
          //this.imgUrlList+=raw[i].response.data+','
          }
+        this.emitInput(imgsArr.join(','))*/
+
+        let imgsArr = []
+        for(let i=0;i<raw.length;i++){
+          imgsArr.push(raw[i].url)
+        }
         this.emitInput(imgsArr.join(','))
+
       },
       startInitImg () {
         // 输出

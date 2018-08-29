@@ -12,11 +12,11 @@
         </el-col>
 
 
-        <el-button class="filter-item" style="margin-left: 10px;" @click="" type="primary"
+        <el-button class="filter-item" style="margin-left: 10px;" @click="goHistoryRecord" type="primary"
                    icon="el-icon-date">历史分红
         </el-button>
 
-        <el-button class="filter-item" style="margin-left: 10px;" @click="" type="primary"
+        <el-button class="filter-item" style="margin-left: 10px;" @click="shareAllFund" type="primary"
                    icon="el-icon-date">分红
         </el-button>
       </el-row>
@@ -65,7 +65,7 @@
       </el-table-column>
       <el-table-column width="200px" align="center" label="状态">
         <template slot-scope="scope">
-          <span>{{scope.row.status==1?'已营业':'待营业'}}</span>
+          <span>{{scope.row.status|statusFilter}}</span>
         </template>
       </el-table-column>
       <!--<el-table-column width="200px" align="center" label="创建时间">
@@ -86,7 +86,7 @@
       <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="success" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="primary" icon="el-icon-date" size="mini" @click="shareCoins(scope.row)">分红</el-button>
+          <el-button type="primary" icon="el-icon-date" size="mini" @click="shareOneFund(scope.row)">分红</el-button>
           <el-button size="mini" icon="el-icon-caret-right" type="warning" @click="showSureDelete(scope.row)">停业</el-button>
         </template>
       </el-table-column>
@@ -99,45 +99,6 @@
       </el-pagination>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="70px"
-               style='width: 400px; margin-left:50px;'>
-        <el-form-item :label="$t('table.type')" prop="type">
-          <el-select class="filter-item" v-model="temp.type" placeholder="Please select">
-            <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name"
-                       :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.date')" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item :label="$t('table.title')" prop="title">
-          <el-input v-model="temp.title"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('table.status')">
-          <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
-            <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.importance')">
-          <el-rate style="margin-top:8px;" v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                   :max='3'></el-rate>
-        </el-form-item>
-        <el-form-item :label="$t('table.remark')">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please input"
-                    v-model="temp.remark">
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
-      </div>
-    </el-dialog>
     <el-dialog title="Reading statistics" :visible.sync="dialogPvVisible">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel"></el-table-column>
@@ -169,6 +130,95 @@
     </el-dialog>
     <!--停业弹窗 end-->
 
+    <!--全部分红 start-->
+    <el-dialog v-el-drag-dialog
+               title="园区分红"
+               :visible.sync="dialogVisible3"
+               width="34%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <el-col :span="12">
+          <span style="color: red;">*只有已营业的项目所在的用户才能享受分红。</span>
+        </el-col>
+      </el-row>
+      <el-row style="margin:20px 0">
+        <el-col :span="4">
+          分红园区:
+        </el-col>
+        <el-col :span="8">
+          <el-select size="middle" v-model="shareAllFundContent.categoryId" filterable placeholder="选择园区">
+            <el-option
+              v-for="item in parksOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4">
+          分红金额:
+        </el-col>
+        <el-col :span="8">
+          <el-input-number v-model="shareAllFundContent.money" size="middle" controls-position="right" :min="1"
+                           :max="1000000"></el-input-number>
+        </el-col>
+      </el-row>
+      <el-row style="margin:20px 0">
+        <el-col :span="4">
+          登录密码:
+        </el-col>
+        <el-col :span="8">
+          <el-input size="middle" type="password" v-model="shareAllFundContent.passWord" auto-complete="off"
+                    :maxlength="10"></el-input>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">取 消</el-button>
+        <el-button type="danger" @click="sureShareAllFund">确认</el-button>
+      </span>
+    </el-dialog>
+    <!--全部分红 end-->
+
+    <!--单个分红 start-->
+    <el-dialog v-el-drag-dialog
+               title="单个分红"
+               :visible.sync="dialogVisible4"
+               width="34%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <el-col :span="12">
+          <span style="color: red;">*只有已营业的项目所在的用户才能享受分红。</span>
+        </el-col>
+      </el-row>
+      <el-row  style="margin:20px 0">
+        <el-col :span="4">
+          分红金额:
+        </el-col>
+        <el-col :span="8">
+          <el-input-number v-model="shareOneFundContent.money" size="middle" controls-position="right" :min="1"
+                           :max="1000000"></el-input-number>
+        </el-col>
+      </el-row>
+      <el-row style="margin:20px 0">
+        <el-col :span="4">
+          登录密码:
+        </el-col>
+        <el-col :span="8">
+          <el-input size="middle" type="password" v-model="shareOneFundContent.passWord" auto-complete="off"
+                    :maxlength="10"></el-input>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4 = false">取 消</el-button>
+        <el-button type="danger" @click="sureShareOneFund">确认</el-button>
+      </span>
+    </el-dialog>
+    <!--单个分红 end-->
+
   </div>
 </template>
 
@@ -176,8 +226,8 @@
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
   import {deleteNews, getNewsList} from '@/api/news'
-  import { getSightSpotList, deleteSpot} from '@/api/scenery'
-  import { fundProductList, fundingProductDetail, deleteFund} from '@/api/fund'
+  import { getSightSpotList, deleteSpot,parkList} from '@/api/scenery'
+  import { fundProductList, fundingProductDetail, deleteFund, overallBonus, singleBonus} from '@/api/fund'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
 
@@ -207,9 +257,16 @@
         list: [],
         total: null,
         listLoading: true,
+        shareAllFundContent:{},
+        shareOneFundContent:{},
         listQuery: {
           page: 1,
           size: 10,
+        },
+        listQuery2: {
+          page: 1,
+          size: 50,
+          level: 1 // 1园区
         },
         visibleDelete: false,
         dataObj:{},
@@ -227,7 +284,10 @@
           type: '',
           status: 'published'
         },
+        parksOptions:[],
         dialogFormVisible: false,
+        dialogVisible3: false,
+        dialogVisible4: false,
         dialogStatus: '',
         textMap: {
           update: 'Edit',
@@ -245,12 +305,25 @@
     },
     filters: {
       statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'info',
-          deleted: 'danger'
+        switch(status){
+          case 0:
+              return "众筹中";
+          break;
+          case 1:
+              return "已众筹";
+              break;
+          case 2:
+              return "在建";
+            break;
+          case 3:
+              return "已建";
+            break;
+          case 4:
+              return "已营业";
+            break;
+          default:
+              break;
         }
-        return statusMap[status]
       },
       typeFilter(type) {
         return calendarTypeKeyValue[type]
@@ -260,12 +333,55 @@
       this.getList()
     },
     methods: {
+      goHistoryRecord(){
+        this.$router.push({path: '/fund-product/fund-scenery/share-all-list'})
+      },
+      shareAllFund(){
+       this.dialogVisible3 = true
+        this.getALLParks()
+      },
+      shareOneFund(row){
+        this.shareOneFundContent={}
+        this.shareOneFundContent.fundingNumber = row.fundingNumber
+        this.dialogVisible4 = true
+        this.getALLParks()
+      },
+      sureShareAllFund(){
+        overallBonus(this.shareAllFundContent).then(response => {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.dialogVisible3 = false
+          this.getList()
+        })
+      },
+      sureShareOneFund(){
+        singleBonus(this.shareOneFundContent).then(response => {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.dialogVisible4 = false
+          this.getList()
+        })
+      },
+      //获取所有园区
+      getALLParks(){
+        parkList(this.listQuery2).then(response => {
+          this.parksOptions =  response.data.data.content
+          this.loading = false
+//          this.listLoading = false
+        })
+      },
       takePartPerson(row){
         this.$router.push({path: '/fund-product/fund-scenery/fund-user-list',query: {id: row.fundingNumber}})
       },
       handleClose() {
         this.dialogFormVisible = false // 关闭dialog
         this.dialogPvVisible = false // 关闭dialog
+        this.dialogVisible3 = false // 关闭dialog
+        this.dialogVisible4 = false // 关闭dialog
       },
       reloads(){
         this.refreshLoading = true

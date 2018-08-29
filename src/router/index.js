@@ -303,6 +303,8 @@ export const asyncRouterMap = [
         },
         children: [
           { path: 'fund-list', component: _import('fundProduct/fundScenery/fundList'), name: 'fundList', meta: { title: 'fundList', noCache: true }},
+          { path: 'share-all-list', component: _import('fundProduct/fundScenery/shareAllList'), name: 'shareAllList', meta: { title: 'shareAllList', noCache: true },hidden: true},
+          { path: 'share-one-list', component: _import('fundProduct/fundScenery/shareOneList'), name: 'shareOneList', meta: { title: 'shareOneList', noCache: true },hidden: true},
           { path: 'fund-user-list', component: _import('fundProduct/fundScenery/fundUserList'), name: 'fundUserList', meta: { title: 'fundUserList', noCache: true },hidden:true},
           { path: 'add-fund', component: _import('fundProduct/fundScenery/addFund'), name: 'addFund', meta: { title: 'addFund', noCache: true }},
           { path: 'edit-fund', component: _import('fundProduct/fundScenery/editFund'), name: 'editFund', meta: { title: 'editFund', noCache: true}, hidden: true }

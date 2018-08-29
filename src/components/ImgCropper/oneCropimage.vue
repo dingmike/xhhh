@@ -16,10 +16,16 @@
                list-type="picture-card"
                :on-preview="handlePictureCardPreview"
                :on-remove="handleRemove">
+      <!--<img v-if="changeFile" class="avatar">-->
       <i class="el-icon-plus"></i>
       <div slot="tip" class="el-upload__tip">点+添加图片(最多1张)</div>
 
     </uploadImg>
+
+
+
+
+
     <el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>
 
     <!--new add-->
@@ -257,7 +263,7 @@
       },
 
       changeFile(file, fileList){
-
+debugger
         let num = 1
         file = file.raw
         let reader = new FileReader()

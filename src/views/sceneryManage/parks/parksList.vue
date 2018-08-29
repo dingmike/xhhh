@@ -216,7 +216,8 @@
             duration: 2000
           })
           this.visibleSaveScenerybox = false
-          this.getALLParks()
+//          this.getALLParks()
+          this.reloads()
         })
       },
       // 添加园区
@@ -240,7 +241,8 @@
             duration: 2000
           })
           this.visibleSavebox = false
-          this.getALLParks()
+//          this.getALLParks()
+          this.reloads()
         })
       },
       showCreatedTimes() {

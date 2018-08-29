@@ -10,7 +10,6 @@
             <el-form-item label="新闻标题" prop="title">
               <el-input v-model="newContent.title"></el-input>
             </el-form-item>
-
           </el-col>
         </el-row>
         <el-row>
@@ -20,7 +19,7 @@
             </div>
           </el-form-item>
         </el-row>
-        <el-row style=" float: right">
+        <el-row style="float: right">
           <el-button type="warning" @click="goBack">返回</el-button>
           <el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">确认发布</el-button>
           <el-button type="primary" v-if="newId" :loading="false" @click="saveNews">确认修改</el-button>

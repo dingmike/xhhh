@@ -4,7 +4,7 @@ import Upload from './upload';
 import IframeUpload from './iframe-upload';
 import ElProgress from 'element-ui/packages/progress';
 import Migrating from 'element-ui/src/mixins/migrating';
-
+import { deleteOssImg } from '@/api/common'   //上传图片模拟https://httpbin.org/post
 function noop() {}
 
 export default {
@@ -179,7 +179,7 @@ export default {
       file.percentage = ev.percent || 0;
     },
     handleSuccess(res, rawFile) {
-        debugger
+
       const file = this.getFile(rawFile);
 
       if (file) {
@@ -202,6 +202,8 @@ export default {
       this.onChange(file, this.uploadFiles);
     },
     handleRemove(file, raw) {
+        //点击删除按钮删除图片文件
+        debugger
       if (raw) {
         file = this.getFile(raw);
       }
@@ -209,6 +211,9 @@ export default {
         this.abort(file);
         let fileList = this.uploadFiles;
         fileList.splice(fileList.indexOf(file), 1);
+
+
+        this.handleDeleteOssImg(file.url);
         this.onRemove(file, fileList);
       };
 
@@ -224,6 +229,12 @@ export default {
           doRemove();
         }
       }
+    },
+    // 调用api删除oss中的文件
+    handleDeleteOssImg(imgUrl){
+      deleteOssImg({imgUrl: imgUrl}).then(response => {
+        console.log("删除oss图片成功")
+      })
     },
     getFile(rawFile) {
       let fileList = this.uploadFiles;

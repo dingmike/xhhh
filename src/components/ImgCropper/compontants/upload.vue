@@ -164,6 +164,7 @@ export default {
   },
 
   render(h) {
+
     let {
       handleClick,
       drag,
@@ -174,12 +175,25 @@ export default {
       listType,
       uploadFiles,
       disabled,
-      handleKeydown
+      handleKeydown,
+      limit,
+      fileList
     } = this;
+
+    // 上传多张图片和上传1张图片隐藏添加按钮
+//    let fileList = fileList
+//    let limit = limit
+    let showNone = 'block'
+    if((fileList.length==1&&limit==1)||(fileList.length==9&&limit==9)){
+      showNone='none'
+    }
     const data = {
       class: {
         'el-upload': true
       },
+     /* style: {
+        display: showNone,
+      },*/
       on: {
         click: handleClick,
         keydown: handleKeydown
@@ -187,7 +201,7 @@ export default {
     };
     data.class[`el-upload--${listType}`] = true;
     return (
-      <div {...data} tabindex="0" >
+      <div {...data} tabindex="0">
         {
           drag
             ? <upload-dragger disabled={disabled} on-file={uploadFiles}>{this.$slots.default}</upload-dragger>

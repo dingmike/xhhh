@@ -81,6 +81,9 @@ export default {
     addFund: '添加项目',
     editFund: '编辑项目',
     fundUserList: '参与会员',
+    shareOneList: '会员分红记录',
+    shareAllList: '历史分红记录',
+
 
     parkSee: '入园参考',
     parkIn: '入园管理',

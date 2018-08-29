@@ -1,6 +1,14 @@
 <template>
   <div class="app-container calendar-list-container">
-    <el-table :data="list" border fit
+    <el-row v-if="!list">
+      <el-col :span="4">
+        <span class="down-box">该园区下没有景点</span>
+      </el-col>
+      <el-col :span="8">
+        <el-button type="primary" size="middle" @click="deleteParks">删除园区</el-button>
+      </el-col>
+    </el-row>
+    <el-table v-if="list" :data="list" border fit
               highlight-current-row
               show-header
               size="middle"
@@ -36,8 +44,8 @@
           <el-button type="primary" size="mini" @click="showDeleteBox(scope.row)">删除</el-button>
         </template>
       </el-table-column>
-
     </el-table>
+
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
                      :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
@@ -63,6 +71,28 @@
       </span>
     </el-dialog>
     <!--删除弹窗 end-->
+
+
+    <!--删除弹窗2 start-->
+    <el-dialog v-el-drag-dialog
+               title="删除数据"
+               :visible.sync="visibleDelete2"
+               width="30%"
+               center
+               :before-close="handleClose">
+      <el-row>
+        <el-col :span="24">
+          <span class="down-box">确定删除园区数据吗？</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="visibleDelete2 = false">取 消</el-button>
+        <el-button type="primary" @click="handleDeleteParks">确定</el-button>
+      </span>
+    </el-dialog>
+    <!--删除弹窗2 end-->
+
+
   </div>
 
 
@@ -106,6 +136,7 @@
         dialogImageUrl: '',
         formLabelWidth: '120px',
         visibleDelete: false,
+        visibleDelete2: false,
         dialogVisible: false,
         dialogVisible2: false,
         dialogVisible3: false,
@@ -142,6 +173,23 @@
 //      this.getList()
     },
     methods: {
+      deleteParks(){
+            this.visibleDelete2 =true
+        },
+      handleDeleteParks(){
+          console.log("删除园区：" +this.type)
+        deletePark({id: this.type}).then(response => {
+          this.$notify({
+            title: '提示',
+            message: '删除成功',
+            type: 'success',
+            duration: 1500
+          })
+          this.visibleDelete2 =false
+          this.getList()
+          this.$emit('refreshLoading', true)
+        })
+      },
       getList() {
         this.loading = true
 //        this.$emit('create') // for test
@@ -171,6 +219,7 @@
         this.dialogVisible2 = false // 关闭dialog
         this.dialogVisible3 = false // 关闭dialog
         this.dialogVisible4 = false // 关闭dialog
+        this.visibleDelete2 = false // 关闭dialog
       },
       showDialog(row) {
         this.dialogVisible2 = true
@@ -182,7 +231,6 @@
       },
       // 删除景区
       handleDeleteNews(){
-          debugger
         deletePark({id: this.dataObj.id}).then(response => {
           this.$notify({
             title: '提示',
