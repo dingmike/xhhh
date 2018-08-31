@@ -31,22 +31,22 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item  label="单笔酒量" prop="standard">
-              <el-input-number v-model="sceneryContent.standard" controls-position="right"  :precision="2" :step="0.1" :max="1000000"></el-input-number>
+            <el-form-item  label="单笔酒量(kg)" prop="standard">
+              <el-input-number v-model="sceneryContent.standard" controls-position="right"  :precision="2" :step="0.1" :min="0" :max="1000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item  label="赠送分红积分" prop="largessIntegral">
-              <el-input-number v-model="sceneryContent.largessIntegral" controls-position="right"  :precision="2" :step="0.1" :max="10000000"></el-input-number>
+              <el-input-number v-model="sceneryContent.largessIntegral" controls-position="right"  :precision="2" :step="0.1" :min="0" :max="10000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item  label="单笔窖酒价格" prop="money">
-              <el-input-number v-model="sceneryContent.money" controls-position="right"  :precision="2" :step="0.1" :max="10000000"></el-input-number>
+              <el-input-number v-model="sceneryContent.money" controls-position="right"  :precision="2" :step="0.1" :min="0" :max="10000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -279,7 +279,7 @@
           ],
           context: [
             {required: true, message: '请输入须知', trigger: 'blur'},
-            {min: 3, max: 2000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
+            {min: 3, max: 100, message: '长度在 3 到 100 个字符', trigger: 'blur'}
           ]
         }
       }

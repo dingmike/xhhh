@@ -14,7 +14,7 @@
 -->
 
     <el-upload
-      action="http://192.168.9.102:8080/huahai/admin/upload"
+      action="http://47.98.185.197:8080/huahai/admin/upload"
       list-type="picture-card"
       :limit="1"
       :show-file-list='true'

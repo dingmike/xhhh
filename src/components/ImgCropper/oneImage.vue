@@ -4,7 +4,8 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="http://192.168.9.109:8080/huahai/admin/upload"
+               accept="image/png,image/jpg,image/jpeg"
+               action="http://47.98.185.197:8080/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="1"

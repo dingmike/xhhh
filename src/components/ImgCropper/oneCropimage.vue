@@ -4,7 +4,8 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="http://192.168.9.109:8080/huahai/admin/upload"
+               accept="image/png,image/jpg,image/jpeg"
+               action="http://47.98.185.197:8080/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="1"
@@ -22,11 +23,7 @@
 
     </uploadImg>
 
-
-
-
-
-    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>
+    <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitImgs">开始上传</el-button>-->
 
     <!--new add-->
     <el-dialog width="50%" v-el-drag-dialog :visible.sync="dialogVisible">
@@ -55,6 +52,8 @@
           :autoCropHeight="option.autoCropHeight"
           :centerBox="option.centerBox"
           :high="option.high"
+          :fixed="option.fixed"
+          :fixedNumber="option.fixedNumber"
           :infoTrue="option.infoTrue"
           @realTime="realTime"
           @imgLoad="imgLoad"
@@ -80,7 +79,7 @@
         <el-row style="margin-top: 20px">
           <el-col>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="startInitImg('base64')">裁剪图片</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="warning" @click="dialogCorpperBox=false">确 定</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="warning" @click="sureUpload">确定上传</el-button>
           </el-col>
         </el-row>
 
@@ -188,7 +187,7 @@
           full: false,
           outputType: 'png',
           canMove: true,
-          fixedBox: true,
+          fixedBox: false,
           original: false,
           canMoveBox: true,
           autoCrop: true,
@@ -196,7 +195,9 @@
           autoCropWidth: this.cropWidth,
           autoCropHeight: this.cropHeight,
           centerBox: true,
-          high: true
+          high: true,
+          fixed: true,
+          fixedNumber: [this.cropWidth/100,this.cropHeight/100]
         },
 
         example2: {
@@ -223,6 +224,10 @@
       })
     },
     methods: {
+      sureUpload(){
+        this.submitImgs()
+        this.dialogCorpperBox=false
+      },
       rmImage() {
         this.emitInput('')
       },

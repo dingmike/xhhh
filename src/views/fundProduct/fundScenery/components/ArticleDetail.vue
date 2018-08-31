@@ -83,7 +83,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item  label="众筹资金" prop="money">
-              <el-input-number v-model="sceneryContent.money" controls-position="right"  :precision="2" :step="0.1" :max="1000000000"></el-input-number>
+              <el-input-number v-model="sceneryContent.money" controls-position="right"  :precision="2" :step="0.1" :min="0" :max="1000000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -326,7 +326,7 @@ import quillor from '@/components/QuillEditor'
         rules: {
           name: [
             {required: true, message: '请输入项目景点名称', trigger: 'blur'},
-            {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
           openTime: [
             {required: true, message: '请输入开放时间', trigger: 'change'},
@@ -350,7 +350,7 @@ import quillor from '@/components/QuillEditor'
           ],
           notes: [
             {required: true, message: '请输入须知', trigger: 'blur'},
-            {min: 3, max: 2000, message: '长度在 3 到 2000 个字符', trigger: 'blur'}
+            {min: 3, max: 100, message: '长度在 3 到 100 个字符', trigger: 'blur'}
           ]
         }
       }

@@ -3,7 +3,8 @@
     <uploadImg class="image-uploader"
                :data="dataObj"
                ref="upload"
-               action="http://192.168.9.109:8080/huahai/admin/upload"
+               accept="image/png,image/jpg,image/jpeg"
+               action="http://47.98.185.197:8080/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="9"
@@ -37,6 +38,7 @@
           :outputSize="option.size"
           :outputType="option.outputType"
           :info="true"
+          :canScale="option.canScale"
           :full="option.full"
           :canMove="option.canMove"
           :canMoveBox="option.canMoveBox"
@@ -48,6 +50,8 @@
           :centerBox="option.centerBox"
           :high="option.high"
           :infoTrue="option.infoTrue"
+          :fixed="option.fixed"
+          :fixedNumber="option.fixedNumber"
           @realTime="realTime"
           @imgLoad="imgLoad"
         ></vueCropper>
@@ -65,7 +69,7 @@
         <button @click="changeScale(-1)" class="btn">缩小</button>
         <button @click="rotateLeft" class="btn">左旋转</button>
         <button @click="rotateRight" class="btn">右旋转</button>
-        <button @click="finish('base64')" class="btn">预览</button>
+        <!--<button @click="finish('base64')" class="btn">预览</button>-->
         <!--<button @click="finish('blob')" class="btn">preview(blob)</button>-->
         <a @click="down('base64')" class="btn">下载</a>
         <!--<a @click="down('blob')" class="btn">download(blob)</a>-->
@@ -170,15 +174,18 @@
           full: false,
           outputType: 'png',
           canMove: true,
-          fixedBox: true,
+          fixedBox: false,
           original: false,
           canMoveBox: true,
+          canScale: false,
           autoCrop: true,
           // 只有自动截图开启 宽度高度才生效
           autoCropWidth: 500,
           autoCropHeight: 300,
           centerBox: true,
-          high: true
+          high: true,
+          fixed: true,
+          fixedNumber: [5,3]
         },
 
         example2: {
@@ -208,7 +215,6 @@
         sureUpload(){
           this.submitImgs()
           this.dialogCorpperBox=false
-
         },
       rmImage() {
         this.emitInput('')
@@ -235,7 +241,6 @@
 //        this.imgUrlList = this.imgUrlList.substring(0, this.imgUrlList.length-1)
 //        this.emitInput(this.imgUrlList)
         if(data.uid==raw[raw.length-1].uid){
-
           let uid = data.uid
            for(let i=0;i<raw.length;i++){
            if(uid!=raw[i].uid){
@@ -368,7 +373,13 @@
 
         let imgsArr = []
         for(let i=0;i<raw.length;i++){
-          imgsArr.push(raw[i].url)
+
+            if(raw[i].response){
+              imgsArr.push(raw[i].response.data)
+            }else{
+              imgsArr.push(raw[i].url)
+            }
+
         }
         this.emitInput(imgsArr.join(','))
 

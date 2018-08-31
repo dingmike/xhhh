@@ -1,6 +1,6 @@
 <template>
   <div class="app-container calendar-list-container">
-    <el-row v-if="!list">
+    <el-row v-if="!total">
       <el-col :span="4">
         <span class="down-box">该园区下没有景点</span>
       </el-col>
@@ -8,7 +8,7 @@
         <el-button type="primary" size="middle" @click="deleteParks">删除园区</el-button>
       </el-col>
     </el-row>
-    <el-table v-if="list" :data="list" border fit
+    <el-table v-if="total" :data="list" border fit
               highlight-current-row
               show-header
               size="middle"

@@ -17,8 +17,8 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item  label="添加景点" prop="pId">
-              <el-select  size="middle" multiple  @change="changeSights" v-model="sceneryContent.pId" filterable placeholder="选择要添加的景点">
+            <el-form-item  label="添加景点" prop="spotId">
+              <el-select  size="middle" multiple  v-model="sceneryContent.spotId" filterable placeholder="选择要添加的景点">
                 <el-option
                   v-for="item in sightOptions"
                   :key="item.id"
@@ -240,7 +240,7 @@ import Upload from '@/components/ImgCropper/oneCropimage'
             {required: true, message: '请输入项目景点名称', trigger: 'blur'},
             {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
           ],
-          pId: [
+          spotId: [
             {required: true, message: '请选择参考景点', trigger: 'change'}
           ],
           img: [
@@ -332,10 +332,6 @@ import Upload from '@/components/ImgCropper/oneCropimage'
           this.listLoading = false
         })
       },
-      changeSights(pId){
-        this.getSightByPark(pId)
-//        this.sceneryContent.sightCategory =  this.sightOptions[0].id
-      },
       submitNews(){
       /*  if(this.sceneryImgArr){
           let newImgsArrStr = this.sceneryImgArr.join(',')
@@ -343,8 +339,9 @@ import Upload from '@/components/ImgCropper/oneCropimage'
         }*/
 //        let newImgsArrStr = this.sceneryImgArr.join(',')
 //        this.sceneryContent.masterImg +=newImgsArrStr
-        this.sceneryContent.pId=this.sceneryContent.pId.join(',')
-        console.log( this.sceneryContent.pId)
+        debugger
+        this.sceneryContent.spotId=this.sceneryContent.spotId.join(',')
+        console.log( this.sceneryContent.spotId)
         saveParkin(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
@@ -368,11 +365,12 @@ import Upload from '@/components/ImgCropper/oneCropimage'
       },
       fetchNewsContent(){
         parkinDetail({id:this.$route.query.id}).then(response => {
-            if( response.data.data.pid){
-              response.data.data.pid=response.data.data.pid.split(',')
+            if( response.data.data.spotId){
+              response.data.data.spotId=response.data.data.spotId.split(',')
+            }else{
+              response.data.data.spotId=[]
             }
           this.sceneryContent = response.data.data
-          this.getSightByPark(response.data.data.pId)
           // 编辑修改
           this.sceneryImgArr=this.sceneryContent.img.split(',')
           for(let i=0; i<this.sceneryImgArr.length;i++){
@@ -394,6 +392,7 @@ import Upload from '@/components/ImgCropper/oneCropimage'
             })
             this.postForm.status = 'published'
             this.loading = false
+            this.goBack()
           } else {
             console.log('error submit!!')
             return false
@@ -426,7 +425,7 @@ import Upload from '@/components/ImgCropper/oneCropimage'
 
       },
       goBack(){
-        this.$router.push({path: '/fund-product/fund-scenery/fund-list'})
+        this.$router.push({path: '/park-see/park-in/park-in-list'})
       }
     }
   }

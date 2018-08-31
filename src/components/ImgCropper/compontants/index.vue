@@ -212,8 +212,8 @@ export default {
         let fileList = this.uploadFiles;
         fileList.splice(fileList.indexOf(file), 1);
 
-
-        this.handleDeleteOssImg(file.url);
+        debugger
+        this.handleDeleteOssImg(file.response.data);
         this.onRemove(file, fileList);
       };
 
