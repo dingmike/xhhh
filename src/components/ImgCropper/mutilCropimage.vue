@@ -4,7 +4,7 @@
                :data="dataObj"
                ref="upload"
                accept="image/png,image/jpg,image/jpeg"
-               action="http://47.98.185.197:8080/huahai/admin/upload"
+               action="http://huahai.tunnel.qydev.com/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="9"
@@ -15,7 +15,8 @@
                :on-success="handleImageScucess"
                list-type="picture-card"
                :on-preview="handlePictureCardPreview"
-               :on-remove="handleRemove">
+               :on-remove="handleRemove"
+               @click.native="showCorpMain">
       <i class="el-icon-plus"></i>
       <div slot="tip" class="el-upload__tip">点+添加图片(最多9张)</div>
     </uploadImg>
@@ -52,23 +53,21 @@
           :infoTrue="option.infoTrue"
           :fixed="option.fixed"
           :fixedNumber="option.fixedNumber"
-          @realTime="realTime"
-          @imgLoad="imgLoad"
         ></vueCropper>
       </div>
       <div class="test-button">
         <!--<button @click="changeImg" class="btn">changeImg</button>-->
-        <label class="btn" for="uploads">选择一张图片</label>
-        <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
-               accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">
+        <!--<label class="btn" for="uploads">选择一张图片</label>-->
+<!--        <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
+               accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">-->
         <!--<button @click="startCrop" v-if="!crap" class="btn">start</button>-->
         <!--<button @click="stopCrop" v-else class="btn">stop</button>-->
         <!--<button @click="clearCrop" class="btn">clear</button>-->
         <!--<button @click="refreshCrop" class="btn">refresh</button>-->
-        <button @click="changeScale(1)" class="btn">放大</button>
-        <button @click="changeScale(-1)" class="btn">缩小</button>
-        <button @click="rotateLeft" class="btn">左旋转</button>
-        <button @click="rotateRight" class="btn">右旋转</button>
+        <!--<button @click="changeScale(1)" class="btn">放大</button>-->
+        <!--<button @click="changeScale(-1)" class="btn">缩小</button>-->
+        <!--<button @click="rotateLeft" class="btn">左旋转</button>-->
+        <!--<button @click="rotateRight" class="btn">右旋转</button>-->
         <!--<button @click="finish('base64')" class="btn">预览</button>-->
         <!--<button @click="finish('blob')" class="btn">preview(blob)</button>-->
         <a @click="down('base64')" class="btn">下载</a>
@@ -76,7 +75,7 @@
         <el-row style="margin-top: 20px">
           <el-col>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="startInitImg('base64')">裁剪图片</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="warning" @click="sureUpload">确定上传</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="warning" v-if="showUploadBtn" @click="sureUpload">确定上传</el-button>
           </el-col>
         </el-row>
       </div>
@@ -118,11 +117,13 @@
     },
     data() {
       return {
+        showUploadBtn: false,
         flag: true,
         showCorpper: true,
         dialogImageUrl: '',
         dialogVisible: false,
         dialogCorpperBox: false,
+
         tempUrl: '',
         picFiles: this.fileLists,
         dataObj: {token: '', key: ''},
@@ -223,23 +224,9 @@
         this.$emit('input', val)
       },
       handleImageScucess(file, data,raw) {
-            debugger
-        /*let uid = data.uid
-        let imgsArr = []
-        for(let i=0;i<raw.length;i++){
-              if(uid!=raw[i].uid){
-                this.imgsArr.push(raw[i].url)
-              }else{
-                this.imgsArr.push(raw[i].response.data)
-               //this.imgUrlList+=raw[i].response.data+','
-              }
-        }*/
-
-       //this.imgUrlList +=file.data+','
-       //console.log(file.data)
-       // console.log(this.imgUrlList)
-//        this.imgUrlList = this.imgUrlList.substring(0, this.imgUrlList.length-1)
-//        this.emitInput(this.imgUrlList)
+        if(file.code==200){
+          this.flag = false
+        }
         if(data.uid==raw[raw.length-1].uid){
           let uid = data.uid
            for(let i=0;i<raw.length;i++){
@@ -250,10 +237,15 @@
            //this.imgUrlList+=raw[i].response.data+','
            }
            }
+           console.log(this.imgsArr.join(','))
           this.emitInput(this.imgsArr.join(','))
+
         }
       },
-
+      showCorpMain(){
+          this.flag = true
+        this.showUploadBtn = false
+      },
       changeFile(file, fileList){
           debugger
           var num = 1
@@ -269,7 +261,9 @@
             }
             if (num === 1) {
               this.option.img = data
-              this.dialogCorpperBox = true
+              if(this.flag){
+                this.dialogCorpperBox = true
+              }
             } else if (num === 2) {
               this.example2.img = data
             }
@@ -281,9 +275,9 @@
 
       },
       beforeUpload(file) {
+          debugger
         const _self = this
         const isLt2M = file.size / 1024 / 1024 < 2
-
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!')
         }
@@ -362,15 +356,6 @@
         this.fileLists.splice(this.fileLists.indexOf(file), 1);
       },
       handleRemove(file, raw) {
-       debugger
-        /* this.doRemove(file);
-         let imgsArr = []
-         for(let i=0;i<this.fileLists.length;i++){
-         imgsArr.push(this.fileLists[i].url)
-         //this.imgUrlList+=raw[i].response.data+','
-         }
-        this.emitInput(imgsArr.join(','))*/
-
         let imgsArr = []
         for(let i=0;i<raw.length;i++){
 
@@ -390,6 +375,8 @@
           let newPic = this.dataURLtoFile(data, "tupian.png")
 //          this.$refs.upload.submit(newPic);
           // 开始上传
+          this.option.img=''
+          this.showUploadBtn = true
           this.$refs.upload.handleStart(newPic)
         })
 

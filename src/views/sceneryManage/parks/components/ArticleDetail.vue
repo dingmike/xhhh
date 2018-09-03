@@ -217,6 +217,7 @@
             duration: 2000
           })
           this.loading = false
+          this.goBack()
         })
       },
       saveNews() {

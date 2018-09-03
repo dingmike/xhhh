@@ -301,7 +301,6 @@
         this.getList()
       },
       handleCurrentChange(val) {
-        debugger
         this.listQuery.page = val
         this.getList()
       },

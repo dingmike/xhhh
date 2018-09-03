@@ -101,58 +101,6 @@
         </template>
       </el-table-column>
 
-
-      <!-- <el-table-column width="100px" align="center" label="状态">
-         <template slot-scope="scope">
-           <span>{{scope.row.is_on_sale === 1?'在架状态' : '下架状态'}}</span>
-         </template>
-       </el-table-column>-->
-      <!--
-            <el-table-column width="100px" align="center" label="HOT产品">
-              <template slot-scope="scope">
-                &lt;!&ndash;<span>{{scope.row.is_hot === 1?'是的' : '不是'}}</span>&ndash;&gt;
-                <i v-show="scope.row.is_hot == 1" class="el-icon-success" style="color: red; font-size: 22px"  @click="updateHotGood(scope.row)"></i>
-                <i v-show="scope.row.is_hot == 0" class="el-icon-success" style="color: #cccccc; font-size: 22px"  @click="updateHotGood(scope.row)"></i>
-
-              </template>
-            </el-table-column>
-
-            <el-table-column width="100px" align="center" label="库存">
-              <template slot-scope="scope">
-                <span>{{scope.row.goods_number}}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column width="100px" label="销量">
-              <template slot-scope="scope">
-                <span>{{scope.row.sell_volume}}</span>
-                &lt;!&ndash;<svg-icon v-for="n in +scope.row.importance" icon-class="star" :key="n"></svg-icon>&ndash;&gt;
-              </template>
-            </el-table-column>
-
-            <el-table-column align="center" label="创建时间" width="200px">
-              <template slot-scope="scope">
-                <span>{{scope.row.add_time | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column class-name="status-col" label="操作" width="300px">
-              <template slot-scope="scope">
-                &lt;!&ndash;<el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>&ndash;&gt;
-                <i class="el-icon-edit edit-good-icon" @click="handleEdit(scope.row)"></i>
-               &lt;!&ndash; <el-button size="mini" :type="scope.row.is_on_sale === 1 ? 'warning' : 'success'" @click="showDialog(scope.row)">{{scope.row.is_on_sale === 1?'下架':'上架'}}
-                </el-button>&ndash;&gt;
-                <el-button v-show="scope.row.is_on_sale === 1" size="mini" type='warning' @click="showDialog(scope.row)">下架
-                </el-button>
-                <el-button type="success" v-show="scope.row.is_on_sale === 0" size="mini" @click="handleUpProduct(scope.row)">
-                  上架
-                </el-button>
-                <el-button type="danger" size="mini"  @click="showDeletDialog(scope.row)">删除
-                </el-button>
-              </template>
-            </el-table-column>
-      -->
-
     </el-table>
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"

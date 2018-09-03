@@ -203,7 +203,6 @@ export default {
     },
     handleRemove(file, raw) {
         //点击删除按钮删除图片文件
-        debugger
       if (raw) {
         file = this.getFile(raw);
       }
@@ -211,9 +210,14 @@ export default {
         this.abort(file);
         let fileList = this.uploadFiles;
         fileList.splice(fileList.indexOf(file), 1);
-
-        debugger
-        this.handleDeleteOssImg(file.response.data);
+        this.fileList.splice(this.fileList.indexOf(file), 1);
+        // 删除oss中的图片
+        if(file.response){
+          this.handleDeleteOssImg(file.response.data);
+        }else{
+          this.handleDeleteOssImg(file.url);
+        }
+       // this.handleDeleteOssImg(file.response.data);
         this.onRemove(file, fileList);
       };
 

@@ -437,19 +437,9 @@ import quillor from '@/components/QuillEditor'
         })
       },
       changeSights(pId){
-          debugger
         this.getSightByPark(pId)
-//        this.sceneryContent.sightCategory =  this.sightOptions[0].id
       },
       submitNews(){
-        debugger
-
-      /*  if(this.sceneryImgArr){
-          let newImgsArrStr = this.sceneryImgArr.join(',')
-        this.sceneryContent.masterImg +=newImgsArrStr
-        }*/
-//        let newImgsArrStr = this.sceneryImgArr.join(',')
-//        this.sceneryContent.masterImg +=newImgsArrStr
         saveFund(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
@@ -458,6 +448,7 @@ import quillor from '@/components/QuillEditor'
             duration: 2000
           })
           this.loading = false
+          this.goBack()
         })
       },
       saveNews() {
@@ -472,14 +463,11 @@ import quillor from '@/components/QuillEditor'
         })
       },
       fetchNewsContent(){
-          debugger
         fundingProductDetail({spotId:this.$route.query.id}).then(response => {
           this.sceneryContent = response.data.data
           this.getSightByPark(response.data.data.pId)
           // 编辑修改
-          debugger
           this.sceneryImgArr=this.sceneryContent.masterImg.split(',')
-          debugger
           for(let i=0; i<this.sceneryImgArr.length;i++){
             let obj={name:'tupian.png', url:this.sceneryImgArr[i]}
             this.sceneryImgArr2.push(obj)

@@ -333,13 +333,6 @@ import Upload from '@/components/ImgCropper/oneCropimage'
         })
       },
       submitNews(){
-      /*  if(this.sceneryImgArr){
-          let newImgsArrStr = this.sceneryImgArr.join(',')
-        this.sceneryContent.masterImg +=newImgsArrStr
-        }*/
-//        let newImgsArrStr = this.sceneryImgArr.join(',')
-//        this.sceneryContent.masterImg +=newImgsArrStr
-        debugger
         this.sceneryContent.spotId=this.sceneryContent.spotId.join(',')
         console.log( this.sceneryContent.spotId)
         saveParkin(this.sceneryContent).then(response => {
@@ -350,6 +343,7 @@ import Upload from '@/components/ImgCropper/oneCropimage'
             duration: 2000
           })
           this.loading = false
+          this.goBack()
         })
       },
       saveNews() {

@@ -14,7 +14,7 @@
 -->
 
     <el-upload
-      action="http://47.98.185.197:8080/huahai/admin/upload"
+      action="http://huahai.tunnel.qydev.com/huahai/admin/upload"
       list-type="picture-card"
       :limit="1"
       :show-file-list='true'

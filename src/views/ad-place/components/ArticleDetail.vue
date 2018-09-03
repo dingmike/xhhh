@@ -237,8 +237,6 @@
         obj.type = "";
         obj.children = []
         this.specs.push(obj)
-
-
         let _obj = [{}]
         _obj[0].goods_specification_ids = ''
         _obj[0].prices = {
@@ -249,7 +247,6 @@
 
         this.specPrices = _obj
       }
-
 //
     },
     methods: {
@@ -262,6 +259,7 @@
             duration: 2000
           })
           this.loading = false
+          this.goBack()
         })
       },
       saveNews() {

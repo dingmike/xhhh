@@ -191,9 +191,9 @@ export default {
       class: {
         'el-upload': true
       },
-     /* style: {
+      style: {
         display: showNone,
-      },*/
+      },
       on: {
         click: handleClick,
         keydown: handleKeydown

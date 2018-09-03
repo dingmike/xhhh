@@ -420,14 +420,6 @@
 
       },
       submitNews(){
-        debugger
-
-      /*  if(this.sceneryImgArr){
-          let newImgsArrStr = this.sceneryImgArr.join(',')
-        this.sceneryContent.masterImg +=newImgsArrStr
-        }*/
-//        let newImgsArrStr = this.sceneryImgArr.join(',')
-//        this.sceneryContent.masterImg +=newImgsArrStr
         saveSightSpot(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
@@ -436,6 +428,7 @@
             duration: 2000
           })
           this.loading = false
+          this.goBack()
         })
       },
       saveNews() {
