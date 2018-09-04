@@ -3,7 +3,7 @@
     <el-button icon='el-icon-upload' size="mini" :style="{background:color,borderColor:color}" @click=" dialogVisible=true" type="primary">上传图片
     </el-button>
     <el-dialog append-to-body :visible.sync="dialogVisible">
-      <el-upload class="editor-slide-upload" action="http://huahai.tunnel.qydev.com/huahai/admin/upload" :multiple="true" :file-list="fileList" :show-file-list="true"
+      <el-upload class="editor-slide-upload" action="http://118.31.40.33:8080/huahai/admin/upload" :multiple="true" :file-list="fileList" :show-file-list="true"
         list-type="picture-card" :on-remove="handleRemove" :on-success="handleSuccess" :before-upload="beforeUpload">
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>

@@ -5,7 +5,7 @@
                :data="dataObj"
                ref="upload"
                accept="image/png,image/jpg,image/jpeg"
-               action="http://47.98.185.197:8080/huahai/admin/upload"
+               action="http://118.31.40.33:8080/huahai/admin/upload"
                :multiple="true"
                :show-file-list='true'
                :limit="1"

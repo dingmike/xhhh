@@ -382,6 +382,7 @@
         this.dialogPvVisible = false // 关闭dialog
         this.dialogVisible3 = false // 关闭dialog
         this.dialogVisible4 = false // 关闭dialog
+        this.visibleDelete = false // 关闭dialog
       },
       reloads(){
         this.refreshLoading = true

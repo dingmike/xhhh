@@ -350,7 +350,7 @@ import quillor from '@/components/QuillEditor'
           ],
           notes: [
             {required: true, message: '请输入须知', trigger: 'blur'},
-            {min: 3, max: 100, message: '长度在 3 到 100 个字符', trigger: 'blur'}
+            {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
           ]
         }
       }

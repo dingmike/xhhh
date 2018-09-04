@@ -53,7 +53,6 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          debugger
           if(response.data.code===200){
             const token = response.data.data
             console.log(token)
