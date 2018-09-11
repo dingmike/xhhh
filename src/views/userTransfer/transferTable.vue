@@ -1,15 +1,16 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-     <!-- <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
-                :placeholder="$t('table.title')" v-model="listQuery.title">
-      </el-input>
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance"
-                 :placeholder="$t('table.importance')">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
+
+      <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.type"
+                 placeholder="交易类型">
+        <el-option v-for="item in dealTypeOptions" :key="item.id" :label="item.type" :value="item.id">
         </el-option>
       </el-select>
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type"
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"
+               placeholder="交易对象手机号" v-model="listQuery.phone">
+     </el-input>
+      <!--<el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type"
                  :placeholder="$t('table.type')">
         <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'"
                    :value="item.key">
@@ -18,17 +19,19 @@
       <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.sort">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
-      </el-select>
+      </el-select>-->
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">
         {{$t('table.search')}}
-      </el-button>-->
+      </el-button>
+
+      <el-button class="filter-item" type="primary" v-waves :loading="refreshLoading" @click="reloads">刷新</el-button>
+
       <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
                   icon="el-icon-edit">{{$t('table.add')}}
        </el-button>-->
-      <el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download"
+      <!--<el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download"
                  @click="handleDownload">{{$t('table.export')}}
-      </el-button>
-
+      </el-button>-->
       <!--<el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">
         {{$t('table.reviewer')}}
       </el-checkbox>-->
@@ -44,55 +47,50 @@
           <span>{{scope.row.userId}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="100px" align="center" label="姓名">
+      <el-table-column width="200px" align="center" label="订单号">
         <template slot-scope="scope">
           <!--<span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>-->
-          <span>{{scope.row.realName }}</span>
+          <span>{{scope.row.orderId }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120px" label="提现金额">
+      <el-table-column width="120px" align="center" label="交易对象">
+        <template slot-scope="scope">
+          <!--<span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>-->
+          <span>{{scope.row.transPhone }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="200px" label="交易类型">
         <template slot-scope="scope">
           <!--<el-tag>{{scope.row.type | typeFilter}}</el-tag>-->
-          <el-tag>{{scope.row.money}}</el-tag>
+          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column width="140px" align="center" label="累计提现金额">
+      <el-table-column width="120px" align="center" label="收入/支出">
         <template slot-scope="scope">
-          <span>{{scope.row.totalMoney}}</span>
+          <span>{{scope.row.inOut| inOutState}}</span>
         </template>
       </el-table-column>
+      <el-table-column width="200px" align="center" label="转账/转换金额">
+        <template slot-scope="scope">
+          <span>{{scope.row.money}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="120px" align="center" label="余额">
+        <template slot-scope="scope">
+          <span>{{scope.row.cashBalance}}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column width="110px" align="center" label="明细">
+        <template slot-scope="scope">
+          <span>{{scope.row.detail}}</span>
+        </template>
+      </el-table-column>-->
 
-      <el-table-column width="120px" align="center" label="实际金额">
-        <template slot-scope="scope">
-          <span>{{scope.row.actualMoney}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="180px" align="center" label="提现至账号">
-        <template slot-scope="scope">
-          <span>{{scope.row.targetAccount}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="120px" align="center" label="提现方式">
-        <template slot-scope="scope">
-          <span>{{scope.row.type | typeFilter }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="110px" align="center" label="状态">
-        <template slot-scope="scope">
-          <span>{{scope.row.status | statusFilter }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="110px" align="center" label="备注">
-        <template slot-scope="scope">
-          <span>{{scope.row.remarks}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" :label="$t('table.actions')" width="240" class-name="small-padding fixed-width">
+      <!--<el-table-column align="center" :label="$t('table.actions')" width="240" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="middle" @click="handleStatus(scope.row)">修改状态</el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
 
     <div class="pagination-container">
@@ -121,7 +119,6 @@
       </span>
     </el-dialog>
     <!--激活账户 end-->
-
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="70px"
@@ -171,15 +168,13 @@
         <el-button type="primary" @click="dialogPvVisible = false">{{$t('table.confirm')}}</el-button>
       </span>
     </el-dialog>
-
-
   </div>
 </template>
 
 <script>
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
-  import {getWithDrawList, idPassed} from '@/api/users'
+  import {getWithDrawList, idPassed, getTransferList} from '@/api/users'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
 
@@ -207,9 +202,23 @@
         list: null,
         total: null,
         listLoading: true,
+        dealTypeOptions:[{
+            id:1,
+          type: '现金余额转账'
+        },
+          {
+            id:2,
+            type: '分红积分转账'
+          },
+          {
+            id:3,
+            type: '现金余额转换分红积分'
+          }],
         listQuery: {
           page: 1,
-          size: 10
+          size: 10,
+          type: '', // 1:余额转账记录，2：积分转账记录，3：余额转积分记录
+          phone: '',
         },
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
@@ -256,14 +265,21 @@
 
         switch (type) {
           case 1:
-            return '支付宝'
+            return '现金余额'
           case 2:
-            return '微信'
+            return '分红积分'
           case 3:
-            return "银行卡"
+            return "现金余额转换分红积分"
           default:
             break
         }
+      },
+      inOutState(type){
+          if(type==1){
+            return '收入'
+          }else{
+            return '支出'
+          }
       },
       statusFilter(status){
         switch (status) {
@@ -286,7 +302,7 @@
     methods: {
       getList() {
         this.listLoading = true
-        getWithDrawList(this.listQuery).then(response => {
+        getTransferList(this.listQuery).then(response => {
           this.list = response.data.data.content
           this.total = response.data.data.totalElements
           this.listLoading = false
@@ -441,7 +457,17 @@
       },
       handleClose(){
 
-      }
+      },
+      reloads() {
+        this.refreshLoading =true
+        this.listQuery={
+          page: 1,
+            size: 10,
+            type: '', // 1:余额转账记录，2：积分转账记录，3：余额转积分记录
+            phone: '',
+        }
+        this.getList()
+      },
     }
   }
 </script>

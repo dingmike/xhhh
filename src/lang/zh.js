@@ -55,6 +55,7 @@ export default {
 
 
     userWithdraw:'会员提现',
+    userTransfer:'会员转账',
     userManage:'会员管理',
     editUser:'编辑会员',
     userDegree:'编辑会员等级',

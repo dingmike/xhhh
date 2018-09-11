@@ -127,6 +127,14 @@ export function idPassed(data) {
 }
 
 
+// 获取會員转账列表
+export function getTransferList(query) {
+  return request({
+    url: 'member/transferRecord',
+    method: 'get',
+    params: query
+  })
+}
 
 
 

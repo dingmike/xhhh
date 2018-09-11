@@ -10,7 +10,7 @@
         <el-button type="primary" :loading="refreshLoading" @click="reloads">刷新</el-button>
       </el-col>
       <el-col :span="4" :offset="20">
-        <el-input placeholder="名称搜索" v-model="searchQuery.name" class="input-with-select">
+        <el-input placeholder="名称搜索" v-model="searchQuery.surname" class="input-with-select">
           <el-button slot="append" icon="el-icon-search"  @click="search()"></el-button>
         </el-input>
       </el-col>
@@ -39,7 +39,9 @@
 //          { label: '已下架', key: '0' }
         ],
         searchQuery: {
-          name: ''
+          page: 1,
+          size: 10,
+          surname: ''
         },
         activeName: 'null',
         createdTimes: 0,
@@ -67,7 +69,7 @@
         this.$refs.childPane[0].getList();
       },
       search() {
-        this.activeName = 'null'
+          debugger
         this.$refs.childPane[0].handlesearchGoods(this.searchQuery);
       }
     }

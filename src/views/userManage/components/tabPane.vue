@@ -275,6 +275,7 @@
         listQuery: {
           page: 1,
           size: 10,
+          surname: ''
 //          isOnSale: this.type  // 全部:''，在架：1，下架：0
         },
         loading: false
@@ -303,7 +304,7 @@
 //        this.$emit('create') // for test
 //        this.$emit('refreshLoading', true)
         fetchUsersList(this.listQuery).then(response => {
-          debugger
+
           this.list = response.data.data.content
           this.total = response.data.data.totalElements
 //          this.loading = false
@@ -312,14 +313,13 @@
         })
       },
       handlesearchGoods(query) {
-        debugger
-        this.loading = true
-        searchGoods(query).then(response => {
-          debugger
-          this.list = response.data.data.data
-          this.total = response.data.data.count
-          this.loading = false
+        this.listLoading = true
+        fetchUsersList(query).then(response => {
+          this.list = response.data.data.content
+          this.total = response.data.data.totalElements
+//          this.loading = false
           this.listLoading = false
+          this.$emit('refreshLoading', false)
         })
       },
       handleSelectionChange(val) {
@@ -356,7 +356,7 @@
         this.goodsObj = row
       },
       showIceUser(row){
-        debugger
+
         this.dialogVisible2 = true
         this.iceUserObj = row
       },
@@ -365,7 +365,6 @@
         this.iceUserObj = row
       },
       handleActiveUser() {
-          debugger
         // 激活和不激活用户
         if (this.iceUserObj.status == 0) {
           isActivationUser({id: this.iceUserObj.id}).then(response => {

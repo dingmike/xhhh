@@ -138,6 +138,16 @@ export const asyncRouterMap = [
     }]
   },
   {
+    path: '/userTransfer',
+    component: Layout,
+    children: [{
+      path: 'transfer-table',
+      component: _import('userTransfer/transferTable'),
+      name: 'userTransfer',
+      meta: { title: 'userTransfer', icon: 'transfer', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+  {
     path: '/editUser',
     component: Layout,
     redirect: '/userManage/editUser',

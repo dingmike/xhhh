@@ -77,7 +77,7 @@ const user = {
         // 只有admin权限
         commit('SET_ROLES', ['admin','editor'])
         commit('SET_NAME', 'admin')
-        commit('SET_AVATAR', 'https://avatars1.githubusercontent.com/u/19502477?s=40&v=4')
+        commit('SET_AVATAR', 'http://gouyigou.oss-cn-zhangjiakou.aliyuncs.com/20180420/img/BBE3837323D34793B6D0005BD9F694A8.jpg')
         let response = {
           data:{
             data: {
