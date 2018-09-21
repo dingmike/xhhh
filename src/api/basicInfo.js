@@ -26,6 +26,28 @@ export function save(data) {
   })
 }
 
+export function getAgreement(query) {
+  return request({
+    url: 'protocol/index',
+    method: 'get',
+    params: query
+  })
+}
+
+export function saveAgreement(data) {
+  let params = new URLSearchParams();
+  params.append('id', data.id);
+  params.append('type', data.type);
+  params.append('protocolContent', data.protocolContent);
+  return request({
+    url: 'protocol/save',
+    method: 'post',
+    data: params
+  })
+}
+
+
+
 
 export function getNewsById(query) {
   return request({

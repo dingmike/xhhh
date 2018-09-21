@@ -64,7 +64,9 @@ export default {
     officeNewsList: '资讯列表',
     addOfficeNews: '新增资讯',
     editOfficeNews: '编辑资讯',
-
+    buyFundAgreement: '编辑众筹协议',
+    buyWineAgreement: '编辑种酒协议',
+    rechargeTable: '会员充值',
     officeNotifice: '官方公告',
     officeNotificeList: '公告列表',
     addOfficeNotifice: '新增公告',

@@ -138,6 +138,16 @@ export const asyncRouterMap = [
     }]
   },
   {
+    path: '/userRecharge',
+    component: Layout,
+    children: [{
+      path: 'recharge-table',
+      component: _import('userRecharge/rechargeTable'),
+      name: 'rechargeTable',
+      meta: { title: 'rechargeTable', icon: 'withdraw', noCache: true, roles: ['admin','editor'] }
+    }]
+  },
+  {
     path: '/userTransfer',
     component: Layout,
     children: [{
@@ -435,7 +445,34 @@ export const asyncRouterMap = [
       { path: 'edit-info', component: _import('basicFile/editInfo'), name: 'editInfo', meta: { title: 'editInfo', icon: 'personCenter', noCache: true }},
     ]
   },
-
+  {
+    path: '/buyFundAgreement',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'buyFundAgreement',
+    meta: {
+      title: '众筹协议',
+      icon: 'personCenter'
+    },
+    children: [
+      // { path: 'basic-info', component: _import('basicFile/basicInfo'), name: 'basicInfo', meta: { title: 'basicInfo', noCache: true }},
+      { path: 'edit-info', component: _import('buyFundAgreement/editInfo'), name: 'buyFundAgreementInfo', meta: { title: 'buyFundAgreement', icon: 'personCenter', noCache: true }},
+    ]
+  },
+  {
+    path: '/buyWineAgreement',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'buyWineAgreement',
+    meta: {
+      title: '基本资料',
+      icon: 'personCenter'
+    },
+    children: [
+      // { path: 'basic-info', component: _import('basicFile/basicInfo'), name: 'basicInfo', meta: { title: 'basicInfo', noCache: true }},
+      { path: 'edit-info', component: _import('buyWineAgreement/editInfo'), name: 'buyWineAgreementInfo', meta: { title: 'buyWineAgreement', icon: 'personCenter', noCache: true }},
+    ]
+  },
 
 
 

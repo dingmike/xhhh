@@ -14,6 +14,13 @@ export function getRanks() {
     params: ''
   })
 }
+export function rechargeList(query) {
+  return request({
+    url: 'recharge/list',
+    method: 'get',
+    params: query
+  })
+}
 
 // 冻结用户
 export function disableUser(data) {
