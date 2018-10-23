@@ -99,7 +99,14 @@ export function wineOrderDetail(query) {
     params: query
   })
 }
-
+// 查看种酒证书寄送地址
+export function wineOrderAddress(query) {
+  return request({
+    url: 'cellarOrder/selectAddress',
+    method: 'get',
+    params: query
+  })
+}
 
 // 种酒已窖藏
 export function wineCollected(data) {

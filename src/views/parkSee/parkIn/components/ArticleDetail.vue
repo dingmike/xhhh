@@ -237,8 +237,8 @@ import Upload from '@/components/ImgCropper/oneCropimage'
         disableValue: false,
         rules: {
           name: [
-            {required: true, message: '请输入项目景点名称', trigger: 'blur'},
-            {min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur'}
+            {required: true, message: '请输入套餐标题', trigger: 'blur'},
+            {min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur'}
           ],
           spotId: [
             {required: true, message: '请选择参考景点', trigger: 'change'}
@@ -247,7 +247,7 @@ import Upload from '@/components/ImgCropper/oneCropimage'
             {required: true, message: '请上传入园参考主图', trigger: 'change'}
           ],
           intro: [
-            {required: true, message: '请输入介绍', trigger: 'blur'},
+            {required: true, message: '请输入套餐介绍', trigger: 'blur'},
             {min: 3, max: 2000, message: '长度在 3 到 2000 个字符', trigger: 'blur'}
           ]
         }

@@ -87,16 +87,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="12">
-            <el-form-item label="窖藏编号：" prop="name">
-              <span>{{sceneryContent.cellarNumber==null?'无':sceneryContent.cellarNumber}}</span>
+            <el-form-item label="启坛寄送地址：" prop="detailedAddress">
+              <span>{{sceneryContent.detailedAddress==null?'无':sceneryContent.detailedAddress}}</span>
             </el-form-item>
-
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="12">
             <el-form-item label="提货方式：" prop="name">
@@ -113,6 +110,18 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="窖藏编号：" prop="name">
+              <span>{{sceneryContent.cellarNumber==null?'无':sceneryContent.cellarNumber}}</span>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+
+
+
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="失效原因：" prop="name">

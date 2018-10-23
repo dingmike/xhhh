@@ -62,7 +62,7 @@
               <span>{{scope.row.money}}</span>
             </template>
           </el-table-column>-->
-      <el-table-column width="120px" align="center" label="数量">
+      <el-table-column width="100px" align="center" label="数量">
         <template slot-scope="scope">
           <span>{{scope.row.number}}</span>
         </template>
@@ -75,8 +75,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="400" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="500" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="primary" size="small" @click="goSeeAddress(scope.row)">查看证书寄送地址</el-button>
           <el-button type="primary" size="small" @click="handleUpdate(scope.row)">查看详情</el-button>
           <el-button size="small" type="success" @click="changeStatus(scope.row)">修改状态</el-button>
         </template>
@@ -208,6 +209,37 @@
 
 
 
+    <!--寄送证书 地址 start-->
+    <el-dialog title="寄送证书地址" :visible.sync="dialogAddressVisible">
+      <el-form class="form-container" :model="addressDetail" label-width="120px">
+        <div class="createPost-main-container">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="收件人：" prop="userName">
+                <span>{{addressDetail.userName}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="联系电话：" prop="phone">
+                <span>{{addressDetail.phone}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="20">
+              <el-form-item label="证书寄送地址：" prop="province">
+                <span>{{addressDetail.province}}, {{addressDetail.city}},  {{addressDetail.dist}}, {{addressDetail.detailedAddress}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+      </el-form>
+    </el-dialog>
+    <!--寄送证书 地址  end-->
 
 
 
@@ -249,7 +281,7 @@
   import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
   import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
   import {deleteNews, getNewsList} from '@/api/news'
-  import {wineOrderList, deleteWine, wineAlreadyInvalid,wineAlreadyOpen,wineCollected} from '@/api/wine'
+  import {wineOrderList, deleteWine, wineAlreadyInvalid,wineAlreadyOpen,wineCollected,wineOrderAddress} from '@/api/wine'
   import { getSightSpotList, deleteSpot} from '@/api/scenery'
   import waves from '@/directive/waves' // 水波纹指令
   import {parseTime} from '@/utils'
@@ -287,7 +319,19 @@
           size: 10,
         },
         visibleDelete: false,
+        dialogAddressVisible: false,
         dataObj:{},
+        addressDetail:{
+          "id": '',
+          "userId": '',
+          "userName": "",
+          "phone": "",
+          "province": "",
+          "city": "",
+          "dist": "",
+          "detailedAddress": "",
+          "isDefault": ''
+        },
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
         waitOptions:[
@@ -354,6 +398,15 @@
       this.getList()
     },
     methods: {
+        goSeeAddress(row){
+//droitAddressId
+          debugger
+          this.dialogAddressVisible=true
+          wineOrderAddress({droitAddressId: row.droitAddressId}).then(response => {
+            this.addressDetail = response.data.data
+
+          })
+        },
       changeStatus(row){
         this.oneObj=row
         //0-代窖藏, 1-已窖藏。2-申请启坛，3-已启坛，4-已失效
