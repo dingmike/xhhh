@@ -393,7 +393,25 @@ export const asyncRouterMap = [
           { path: 'wine-order-detail', component: _import('wineManage/wineOrder/wineOrderDetail'), name: 'wineOrderDetail', meta: { title: 'wineOrderDetail', noCache: true },hidden: true},
           // { path: 'edit-office-news', component: _import('news/officeNews/editOfficeNews'), name: 'editOfficeNews', meta: { title: 'editOfficeNews', noCache: true}, hidden: true }
         ]
-      }
+      },
+      {
+        path: '/wine-manage/wine-now',
+        component: _import('wineManage/wineNow/index'),
+        // redirect: '/wine-manage/wine-now/wine-list',
+        name: 'wineNow',
+        meta: {
+          title: 'wineNow',
+          icon: 'table'
+        },
+        children: [
+          {
+            path: 'wine-now',
+            component: _import('wineManage/wineNow/index'),
+            name: 'wineAddNow',
+            meta: { title: 'wineAddNow', icon: 'documentation', noCache: true }
+          }
+        ]
+      },
     ]
   },
 

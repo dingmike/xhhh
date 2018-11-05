@@ -3,21 +3,12 @@
     <div class="filter-container">
       <el-button class="filter-item" type="warning" @click="goBack">返回</el-button>
     </div>
-    <el-form class="form-container" :model="sceneryContent" :rules="rules" ref="postForm" label-width="120px">
+    <el-form class="form-container" :model="sceneryContent" :rules="rules" ref="postForm" label-width="160px">
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="订单编号：" prop="name">
-              <span>{{sceneryContent.orderId}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="来源订单编号：" prop="name">
-              <span>{{sceneryContent.pOrderId!=null?sceneryContent.pOrderId:'无'}}</span>
-
+            <el-form-item label="账号（手机号）" prop="phone">
+              <el-input v-model="sceneryContent.phone"></el-input>
             </el-form-item>
 
           </el-col>
@@ -25,119 +16,75 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="会员账号：" prop="name">
-              <span>{{sceneryContent.phone}}</span>
+            <el-form-item  label="推荐人账号(手机号)" prop="tPhone">
+              <el-input v-model="sceneryContent.tPhone"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="收货人姓名" prop="userName">
+              <el-input v-model="sceneryContent.userName"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="收货地址" prop="province">
+              <v-distpicker :placeholders="placeholders" @selected="onSelected"  :province="sceneryContent.province" :city="sceneryContent.city" :area="sceneryContent.dist"></v-distpicker>
+            </el-form-item>
+            <el-input type="hidden" v-model="sceneryContent.dist"></el-input>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="详细地址" prop="detailedAddress">
+              <el-input v-model="sceneryContent.detailedAddress"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="订单状态：" prop="name">
-              <span>{{sceneryContent.orderStatusName}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="数量：" prop="name">
-              <span>{{sceneryContent.number}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="种酒名称：" prop="name">
-              <span>{{sceneryContent.liquorProductName}}</span>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="种酒类别：" prop="name">
-              <span>{{sceneryContent.liquorCategoryName}}</span>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="支付现金余额：" prop="name">
-              <span>{{sceneryContent.payMoney}} 元</span>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="总酒量：" prop="name">
-              <span>{{sceneryContent.specs}}（kg）</span>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="下单时间：" prop="name">
-              <span>{{sceneryContent.creatTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="启坛时间：" prop="name">
-              <span>{{sceneryContent.openTime==null?'无': sceneryContent.openTime| parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+            <el-form-item  label="酒品" prop="liquorProductId">
+              <el-select size="small" v-model="sceneryContent.liquorProductId" filterable placeholder="选择种酒类别">
+                <el-option
+                  v-for="item in wineCategoryOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="启坛寄送地址：" prop="detailedAddress">
-              <span>{{sceneryContent.detailedAddress==null?'无':sceneryContent.detailedAddress}}</span>
+            <el-form-item  label="数量(坛)" prop="payNumber">
+              <el-input-number v-model="sceneryContent.payNumber" controls-position="right"  :precision="0" :step="1" :min="0" :max="10000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="提货方式：" prop="name">
-              <span>{{sceneryContent.mailType==1?'自提':'快递'}}</span>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="快递编号：" prop="name">
-              <span>{{sceneryContent.expressNumber==null?'无':sceneryContent.expressNumber}}</span>
+            <el-form-item  label="价格" prop="payMoney">
+              <el-input-number v-model="sceneryContent.payMoney" controls-position="right"  :precision="2" :step="0.1" :min="0" :max="10000000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="窖藏编号：" prop="name">
-              <span>{{sceneryContent.cellarNumber==null?'无':sceneryContent.cellarNumber}}</span>
+            <el-form-item  label="积分" prop="giveIntegral">
+              <el-input-number v-model="sceneryContent.giveIntegral" controls-position="right"  :precision="2" :step="0.1" :min="0" :max="10000000"></el-input-number>
             </el-form-item>
-
           </el-col>
         </el-row>
 
-
-
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="失效原因：" prop="name">
-              <span>{{sceneryContent.remarks==null?'无':sceneryContent.remarks}}</span>
-            </el-form-item>
-          </el-col>
+        <el-row style=" float: right">
+          <!--<el-button type="warning" @click="goBack">返回</el-button>-->
+          <el-button type="primary" v-if="!newId" :loading="false" @click="saveNews">提交</el-button>
+          <!--<el-button type="primary" v-if="newId" :loading="false" @click="saveNews">确认修改</el-button>-->
         </el-row>
       </div>
     </el-form>
@@ -148,16 +95,16 @@
 <script>
   import Tinymce from '@/components/Tinymce'
   import VueCropper from 'vue-cropper'
-//  import Upload from '@/components/ImgCropper/mutilImage'
+  //  import Upload from '@/components/ImgCropper/mutilImage'
   import Upload from '@/components/ImgCropper/mutilCropimage'
-//  import UploadSingle from '@/components/Upload/oneImage'
+  //  import UploadSingle from '@/components/Upload/oneImage'
   import MDinput from '@/components/MDinput'
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   import Sticky from '@/components/Sticky' // 粘性header组件
   import {validateURL} from '@/utils/validate'
-    import {saveAndUpdateNews,getNewsById} from '@/api/news'
-    import {wineClassifyList, saveWine, wineDetail, deleteWineClassify, wineOrderDetail} from '@/api/wine'
+  import {saveAndUpdateNews,getNewsById} from '@/api/news'
+  import {wineClassifyList, saveWine, wineDetail, deleteWineClassify,wineList, saveWineNow} from '@/api/wine'
   import {fetchGoodDetail} from '@/api/goods'
   import {userSearch} from '@/api/remoteSearch'
   import {
@@ -169,7 +116,7 @@
   import {fetchGoodsList, searchGoods, downUpGoods, getSpecifications, getSpecValue} from '@/api/goods'
 
   import UE from '@/components/Ue/ue.vue';
-
+  import VDistpicker from 'v-distpicker'
   const defaultNews={
     "id": '',
     "title": "",
@@ -177,17 +124,17 @@
     "type": 1 // 咨询
   }
   const sceneryContent={
-    id: "",
-    name: "",
-    standard:"",
-    money: "",
-    largessIntegral: "",
-    img: "",
-    imgDesc: "",
-    context: "",
-//    type: "",
-    liquorCategory: ""
-//    cellarNumber: "",
+    phone: "",
+    tPhone: "",
+    userName:"",
+    province: "",
+    city: "",
+    dist: "",
+    detailedAddress: "",
+    liquorProductId: "",
+    payNumber: "",
+    payMoney: "",
+    giveIntegral: "",
   }
   const defaultForm = {
     status: 'draft',
@@ -223,7 +170,7 @@
 
   export default {
     name: 'articleDetail',
-    components: {Tinymce, MDinput, Multiselect,Upload, Sticky, VueCropper, UE},
+    components: {Tinymce, MDinput, Multiselect,Upload, Sticky, VueCropper, UE, VDistpicker},
     props: {
       isEdit: {
         type: Boolean,
@@ -268,8 +215,7 @@
         ue1: "ue1", // 不同编辑器必须不同的id
         listQuery: {
           page: 1,
-          size: 50,
-          level: 1 // 1园区
+          size: 10000,
         },
         listQuery2: {
           page: 1,
@@ -290,34 +236,42 @@
         isShow: false,
         isShowValue: false,
         disableValue: false,
+        placeholders:{
+          province: '------- 省 --------',
+          city: '--- 市 ---',
+          area: '--- 区/县 ---',
+        },
         rules: {
-          liquorCategory: [
-            {required: true, message: '请选择种酒分类', trigger: 'change'}
-          ],
-          name: [
-            {required: true, message: '请输入种酒名称', trigger: 'blur'},
+          phone: [
+            {required: true, message: '请输入用户账号', trigger: 'change'},
             {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
           ],
-          money: [
-            {required: true, message: '请输入价格', trigger: 'change'}
+          tPhone: [
+            {required: false, message: '请输入推荐人账号', trigger: 'blur'},
+            {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
           ],
-          largessIntegral: [
-            {required: true, message: '请输入积分', trigger: 'change'}
+          userName: [
+            {required: true, message: '请输入收货人姓名', trigger: 'change'},
+            {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
           ],
-          standard: [
-            {required: true, message: '请输入单笔酒量', trigger: 'change'}
+          province: [
+            {required: false, message: '请选择完整省市区', trigger: 'change'}
           ],
-
-          img: [
-            {required: true, message: '请上传景点主图', trigger: 'change'}
+          detailedAddress: [
+            {required: true, message: '请输入详细地址', trigger: 'change'},
+            {min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur'}
           ],
-          imgDesc: [
-            {required: true, message: '请输入详情介绍', trigger: 'blur'},
-            {min: 3, max: 5000, message: '长度在 3 到 5000 个字符', trigger: 'blur'}
+          liquorProductId: [
+            {required: true, message: '请选择酒品', trigger: 'change'}
           ],
-          context: [
-            {required: true, message: '请输入须知', trigger: 'blur'},
-            {min: 3, max: 2000, message: '长度在 3 到 1000 个字符', trigger: 'blur'}
+          payNumber: [
+            {required: true, message: '请输入数量', trigger: 'blur'}
+          ],
+          payMoney: [
+            {required: true, message: '请输入价格', trigger: 'blur'}
+          ],
+          giveIntegral: [
+            {required: true, message: '请输入积分', trigger: 'blur'}
           ]
         }
       }
@@ -345,7 +299,6 @@
     },
     created() {
       if (this.isEdit) {
-debugger
         this.newId = this.$route.query.id
         this.fetchNewsContent()
       } else {
@@ -360,8 +313,6 @@ debugger
         obj.type = "";
         obj.children = []
         this.specs.push(obj)
-
-
         let _obj = [{}]
         _obj[0].goods_specification_ids = ''
         _obj[0].prices = {
@@ -369,20 +320,23 @@ debugger
           retail_price: 0,
           pic_url: ''
         }
-
         this.specPrices = _obj
       }
     },
     methods: {
+      onSelected(data){
+        this.sceneryContent.province = data.province.value
+        this.sceneryContent.city = data.city.value
+        this.sceneryContent.dist = data.area.value
+      },
       getWineCategory(){
-        wineClassifyList(this.listQuery).then(response => {
+        wineList(this.listQuery).then(response => {
           this.wineCategoryOptions = response.data.data.content
           this.loading = false
-          this.listLoading = false
         })
       },
       submitNews(){
-        saveWine(this.sceneryContent).then(response => {
+        saveWineNow(this.sceneryContent).then(response => {
           this.$notify({
             title: '提示',
             message: '数据提交成功',
@@ -404,14 +358,14 @@ debugger
         })
       },
       fetchNewsContent(){
-        wineOrderDetail({orderId:this.$route.query.id}).then(response => {
+        wineDetail({id:this.$route.query.id}).then(response => {
           this.sceneryContent = response.data.data
           // 编辑修改
-         /* this.sceneryImgArr=this.sceneryContent.img.split(',')
+          this.sceneryImgArr=this.sceneryContent.img.split(',')
           for(let i=0; i<this.sceneryImgArr.length;i++){
             let obj={name:'tupian.png', url:this.sceneryImgArr[i]}
             this.sceneryImgArr2.push(obj)
-          }*/
+          }
         })
       },
       showPopover(index) {

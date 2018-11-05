@@ -104,8 +104,8 @@ export default {
     addAd: '添加广告',
     editInfo: '编辑基本资料',
     wineClassify: '种酒分类',
-
-
+    wineAddNow:'添加种酒订单',
+    wineNow:'手动生成订单',
     wineManage: '种酒管理',
     wine: '种酒',
     wineList: '种酒列表',

@@ -142,3 +142,25 @@ export function wineAlreadyInvalid(data) {
     data: params
   })
 }
+
+
+// 手动添加种酒订单
+export function saveWineNow(data) {
+  let params = new URLSearchParams();
+  params.append('phone', data.phone);
+  params.append('tPhone', data.tPhone);
+  params.append('userName', data.userName);
+  params.append('province', data.province);
+  params.append('city', data.city);
+  params.append('dist', data.dist);
+  params.append('detailedAddress', data.detailedAddress);
+  params.append('liquorProductId', data.liquorProductId);
+  params.append('payNumber', data.payNumber);
+  params.append('payMoney', data.payMoney);
+  params.append('giveIntegral', data.giveIntegral);
+  return request({
+    url: 'cellarOrder/autoLiquor',
+    method: 'post',
+    data: params
+  })
+}

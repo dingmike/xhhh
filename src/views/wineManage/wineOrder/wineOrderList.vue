@@ -67,7 +67,11 @@
           <span>{{scope.row.number}}</span>
         </template>
       </el-table-column>
-
+      <el-table-column width="100px" align="center" label="来源订单">
+        <template slot-scope="scope">
+          <span>{{scope.row.pOrderId!=null?scope.row.pOrderId:'无'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="200px" align="center" label="下单时间">
         <template slot-scope="scope">
           <!--<span>{{scope.row.creatTime}}</span>-->
@@ -77,7 +81,7 @@
 
       <el-table-column align="center" label="操作" width="500" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="goSeeAddress(scope.row)">查看证书寄送地址</el-button>
+          <el-button v-if="scope.row.pOrderId==null" type="primary" size="small" @click="goSeeAddress(scope.row)">查看证书寄送地址</el-button>
           <el-button type="primary" size="small" @click="handleUpdate(scope.row)">查看详情</el-button>
           <el-button size="small" type="success" @click="changeStatus(scope.row)">修改状态</el-button>
         </template>
